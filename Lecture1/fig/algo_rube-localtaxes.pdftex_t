@@ -1,0 +1,16 @@
+\begin{picture}(0,0)%
+\includegraphics{fig/algo_rube-localtaxes.pdftex}%
+\end{picture}%
+%
+%  created by potrace 1.8, written by Peter Selinger 2001-2007 
+%
+\setlength{\unitlength}{3947sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(7688,4691)(1290,-8118)
+\end{picture}%

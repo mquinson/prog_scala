@@ -1,0 +1,1024 @@
+* Introduction
+
+#+BIND: org-latex-title-command ""
+
+#+TAGS: noexport(n)
+#+LaTeX_CLASS: beamer
+#+startup: indent
+#+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,presentation]
+#+OPTIONS:   H:3 skip:nil num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+startup: beamer
+#+LATEX_HEADER: \usedescriptionitemofwidthas{bl}
+#+LATEX_HEADER: \usepackage{ifthen,figlatex,amsmath,amstext}
+#+LATEX_HEADER: \usepackage{boxedminipage,xspace,multicol,multirow,pdfpages}
+#+LATEX_HEADER: \usetheme{Emptty3}
+#+LATEX_HEADER: \usepackage{pgf,tikz,color}
+#+LATEX_HEADER: \usetikzlibrary{decorations.pathmorphing,backgrounds,fit,arrows}
+#+LATEX_HEADER: \usetikzlibrary{decorations.pathreplacing}
+#+LATEX_HEADER: \usetikzlibrary{shapes}
+#+LATEX_HEADER: \usetikzlibrary{positioning}
+#+LATEX_HEADER: \usetikzlibrary{arrows,automata}
+#+LATEX_HEADER: \usetikzlibrary{patterns}
+
+#+LATEX_HEADER: \newcommand<>{\green}[1]{{\color#2[rgb]{.5,.85,.5}#1}}
+#+LATEX_HEADER: \newcommand<>{\magenta}[1]{{\color#2[rgb]{.8,.0,.8}#1}}
+#+LATEX_HEADER: \newcommand<>{\blue}[1]{{\color#2[rgb]{.5,.5,1}#1}}
+#+LATEX_HEADER: \newcommand<>{\red}[1]{{\color#2[rgb]{1,.5,.5}#1}}
+#+LATEX_HEADER: \newcommand<>{\black}[1]{{\color#2[rgb]{0,0,0}#1}}
+
+#+LATEX_HEADER: \def\shorttitle{Computer Programming with Scala}
+
+#+latex: \thispagestyle{empty}
+#+BEGIN_LaTeX
+\begin{frame}{}
+  \thispagestyle{empty}
+  \centering\null\vfill
+  \structure{ \LARGE Computer Programming with Scala}
+  \\[2\baselineskip]
+  Martin Quinson\\
+  
+  {\footnotesize November 2015}\\[3.5\baselineskip]
+  \includegraphics[scale=.7]{img/logo-ens.pdf}\\[-3\baselineskip]
+  \vfill
+\end{frame}
+#+END_LaTeX
+
+
+*** About me
+#+BEGIN_LaTeX
+  \begin{itemize}
+  \item Prof ENS Rennes depuis 2015 {\small(avant: MCF Université de Lorraine depuis 2005)}
+  \item Thèse ENS Lyon, après Deug+Licence+Maîtrise Université St Etienne
+  \item \structure{Équipe recherches:} {\small Myriads \footnotesize(IRISA = U. Rennes I/INRIA/CNRS/ENS Rennes)}
+  \end{itemize}
+\vspace{-.4\baselineskip}
+  
+\begin{columns}
+  \begin{column}{.27\linewidth}
+    \begin{tikzpicture}[xscale=1,yscale=1]
+      \node (nodehost) [name=nodehost] 
+        { \includegraphics[height=23mm]{img/laptop.png}};
+
+      \node (nodelisting) [above right= -25mm of nodehost]%, overlay]  
+        { \includegraphics[height=12mm]{img/mpi-codelisting.png}};
+
+      \node (nodeimagine) [
+        shape             = cloud callout,
+        cloud puffs       = 11,
+        aspect            = 1.5,
+        opacity           =.75,
+        draw              = black!90!white, % colour of the border
+        top color         = white,                % | filling of the node
+        bottom color      = black!30!white, % |
+        text              = black!90!white, % colour of the fonts
+        thick,                              % thickness of the border
+        above             = 5mm of nodehost,
+        minimum height    = 25mm,
+        minimum width     = 30mm,
+        callout relative pointer={(285:5.5mm)},
+      ]{};
+
+      \node at (nodeimagine) {\includegraphics[width=15mm]{img/cluster.png}};
+    \end{tikzpicture}
+  \end{column}
+  \begin{column}{.72\linewidth}
+    \begin{block}{Recherche: {\color{black}Méthodologies expérimentales}}
+      \begin{itemize} 
+      \item Évaluer des applications distribuées {\small(perfs, bugs)}
+      \item Projet SimGrid: Simulateur de systèmes distribués
+      \item Vérification formelle (model-checking), virtualisation
+      \end{itemize}
+    \end{block}\vspace{-.7\baselineskip}
+
+    \begin{block}{Enseignements: {\color{black}Algorithmique et programmation}}
+      \begin{itemize}
+      \item Initiation, Java/Scala, AlgoProg, C seconde langue
+      \item Prog Système; Algo dist; P2P; Prog répartie
+      \end{itemize}
+    \end{block}
+
+    \structure{\large Activités complémentaires:}
+    \begin{itemize}
+    \item Beaucoup de médiation scientifique \& pédagogie
+    \item PLM: Exerciseur de programmation 
+    \item Developpeur Debian depuis 2004 (l10n, quilt, jeux)
+    \end{itemize}
+  \end{column}
+\end{columns}
+
+
+#+END_LaTeX
+*** Me as a Programmer
+- First language: Logo (1983? 1984?). Self taught in Basic (I was young!)
+- A lot of small Pascal programms before my first CS class (at
+  University)
+- Graduation project in OCaml (1999)
+**** Main Contributions to Open Source Software (after my PhD)
+\includegraphics[width=\linewidth]{fig/mes-langages.png}
+
+#+LaTeX: \vspace{-2.3\baselineskip}\small(my research projects are open-sourced and thus included)\normalsize
+
+#+LaTeX: \vspace{-.3\baselineskip}\null\hfill{\footnotesize\url{https://www.openhub.net/accounts/mquinson}}
+
+#+LaTeX: \bigskip\concept{I love building large systems, I must confess}
+*** About this course
+**** General Objective
+- Be prepared to be a Computer Scientist, in a few years
+- Get the grasp on programming (?)
+**** Practical Objective
+- Learn a new language that you shall soon all love: Scala
+- Learn how to organize your code (mostly OOP... with bits of FP)
+**** Agenda and Organization
+- Courses + Practical, as usual
+- Evaluation: A "big" project, to be announced
+- Please be patient: that's my first year here (report typo,
+  comments per email)
+**** Today
+- Understand the place of programming in Informatics
+- Basics of Scala
+* Informatics, what does that mean?
+*** Informatics? What does that mean?
+#+LaTeX: \concept{Comment définiriez vous «l'informatique»? Et la science afférente?}
+#+LaTeX: \pause
+**** Wikipédia + Google translate
+- Anglais, Hébreux: ingénierie (Institute of Electrical and Electronics Engineers)
+- Portuguais: Shannon, théorie de l'information
+- Allemand, Russe: linguistique (chomsky comme papa de
+  l'informatique) \tiny (Bielefeld)\normalsize
+- Français, Italien: calculabilité, théorie des graphes, décidabilité
+#+LaTeX: \pause
+#+LaTeX: \vspace{.3\baselineskip}
+#+LaTeX: \concept{Et vis-à-vis des maths ? De la physique? Des autres disciplines?}
+#+LaTeX: \vspace{-.3\baselineskip}
+#+LaTeX: \pause
+**** L'informatique fait partie des mathématiques!!! (air connu :-)
+- On peut retourner l'argument pour le plaisir du troll
+- Modèles algorithmiques $\supseteq$ modèles équationnels $\Rightarrow$ maths $\subseteq$ informatique 
+- Design de processeur $\notin$ maths \hspace{26mm}$\Rightarrow$ maths
+  $\subset$ informatique :D
+  
+# Navier-Stokes décrit par un algorithme, un algorithme n'est pas une équation
+#+LaTeX: \vspace{-.7\baselineskip}
+**** C'est juste pour le plaisir du troll
+- Je n'ai rien contre les maths au contraire, elles m'ont énormément apporté
+- "On peut écrire des logiciels sans réaliser que l'on fait [aussi] des maths" ;)
+- Un troll, ce n'est pas sérieux et il ne faut pas en abuser
+*** Vers une épistémologie de l'informatique
+#+BEGIN_LaTeX
+\only<1,3->{
+  \begin{itemize}
+  \item \alert{[Dowek]} La science des algorithmes, information, langages, machines 
+  \item \structure{Physique:} teste les contingences; Mathématiques: démontre les nécessités
+  \item[] \structure{Informatique:} teste les nécessités, ou démontre les
+    contingences (ou autre)
+    \begin{itemize}
+    \item IMRAD vs Problème, solution, éval, conclusion vs Axiome,
+      théorèmes, preuve
+    \end{itemize}
+  \medskip
+  \item \alert{[Denning]} confluence de maths, ingénierie et sciences
+    naturelles
+    \begin{itemize}
+    \item U. Heidelberg: faculté "Maths, Sciences nat et Info"
+      \small(similaires et différents)\normalsize
+    \end{itemize}
+  \end{itemize}
+} 
+
+\only<2>{
+  \centerline{\includegraphics[width=\linewidth]{img/math_1_physics_0.png}}
+  \centerline{\url{http://abstrusegoose.com/316}}
+}
+\only<1,3->{\visible<3->{
+
+  \begin{block}{Le diable est dans les détails \alert{[Varenne 2009]}}
+    \begin{itemize}
+    \item En maths, l'abstraction supprime les détails pour ne laisser
+      que la généralité
+    \item En science nat, on catégorise selon les détails puis on
+      raisonne sur les groupes
+    \item En informatique, l'abstraction \textit{masque} les détails,
+      mais ils restent présents dans la \textbf{pyramide des symboles}
+      mise en œuvre
+      \medskip
+    \item C'est à mes yeux l'essence même de la programmation: définir
+      des méthodes
+    \item[] (et c'est pour ça que même les théoriciens doivent apprendre
+      à programmer)
+    \end{itemize}
+  \end{block}
+}}
+
+#+END_LaTeX
+*** Une preuve d'informaticien
+#+LaTeX: \only<2>{\vspace{-3\baselineskip}\includegraphics[width=\linewidth]{img/Feit-Thompson.png}\vspace{-24\baselineskip}}
+#+LaTeX: \vspace{-.3\baselineskip}
+**** Le théorème de Feit-Thompson (1963)
+- \alert{Tout groupe fini dont le nombre d’éléments est impair est résoluble}
+- Le groupe de Fischer-Griess compte environ $8\cdot 10^{53}$ éléments
+  (mais c'est pair)
+- Hypothèse géométrique, conclusion algébrique, preuve: théorie 
+  représentations
+- La preuve originelle: 255 pages, étendues depuis en deux livres
+#+LaTeX: \vspace{-.6\baselineskip}
+**** Breaking News (2012)
+- Théorème de Feit-Thompson \structure{redémontré formellement} [Inria/MSR,
+  Gonthier]
+- La nouvelle preuve est entièrement mécanique (grâce à Coq)
+- 6 ans de travail, 15000 définitions, 4200 théorèmes, 170000 lignes
+  de code\ldots
+#+LaTeX: \pause\pause
+#+LaTeX: \vspace{-.6\baselineskip}
+**** Pourquoi? Et après? Et alors?
+- Personne ne doutait de la preuve, mais maintenant on est sûrs :)
+- Formalisation de l'univers mathématique de la preuve, réutilisable
+- La classification des groupes finis simples: 10,000 à 20,000 pages manuelles
+#+LaTeX: \pause\vspace{-.6\baselineskip}
+- \alert{Vous voyez ce que Varenne veut dire par le traitement spécifique du détail?}
+#+LaTeX: \hfill{\scriptsize\url{http://images.math.cnrs.fr/Coq-et-caracteres.html}}
+# http://research.microsoft.com/en-us/news/features/gonthierproof-101112.aspx
+*** Foundations of Computing
+**** Fundamental mathematical and logical structures
+- To understand computing [Turing 36], and its difficulties
+- To analyze and verify the correctness of software and hardware
+#+LaTeX: \vspace{-.5\baselineskip}
+**** Main issues of interest in Computer Science \alert{in France}
+- \structure{Calculability}
+  - Given a problem, can we show whether there exist an algorithm
+    solving it?
+  - Which are the problems for which no algorithm exist? How to
+        categorize them?
+- \structure{Complexity}
+  -  How long does my algorithm need to answer? (as function
+        of input size)
+  - How much memory does it take?
+  - Is my algorithm optimal, or does a better one exist?
+- \structure{Correctness}
+  - Can we be certain that a given algorithm always reaches a solution?
+  - Can we be certain that a given algorithm always reaches
+        the right solution?
+#+LaTeX: \vspace{-.5\baselineskip}
+**** But don't forget Denning!
+- Computer Science: convergence of Maths, Natural Science and Engineering
+** Computational Thinking
+*** Computational Thinking \normalsize[Wing 2005]
+#+BEGIN_LaTeX
+\begin{center}
+  \textit{Thinking like a computer scientist means more than
+    programming a computer.\\ It requires thinking at multiple levels
+    of abstraction.}
+\end{center}
+\vspace{-.5\baselineskip}
+#+END_LaTeX
+- Methods and models to \alert{solve problems} efficiently: 
+  \small Récursivity, reductions, etc.\normalsize
+- /Complements and combines mathematical and engineering thinking/
+- /A way that humans, not computers, think/
+
+#+BEGIN_LaTeX
+\begin{center}
+  Equipped with computing devices, we use our cleverness to tackle
+  problems we would not dare take on before the age of computing and
+  build systems with functionality limited only by our imaginations. 
+\end{center}
+#+END_LaTeX
+ 
+#+LaTeX: \hfill{\scriptsize\url{https://www.cs.cmu.edu/~15110-s13/Wing06-ct.pdf}}
+#+LaTeX: \bigskip
+- Impact of Informatics on Sciences \gg Impact of Computers
+  - Biologists see the genom as a Code
+  - Lawyers (should) write unambiguous laws, that is, algorithmic laws
+** Computational Science
+*** Computational Science
+#+BEGIN_LaTeX
+  ~~
+  \visible<2->{
+    \includegraphics[height=3.6\baselineskip]{img/science-compute-genome.png}
+    \includegraphics[height=3.6\baselineskip]{img/science-compute-earthquake.png}
+    \includegraphics[height=3.6\baselineskip]{img/science-compute-math.png}
+    \includegraphics[height=3.6\baselineskip]{img/science-compute-socio.png}
+    \includegraphics[height=3.6\baselineskip]{img/science-compute-galaxy.png}
+    \includegraphics[height=3.6\baselineskip]{img/science-compute-heart.png}
+  }
+
+  \begin{block}{Computational Science in a Nutshell} % \vspace{-\baselineskip}
+    \begin{columns}
+      \begin{column}{.7\linewidth}
+        \begin{itemize}
+        \item Mathematical Models of Complex Phenomenons
+        \item Simulation on Super-Computers
+        \item (In)validation: compare predictions vs. observations
+        \item Then, get results without doing any experience (!)
+        \end{itemize}
+      \end{column}
+      \visible<2->{
+        \begin{column}{.35\linewidth}
+          \centerline{\includegraphics[width=.8\linewidth]{img/science-compute-climate.png}}
+        \end{column}
+      }
+    \end{columns}
+  \end{block}%\vspace{-.5\baselineskip}
+
+  \bigskip
+
+  \visible<2->{
+    \begin{columns}
+      \begin{column}{.19\linewidth}
+        \includegraphics[width=\linewidth]{img/science-compute-plane.png}    
+        
+        \includegraphics[width=\linewidth]{img/science-compute-pneu.png}    
+      \end{column}
+      \begin{column}{.4\linewidth}
+        \includegraphics[width=\linewidth]{img/science-compute-cyclone.png}    
+      \end{column}
+      \begin{column}{.16\linewidth}
+        \includegraphics[width=\linewidth]{img/science-compute-combustion.png}    
+        
+        \includegraphics[width=\linewidth]{img/science-compute-mesh.png}    
+      \end{column}
+      \begin{column}{.18\linewidth}
+        \includegraphics[width=\linewidth]{img/science-compute-car-crash.pdf}    
+      \end{column}
+    \end{columns}
+  }
+#+END_LaTeX
+*** The third Pillar of Science
+#+BEGIN_LaTeX
+  \Concept{Doing Science = Acquiring Knowledge}
+  \bigskip
+  \bigskip
+
+  \begin{columns}[b]
+    \begin{column}{.3\linewidth}
+      \centerline{\includegraphics[height=5\baselineskip]{img/science-XP.jpeg}}
+      % \centerline{\includegraphics[height=5\baselineskip]{img/science-XP-tonneau-pascal.png}}
+      
+      \vspace{\baselineskip}
+      \alert{\bf Experimental Science}
+    \end{column}
+    \begin{column}{.3\linewidth}
+      \centerline{\includegraphics[width=\linewidth]{img/science-theory.png}}
+      
+      \vspace{2.4\baselineskip}
+      \alert{\bf Theoretical Science}
+    \end{column}
+    \begin{column}{.34\linewidth}
+%      \centerline{\includegraphics[height=5\baselineskip]{img/science-compute.jpeg}}
+      \centerline{\includegraphics[height=5\baselineskip]{img/science-compute-climate-grid.jpeg}}
+
+      \vspace{\baselineskip}
+      \alert{\bf Computational Science}
+    \end{column}
+  \end{columns}
+  \vspace{-\baselineskip}
+  \begin{columns}[t]
+    \begin{column}{.3\linewidth}
+      \begin{itemize}
+      \item Thousand years ago
+      \item Observations-based
+      \item Can describe
+      \item Prediction tedious
+      \end{itemize}
+    \end{column}
+    \begin{column}{.33\linewidth}
+      \begin{itemize}
+      \item Last few centuries
+      \item Equations-based
+      \item Can understand
+      \item Prediction long
+      \end{itemize}
+    \end{column}
+    \begin{column}{.33\linewidth}
+      \begin{itemize}
+      \item Nowadays
+      \item Compute-intensive
+      \item Can simulate
+      \item Prediction easier
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \bigskip
+  \centerline{\textit{Prediction is very difficult, especially about the
+      future.~~-- Niels Bohr}}
+  \vspace{-\baselineskip}
+
+#+END_LaTeX
+
+*** Observation still bases Science \normalsize(to feed models) 
+#+BEGIN_LaTeX
+    % http://www.nsf.gov/news/special_reports/nees/tsunami_or.jsp
+    \begin{columns}
+      \begin{column}{.25\linewidth}
+        \centerline{\structure{Space telescope}}\smallskip
+
+        \centerline{\includegraphics[height=4.5\baselineskip]{img/hubble.jpg}}
+      \end{column}
+      \begin{column}{.25\linewidth}
+  \centerline{\structure{Large Hadron Collider}}\smallskip
+
+        \centerline{\includegraphics[height=4.5\baselineskip]{img/science-XP-LHC.jpg}}
+      \end{column}
+      \begin{column}{.25\linewidth}
+        \centerline{\structure{Mars Explorer}}\smallskip
+
+        \centerline{\includegraphics[height=4.5\baselineskip]{img/science-XP-curiosity.png}}
+      \end{column}
+    \end{columns}
+    \bigskip
+    \begin{columns}
+      \begin{column}{.25\linewidth}
+        \centerline{\structure{Tsunamis}}\smallskip
+
+        \centerline{\includegraphics[height=4.5\baselineskip]{img/emul_tsunami.png}}
+      \end{column}
+      \begin{column}{.25\linewidth}
+        \centerline{\structure{Earthquake vs. Bridge}}\smallskip
+
+        \centerline{\includegraphics[height=4.5\baselineskip]{img/emul_bridge_earthquake.jpg}}
+      \end{column}
+      \begin{column}{.25\linewidth}
+        % metatron CNRS
+        \centerline{\structure{Climate vs. Ecosystems}}\smallskip
+
+        \centerline{\includegraphics[height=4.5\baselineskip]{img/emul_climat.png}}
+      \end{column}
+    \end{columns}
+   \bigskip
+   \begin{columns}
+     \begin{column}{.25\linewidth}
+       \centerline{\structure{NMR Spectroscope}}\smallskip
+
+       \centerline{\includegraphics[height=4.5\baselineskip]{img/science-XP-nmr.jpg}}
+     \end{column}
+     \begin{column}{.25\linewidth}
+       \centerline{\structure{Synchrotrons}}\smallskip
+
+       \centerline{\includegraphics[height=4.5\baselineskip]{img/synchrotron_soleil.jpg}}
+     \end{column}
+     \begin{column}{.25\linewidth}
+       \centerline{\structure{Turntable}}\smallskip
+
+       % \structure{Coriolis, stratification and viscosity}
+       \centerline{\includegraphics[height=4.5\baselineskip]{img/emul_coriolis-legi.jpg}}
+     \end{column}
+   \end{columns}
+   
+
+    \bigskip
+    \hfill{\small\it(who said that science is not fun??)}~~~~~~~~~~
+
+#+END_LaTeX
+** In Practice: Climatology
+*** Computational Science in Practice
+#+LaTeX: \concept{How do we build a Model in Climatology?}\bigskip
+
+#+LaTeX: \centerline{\includegraphics[width=.8\linewidth]{img/climato-modele.png}}
+#+LaTeX: \vspace{-3\baselineskip}\null\hfill\rotatebox{90}{\footnotesize[Eric Blayo]}
+
+*** 1 - Modeling: translate reality into equations
+#+BEGIN_LaTeX
+  \centering\framebox{
+    \begin{minipage}{.8\linewidth}
+      \includegraphics[width=\linewidth]{img/climato-equations.png}
+
+      \bigskip
+     \centerline{\alert{The Ocean, as seen by a mathematician}}
+    \end{minipage}
+  }
+
+  \vspace{-3\baselineskip}\null\hfill\rotatebox{90}{\footnotesize[Eric Blayo]}
+#+END_LaTeX
+*** 2 - Simulating: solve Equations on Computers
+#+BEGIN_LaTeX
+  \begin{columns}
+    \begin{column}{.35\linewidth}
+      \includegraphics[width=\linewidth]{img/science-compute-climate-grid.jpeg}
+    \end{column}
+    \begin{column}{.05\linewidth}
+      \LARGE +
+    \end{column}
+    \begin{column}{.35\linewidth}
+      \includegraphics[width=\linewidth]{img/cluster-tianhe.jpeg}
+
+      \includegraphics[width=.6\linewidth]{img/cluster-sequoia.jpeg}\hfill
+      \includegraphics[width=.4\linewidth]{img/cluster-cables.png}
+
+      \includegraphics[width=\linewidth]{img/cluster-mare-nostrum.png}
+    \end{column}
+  \end{columns}
+
+
+  \vspace{-3\baselineskip}\null\hfill\rotatebox{90}{\footnotesize[Eric Blayo]}
+#+END_LaTeX
+*** 3 - Tuning the model with the Observations
+#+BEGIN_LaTeX
+  \centerline{Reconstitute the current situation from the available information}
+  \bigskip
+
+  \begin{columns}
+    \begin{column}{.42\linewidth}
+      \centering
+
+      \includegraphics[height=7\baselineskip]{img/climato-mesures.png}
+      
+      \structure{Past and Present Observations}
+    \end{column}
+    \begin{column}{.42\linewidth}
+      \centering
+
+      \includegraphics[height=7\baselineskip]{img/climato-equations2.png}
+      
+      \structure{Mathematical Models}
+    \end{column}
+  \end{columns}
+  \bigskip
+
+  \centerline{\includegraphics[height=7\baselineskip]{img/climato-reglages.png}}
+
+    \vspace{-4\baselineskip}\null\hfill\rotatebox{90}{\footnotesize[Eric Blayo]}
+#+END_LaTeX
+*** 4 - Estimate the uncertaincy
+#+BEGIN_LaTeX
+    \centerline{Noised Initial Conditions + Numerous Simulations $\leadsto$
+      Confidence Intervals }
+    \bigskip
+
+   
+    \centerline{%
+      \includegraphics[height=7\baselineskip]{img/climato-ensembles.png}%
+      \includegraphics[height=7\baselineskip]{img/climato-ensembles2.png}%
+    }
+
+      \vspace{-4\baselineskip}\null\hfill\rotatebox{90}{\footnotesize[Eric
+        Blayo]}
+\pause
+#+END_LaTeX
+**** Conclusions
+- Informatics = Mixup of Maths, Engineering and Natural Science. 
+- \structure{+major revolution}: ever heard of experimental maths? or experimental history?
+#+LaTeX: \vspace{-.3\baselineskip}
+- No "Good Model". There is only models more or less adapted to the study
+- \structure{Open Science:} Ensuring the Experimental Reproducibility
+#+LaTeX: \vspace{-.3\baselineskip}
+- \alert{Computer Scientists are very bad in Computational Science!}\\
+  But things slowly improve, so get ready! \alert{\bf\large Learn programming! \normalsize Now!}
+* Crash course on the Scala syntax
+*** Crash Course on Scala
+#+LaTeX: \concept{Scala is Java as it \textit{should} be}
+**** What is all the hype about Scala?
+- \structure{Pleasant:} The syntax is simple and elegant
+- \structure{Multi-paradigm:} Functional (+ properties) and OOP (+
+  mixin and singleton)
+- \structure{Typed:} not as strongly as Caml, but implicits make the life much easier
+- \structure{JVM-based:} You gain Java libs, aggressive optimizations
+  and portability
+- \structure{Actor models:} At least, parallelism made easier than
+  threads
+**** The Bad Points
+- Mixing paradigms $\leadsto$ Frankenstein effect, tricky to go along
+- The error messages are sometimes pure hells
+- The language and runtime are still moving targets (longevity?)
+
+**** Why you will love it?
+- Often cleaver and sometimes tricky. Who don't like mind challenges?
+- Pretend you coded it in Java, and enjoy the beauty of Scala
+** Basics of the syntax
+#+BEGIN_LaTeX
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Starting Scala}
+  
+  \structure{\large Installation:} Get it from \url{http://scala-lang.org/} (version 2.11 at best)
+  \smallskip
+
+  \begin{block}{Executing your code}
+    \begin{columns}
+      \begin{column}{.28\linewidth}
+        \begin{boitecode}{myfile.scala}
+println("Hello, friends")
+
+        \end{boitecode}
+      \end{column}
+      \begin{column}{.22\linewidth}
+        \begin{boiteshell}{Run directly}
+\$ scala myfile.scala          
+Hello, friends
+\$
+        \end{boiteshell}
+      \end{column}
+      \begin{column}{.38\linewidth}
+        \begin{boiteshell}{Compile first}
+\$ scalac -Xscript toto myfile.scala          
+\$ scala toto
+Hello, friends
+\$      \end{boiteshell}
+      \end{column}
+    \end{columns}
+    %%%
+    \begin{columns}
+      \begin{column}{.3\linewidth}
+        \begin{boitecode}{myscript}
+#!/usr/bin/scala
+!#
+println("Hello, friends")
+        \end{boitecode}
+        \begin{boiteshell}{Turn it into a script}
+\$ chmod +x myscript
+\$ ./myscript
+Hello, friends
+\$      \end{boiteshell}
+      \end{column}
+      \begin{column}{.4\linewidth}
+        \begin{boiteshell}{Run interactively (REPL)}
+\$ scala
+Welcome to Scala [...]
+
+scala> \structure{println("Hello, friends")}
+Hello, friends
+
+scala> \structure{:load myfile.scala}
+Loading toto.scala...
+Hello, friends
+        \end{boiteshell}
+      \end{column}
+
+    \end{columns}
+  \end{block}
+  \concept{The REPL is your friend to play with the concepts}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Getting Started in Scala}
+  \structure{\large Declaring a variable:} {\large\framebox{\texttt{var x:Int = 0}} }
+  \smallskip
+
+  \begin{tabular}{c@{~$\leadsto$~}l}
+    \texttt{var} & because that's a \textbf{var}iable\\
+    \texttt{x}   & name of that variable (its label)\\
+    \texttt{:Int}& type of this variable (what it can store)\\
+    \texttt{= 0}  & initial value (mandatory)
+  \end{tabular}
+
+  \begin{itemize}
+  \item You can often omit the type (it's inferred): \framebox{\texttt{var x = 0}}
+  \end{itemize}
+
+  \begin{block}{Some Scala data types}
+    \begin{itemize}
+    \item \structure{Int:} for integer values,  \structure{Double:} for dot numbers
+    \item \structure{Boolean:} \texttt{true/false}, \structure{String:} \texttt{"some chars together"}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}<2->{Declaring a value}
+    \begin{itemize}
+    \item If your "variable" is constant, make it a value:
+      ~\framebox{\texttt{\alert{val} answer:Int = 42}}
+      \smallskip
+      
+    \item Seen as good style in Scala \hfill%
+      \textit{\small mutable stateful objects are the new spaghetti code}
+    \item Allows to detect errors, may produce faster code, easy multithreading.
+    \item \alert{Use values unless you must} use variables
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\recvVal}{$<$-}
+\begin{frame}[fragile]{The Scala Syntax}
+  \begin{block}{Looping}\smallskip
+  \begin{columns}
+    \begin{column}{.3\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\small,frame=single,commandchars=+[\]]
+        +textrm[+textbf[while]] (+textit[condition]) {
+          +textit[instructions]
+        }
+      \end{Verbatim}
+    \end{column}
+
+    \begin{column}{.3\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\small,frame=single,commandchars=+[\]]
+        +textrm[+textbf[do]] {
+          +textit[instructions]
+        } +textrm[+textbf[while]] (+textit[condition])
+      \end{Verbatim}
+    \end{column}
+
+    \begin{column}{.37\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\small,frame=single,commandchars=+[\]]
+        +textrm[+textbf[for]] (+textit[i] +textrm[+textbf[+recvVal]] 0 +textrm[+textbf[to]] 10 +textrm[+textbf[by] 2]) {
+          // i in 0,2,4,6,8,10
+        }
+      \end{Verbatim}
+    \end{column}
+  \end{columns}
+  \end{block}
+
+  \bigskip
+  \begin{block}{Methods and functions} \vspace{-\baselineskip}
+    \begin{columns}
+      \begin{column}{.42\linewidth}
+        \begin{Verbatim}[gobble=9,fontsize=\small,frame=single,commandchars=+[\]]
+         +textrm[+textbf[def]] +textit[sayIt](msg:String)+alert[:Unit=] {
+           print(msg)
+         }
+        \end{Verbatim}
+      \end{column}
+
+      \begin{column}{.56\linewidth}
+        \begin{Verbatim}[gobble=9,fontsize=\small,frame=single,commandchars=+[\]]
+         +textrm[+textbf[def]] +textit[max3](x:Int, y:Int, z:Int)+alert[:Int =] {
+           val m = if (x>y) x else y
+           if (m>z) { 
+             m       +emph[// explicit +emph[return] not need]
+           } else {  +emph[// and sometimes considered]
+             z       +emph[// harmfull (but YMMV)]
+           }
+         }
+        \end{Verbatim}
+      \end{column}
+    \end{columns}
+  \end{block}
+  \begin{columns}
+    \begin{column}{.42\linewidth}
+      \begin{block}{Nice Aspects}
+        \begin{itemize}
+        \item Semicolons (;) are optional
+        \item Much of C scoria removed
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{.54\linewidth}
+      \begin{block}{Pitfalls}
+        \begin{itemize}
+        \item The interpreter may start too early
+        \item Shorter is not always clearer
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Pattern matching: cascading if / else if are over}
+  
+  \begin{columns}
+    \begin{column}{.57\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single,commandchars=+[\]]
+        +textit[name] +textrm[+textbf[match]] {
+          +textrm[+textbf[case]] +textit["Martin"] => +textit[println("Hey there")]
+          +textrm[+textbf[case]] +textit["Luc"] => +textit[println("Hello")]
+          +textrm[+textbf[case]] _ +hspace[10.7mm]=> +textit[println("Gnii?")]
+        }
+      \end{Verbatim}
+    \end{column}
+    \begin{column}{.42\linewidth}
+      \begin{itemize}
+      \item Veeery powerful construct
+      \item Any expression can be filtered
+      \item The default case is mandatory
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \begin{columns}
+    \begin{column}{.73\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single,commandchars=+[\]]
+        +textit[name] +textrm[+textbf[match]] {
+          +textrm[+textbf[case]] +textit["Martin"] | +textit["Luc"] => +textit[println("Hey there")]
+          +textrm[+textbf[case]] _ +hspace[27.7mm]=> +textit[println("Gniii?")]
+        }
+      \end{Verbatim}      
+    \end{column}
+    \begin{column}{.265\linewidth}
+      ~
+    \end{column}
+  \end{columns}
+
+ \begin{columns}
+    \begin{column}{.73\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single,commandchars=+[\]]
+        +textit[age] +textrm[+textbf[match]] {
+          +textrm[+textbf[case]] i +textrm[+textbf[if]] i<20 => println("Hey dude!")
+          +textrm[+textbf[case]] i +textrm[+textbf[if]] i<30 => println("Hello young man")
+          +textrm[+textbf[case]] _ +hspace[11.4mm]=> println("Hello Sir")
+        }
+      \end{Verbatim}      
+    \end{column}
+    \begin{column}{.265\linewidth}
+      ~
+    \end{column}
+  \end{columns}
+
+ \begin{columns}
+    \begin{column}{.73\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single,commandchars=+[\]]
+        +textit[(x,y)] +textrm[+textbf[match]] {
+          +textrm[+textbf[case]] (0,0) => println("Origin")
+          +textrm[+textbf[case]] (_,0) => println("Abscissa")
+          +textrm[+textbf[case]] (0,_) => println("Ordinate")
+          +textrm[+textbf[case]] (_,_) => println("Random")
+        }
+      \end{Verbatim}      
+    \end{column}
+    \begin{column}{.265\linewidth}
+      ~
+    \end{column}
+  \end{columns}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Lists: central data container in functional world}
+  \begin{block}{Scala lists are homogeneous (all elements of same type)}
+  \end{block}
+  \vspace{-\baselineskip}
+  \begin{columns}
+    \begin{column}{.80\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single]
+        scala > val l0 = Nil // the empty list
+        res1: scala.collection immutable.Nil.type = List ()
+
+        scala > val l = 1 :: 2 :: Nil   // :: is pronounced " cons "
+        l: List[Int] = List (1 , 2)
+
+        scala > val m = List (3 , 4 , 5)
+        m: List[Int] = List (3 , 4 , 5)
+
+        scala > l ::: m
+        res2: List[Int] = List (1 , 2 , 3 , 4 , 5)      
+      \end{Verbatim}
+    \end{column}
+  \end{columns}
+
+  \begin{block}{Scala lists are immutable (cannot change value)}
+  \end{block}
+  \vspace{-\baselineskip}
+  \begin{columns}
+    \begin{column}{.80\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single]
+        scala> val l = List (1 ,2 ,3 ,4)
+        l: List [Int] = List (1 , 2 , 3 , 4)
+
+        scala> l (3)
+        res1: Int = 4
+
+        scala> l (3) = 100
+        <console>:9: error: value update is not a member of List[Int]
+      \end{Verbatim}
+    \end{column}
+  \end{columns}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Arrays: central data container in imperative world}
+  \begin{block}{Scala arrays are homogeneous, but mutable}
+  \end{block}
+  \vspace{-\baselineskip}
+  \begin{columns}
+    \begin{column}{.80\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single]
+        scala > val a = Array (1 ,2 ,3 ,4)
+        a: Array[Int] = Array (1 , 2 , 3 , 4)
+
+        scala > a(3) = 100
+
+        scala > a
+        res2 : Array [ Int ] = Array (1 , 2 , 3 , 100)
+      \end{Verbatim}
+    \end{column}
+  \end{columns}
+
+  \begin{itemize}
+  \item Scala defines immutable and mutable versions of many data containers
+  \item Always prefer the immutable version
+  \end{itemize}
+
+  \begin{block}{The content of an immutable container may be mutable}
+  \end{block}
+    \vspace{-\baselineskip}
+  \begin{columns}
+    \begin{column}{.95\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single]
+        scala> val a = List(Array(1,2,3), Array(4,5), Array(6))
+        a: List[Array[Int]] = List(Array(1, 2, 3), Array(4, 5), Array(6))
+        
+        scala> a(0)(0) = 1000
+
+        scala> a
+        res1: List[Array[Int]] = List(Array(1000, 2, 3), Array(4, 5), Array(6))
+
+        scala> a(0) = Array(1,2,3)
+        <console>:12: error: value update is not a member of List[Array[Int]]
+      \end{Verbatim}
+    \end{column}
+  \end{columns}    
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Advanced for loops}
+  \begin{columns}
+    \begin{column}{.90\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single]
+        scala> 1 to 10 // or 1.to(10)
+        res1: scala.collection.immutable.Range.Inclusive =
+           Range (1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10)
+
+        scala> 10 to (0 , -2)
+        res2: scala.collection.immutable.Range.Inclusive =
+           Range (10 , 8 , 6 , 4 , 2 , 0)
+        
+        scala> for ( x <- List (1 ,2 ,3)) yield x *2
+        res3: List[Int] = List(2 , 4 , 6)
+
+        scala> for { x <- 1 to 5  // generator
+                     y = x % 2;   // definition
+                     if ( y == 0) // filter
+                   } yield {
+                     println ( x )
+                     x
+                   }
+        2
+        4
+        res4:scala.collection.immutable.IndexedSeq[Int] = Vector (2 , 4 )
+
+        scala > for { x <- List (1 ,2 ,3); y <- List (4 ,5)) } yield x * y
+        res5: List[Int] = List (4 , 5 , 8 , 10 , 12 , 15)
+      \end{Verbatim}
+    \end{column}
+  \end{columns}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{More on Scala usage}
+  \begin{block}{Compile once, use many times}    
+    \begin{columns}
+      \begin{column}{.45\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\scriptsize,frame=single,label={Hello.scala},commandchars=+[\]]
+        object Hello {
+          def main(args: Array[String]) = 
+              println("Hello, friends")
+        }
+      \end{Verbatim}
+
+    \end{column}
+    \begin{column}{.45\linewidth}
+      \begin{boiteshell}{}
+\$ scalac Hello.scala          
+\$ ls
+Hello\$.class    Hello.class   Hello.scala
+\$ scala Hello # no recompilation
+Hello, friends
+\$        
+      \end{boiteshell}
+    \end{column}
+    \end{columns}
+  \end{block}
+  \begin{block}{Interfacing with Java libraries}
+  \begin{columns}
+    \begin{column}{.53\linewidth}
+      \begin{Verbatim}[gobble=8,fontsize=\scriptsize,frame=single,commandchars=+[\]]
+        import java.awt._
+        import scala.swing._
+        import scala.swing.event._
+
+        object MyGUI extends SimpleSwingApplication {
+          lazy val ui: scala.swing.Panel = new Panel {
+            background = Color.white
+            preferredSize = new Dimension(800, 600)
+            override def paintComponent(g: Graphics2D)={
+              super.paintComponent(g)
+              g.drawString("Hello, world.", 
+                           10, size.height - 10)
+           }
+         }
+          \end{Verbatim}
+        \end{column}
+        \begin{column}{.45\linewidth}
+          \begin{Verbatim}[gobble=8,fontsize=\scriptsize,frame=single,commandchars=+[\]]
+        +textit[(continued)]    
+
+         def top = new MainFrame {
+          title = "My little GUI"
+           contents = ui
+         }
+        }
+      \end{Verbatim}
+      \begin{boiteshell}{}
+\$ scalac -cp scala-swing.jar:. MyGUI.scala          
+\$ scala -cp scala-swing.jar:. MyGUI
+(opens a new windows)
+\$        
+      \end{boiteshell}
+    \end{column}
+    \end{columns}
+  \end{block}
+\end{frame}
+#+END_LaTeX
+** Biblio
+*** More Information on Scala
+\vspace{-\baselineskip}\null\hfill
+\includegraphics[width=.3\linewidth]{img/Programming_in_scala.png}
+\hfill
+\includegraphics[width=.25\linewidth]{img/Scala_in_depth.png}
+\hfill\null
+
+\bigskip
+#+LaTeX: \centerline{\includegraphics[width=.5\linewidth]{img/scala-lang.png}}
+#+LaTeX: \centerline{\url{http://scala-lang.org}}
