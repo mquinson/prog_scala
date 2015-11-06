@@ -558,16 +558,18 @@
       \vspace{-4\baselineskip}\null\hfill\rotatebox{90}{\footnotesize[Eric
         Blayo]}
 \pause
+\vspace{-1.2\baselineskip}
+
 #+END_LaTeX
 **** Conclusions
 - \structure{Major revolution}: ever heard of experimental maths? or experimental history?
 - No "Good Model". There is only models more or less adapted to the study
-#+LaTeX: \vspace{-.3\baselineskip}
+#+LaTeX: \vspace{-.1\baselineskip}
 - \structure{Open Science:} Ensuring the Experimental Reproducibility,
   as in Natural Science
 - \structure{Conclusion 1:} Computer Science has an heritage in Natural Science\\
   \small(also in Cognitive Science and IA and other parts of CS)\normalsize
-#+LaTeX: \vspace{-.3\baselineskip}
+#+LaTeX: \vspace{-.1\baselineskip}
 - \structure{Conclusion 2:} \alert{Computer Scientists are very bad in Computational Science!}\\
   But things slowly improve, so get ready! \alert{\bf\large Learn programming! \normalsize Now!}
 * Crash course on the Scala syntax
@@ -582,13 +584,14 @@
   and portability
 - \structure{Actor models:} At least, parallelism made easier than
   threads
+#+LaTeX: \vspace{-.5\baselineskip}
 **** The Bad Points
 - Mixing paradigms $\leadsto$ Frankenstein effect, tricky to go along
 - The error messages are sometimes pure hells
 - The language and runtime are still moving targets (longevity?)
-
+#+LaTeX: \vspace{-.5\baselineskip}
 **** Why you will love it?
-- Often cleaver and sometimes tricky. Who don't like mind challenges?
+- Often clever and sometimes tricky. Who don't like mind challenges?
 - Pretend you coded it in Java, and enjoy the beauty of Scala
 ** Basics of the syntax
 #+BEGIN_LaTeX
@@ -1057,7 +1060,7 @@ Hello, friends
   \end{column}
 \end{columns}
 \medskip
-\concept{Programming complex systems is the core of the discipline}
+\concept{Programming Complex Systems is at the core of the discipline}
 
 \centerline{\small(That's the topic of this course :)}
 \vspace{-.3\baselineskip}
