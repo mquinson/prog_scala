@@ -121,6 +121,8 @@
 #+LaTeX: \vspace{-.3\baselineskip}\null\hfill{\footnotesize\url{https://www.openhub.net/accounts/mquinson}}
 
 #+LaTeX: \bigskip\concept{I love building large systems, I must confess}
+
+#+LaTeX: \centerline{\small (but I'm not that fluent in FP)}
 *** About this course
 **** General Objective
 - Be prepared to be a Computer Scientist, in a few years
@@ -134,7 +136,7 @@
 - Please be patient: that's my first year here (report typo,
   comments per email)
 **** Today
-- Understand the place of programming in Informatics
+- Try to convince you that programming is both important and interesting
 - Basics of Scala
 * Informatics, what does that mean?
 *** Informatics? What does that mean?
@@ -155,7 +157,7 @@
 - On peut retourner l'argument pour le plaisir du troll
 - Modèles algorithmiques $\supseteq$ modèles équationnels $\Rightarrow$ maths $\subseteq$ informatique 
 - Design de processeur $\notin$ maths \hspace{26mm}$\Rightarrow$ maths
-  $\subset$ informatique :D
+  $\subset$ informatique $\:\:$ :D
   
 # Navier-Stokes décrit par un algorithme, un algorithme n'est pas une équation
 #+LaTeX: \vspace{-.7\baselineskip}
@@ -175,13 +177,6 @@
     \item IMRAD vs Problème, solution, éval, conclusion vs Axiome,
       théorèmes, preuve
     \end{itemize}
-  \medskip
-  \item \alert{[Denning]} confluence de maths, ingénierie et sciences
-    naturelles
-    \begin{itemize}
-    \item U. Heidelberg: faculté "Maths, Sciences nat et Info"
-      \small(similaires et différents)\normalsize
-    \end{itemize}
   \end{itemize}
 } 
 
@@ -190,6 +185,15 @@
   \centerline{\url{http://abstrusegoose.com/316}}
 }
 \only<1,3->{\visible<3->{
+    \begin{itemize}
+  \item \alert{[Denning]} confluence de maths, ingénierie et sciences
+    naturelles
+    \begin{itemize}
+    \item U. Heidelberg: faculté "Maths, Sciences nat et Info"
+      \small(similaires et différents)\normalsize
+    \item (on y revient)
+    \end{itemize}
+    \end{itemize}
 
   \begin{block}{Le diable est dans les détails \alert{[Varenne 2009]}}
     \begin{itemize}
@@ -233,7 +237,7 @@
 - Personne ne doutait de la preuve, mais maintenant on est sûrs :)
 - Formalisation de l'univers mathématique de la preuve, réutilisable
 - La classification des groupes finis simples: 10,000 à 20,000 pages manuelles
-#+LaTeX: \pause\vspace{-.6\baselineskip}
+#+LaTeX: \vspace{-.6\baselineskip}
 - \alert{Vous voyez ce que Varenne veut dire par le traitement spécifique du détail?}
 #+LaTeX: \hfill{\scriptsize\url{http://images.math.cnrs.fr/Coq-et-caracteres.html}}
 # http://research.microsoft.com/en-us/news/features/gonthierproof-101112.aspx
@@ -288,6 +292,7 @@
 - Impact of Informatics on Sciences \gg Impact of Computers
   - Biologists see the genom as a Code
   - Lawyers (should) write unambiguous laws, that is, algorithmic laws
+- \structure{Conclusion:} \alert{Computer Science has an important heritage from Enginering} 
 ** Computational Science
 *** Computational Science
 #+BEGIN_LaTeX
@@ -555,13 +560,15 @@
 \pause
 #+END_LaTeX
 **** Conclusions
-- Informatics = Mixup of Maths, Engineering and Natural Science. 
-- \structure{+major revolution}: ever heard of experimental maths? or experimental history?
-#+LaTeX: \vspace{-.3\baselineskip}
+- \structure{Major revolution}: ever heard of experimental maths? or experimental history?
 - No "Good Model". There is only models more or less adapted to the study
-- \structure{Open Science:} Ensuring the Experimental Reproducibility
 #+LaTeX: \vspace{-.3\baselineskip}
-- \alert{Computer Scientists are very bad in Computational Science!}\\
+- \structure{Open Science:} Ensuring the Experimental Reproducibility,
+  as in Natural Science
+- \structure{Conclusion 1:} Computer Science has an heritage in Natural Science\\
+  \small(also in Cognitive Science and IA and other parts of CS)\normalsize
+#+LaTeX: \vspace{-.3\baselineskip}
+- \structure{Conclusion 2:} \alert{Computer Scientists are very bad in Computational Science!}\\
   But things slowly improve, so get ready! \alert{\bf\large Learn programming! \normalsize Now!}
 * Crash course on the Scala syntax
 *** Crash Course on Scala
@@ -835,16 +842,16 @@ Hello, friends
   \begin{columns}
     \begin{column}{.80\linewidth}
       \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single]
-        scala > val l0 = Nil // the empty list
+        scala> val l0 = Nil // the empty list
         res1: scala.collection immutable.Nil.type = List ()
 
-        scala > val l = 1 :: 2 :: Nil   // :: is pronounced " cons "
+        scala> val l = 1 :: 2 :: Nil   // :: is pronounced " cons "
         l: List[Int] = List (1 , 2)
 
-        scala > val m = List (3 , 4 , 5)
+        scala> val m = List (3 , 4 , 5)
         m: List[Int] = List (3 , 4 , 5)
 
-        scala > l ::: m
+        scala> l ::: m
         res2: List[Int] = List (1 , 2 , 3 , 4 , 5)      
       \end{Verbatim}
     \end{column}
@@ -876,13 +883,13 @@ Hello, friends
   \begin{columns}
     \begin{column}{.80\linewidth}
       \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single]
-        scala > val a = Array (1 ,2 ,3 ,4)
+        scala> val a = Array (1 ,2 ,3 ,4)
         a: Array[Int] = Array (1 , 2 , 3 , 4)
 
-        scala > a(3) = 100
+        scala> a(3) = 100
 
-        scala > a
-        res2 : Array [ Int ] = Array (1 , 2 , 3 , 100)
+        scala> a
+        res1: Array [ Int ] = Array (1 , 2 , 3 , 100)
       \end{Verbatim}
     \end{column}
   \end{columns}
@@ -896,7 +903,7 @@ Hello, friends
   \end{block}
     \vspace{-\baselineskip}
   \begin{columns}
-    \begin{column}{.95\linewidth}
+    \begin{column}{.9\linewidth}
       \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single]
         scala> val a = List(Array(1,2,3), Array(4,5), Array(6))
         a: List[Array[Int]] = List(Array(1, 2, 3), Array(4, 5), Array(6))
@@ -904,7 +911,7 @@ Hello, friends
         scala> a(0)(0) = 1000
 
         scala> a
-        res1: List[Array[Int]] = List(Array(1000, 2, 3), Array(4, 5), Array(6))
+        res2: List[Array[Int]] = List(Array(1000, 2, 3), Array(4, 5), Array(6))
 
         scala> a(0) = Array(1,2,3)
         <console>:12: error: value update is not a member of List[Array[Int]]
@@ -939,7 +946,7 @@ Hello, friends
         4
         res4:scala.collection.immutable.IndexedSeq[Int] = Vector (2 , 4 )
 
-        scala > for { x <- List (1 ,2 ,3); y <- List (4 ,5)) } yield x * y
+        scala> for { x <- List (1 ,2 ,3); y <- List (4 ,5)) } yield x * y
         res5: List[Int] = List (4 , 5 , 8 , 10 , 12 , 15)
       \end{Verbatim}
     \end{column}
@@ -1011,7 +1018,7 @@ Hello, friends
   \end{block}
 \end{frame}
 #+END_LaTeX
-** Biblio
+* Bibliography
 *** More Information on Scala
 \vspace{-\baselineskip}\null\hfill
 \includegraphics[width=.3\linewidth]{img/Programming_in_scala.png}
@@ -1022,3 +1029,41 @@ Hello, friends
 \bigskip
 #+LaTeX: \centerline{\includegraphics[width=.5\linewidth]{img/scala-lang.png}}
 #+LaTeX: \centerline{\url{http://scala-lang.org}}
+* Conclusion
+*** Conclusion
+**** Computer Science and Informatics
+- \alert{\bf Science of Abstraction:} building hierarchies of symbols and
+  concepts\\
+  Programming computers: surface activity, but the easiest to practice
+  with
+- \structure{Computational Sciences}: simulation as third pilar \small(+ observation &
+  theory)\normalsize
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.65\linewidth}
+    \begin{block}{The Historical Heritages of Computer Science}
+      \begin{itemize}
+      \item \structure{Maths}: proves necessary facts
+      \item \structure{Natural Sciences}: tests contingent facts
+      \item \structure{Engineering}: solves problems
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{.25\linewidth}
+    \includegraphics[width=\linewidth]{img/heritages.pdf}
+  \end{column}
+  \begin{column}{.06\linewidth}
+    ~
+  \end{column}
+\end{columns}
+\medskip
+\concept{Programming complex systems is the core of the discipline}
+
+\centerline{\small(That's the topic of this course :)}
+\vspace{-.3\baselineskip}
+#+END_LaTeX
+
+
+**** Scala
+- Nice little language, that turns out to be a multi-paradigm beauty (beast)
+- That's not perfect either, but we will use it in this course
