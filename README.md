@@ -1,7 +1,9 @@
 # System Programming with Scala
 
 This repository contains the teaching material that I use for my
-lectures on System Programming at ENS Rennes.
+lectures on System Programming at [ENS Rennes](http://ens-rennes.fr/). 
+This is a undergrad lecture, introductionnary on scala (but not on
+programming).
 
 If you are a student of ENS Rennes, you will not find any solution to
 the exercises. You should not read the material before the lectures to
