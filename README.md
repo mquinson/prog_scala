@@ -1,4 +1,4 @@
-# Lectures **System Programming with Scala**
+# System Programming with Scala
 
 This repository contains the teaching material that I use for my
 lectures on System Programming at ENS Rennes.
