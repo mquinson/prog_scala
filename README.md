@@ -24,7 +24,8 @@ your help is welcome to improve the material. Pull requests welcome ;)
 - *Practical 1: [First steps with Scala on the PLM](https://plm.telecomnancy.univ-lorraine.fr/#/ui/lessons/recursion.hanoi/).*
 
   We use the lesson on Hanoï Towers of [the PLM](https://github.com/BuggleInc/PLM) 
-  to experiment with the Scala syntax.
+  to experiment with the Scala syntax. Don't forget to switch to
+  Scala with the upper right menu!
 
 - *Lecture 2: [Dealing with Complexity](https://github.com/mquinson/prog_scala/raw/master/Lecture2/scala_lect2.pdf).*
 
