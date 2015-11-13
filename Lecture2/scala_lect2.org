@@ -1,0 +1,1289 @@
+* Header
+
+#+BIND: org-latex-title-command ""
+
+#+TAGS: noexport(n)
+#+LaTeX_CLASS: beamer
+#+startup: indent
+#+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,presentation]
+# non #+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,handout]
+#+OPTIONS:   H:3 skip:nil num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+startup: beamer
+#+LATEX_HEADER: \usedescriptionitemofwidthas{bl}
+#+LATEX_HEADER: \usepackage{ifthen,figlatex,amsmath,amstext}
+#+LATEX_HEADER: \usepackage{boxedminipage,xspace,multicol,multirow,pdfpages}
+#+LATEX_HEADER: \usetheme{Emptty3}
+#+LATEX_HEADER: \usepackage{pgf,tikz,color}
+#+LATEX_HEADER: \usetikzlibrary{decorations.pathmorphing,backgrounds,fit,arrows}
+#+LATEX_HEADER: \usetikzlibrary{decorations.pathreplacing}
+#+LATEX_HEADER: \usetikzlibrary{shapes}
+#+LATEX_HEADER: \usetikzlibrary{positioning}
+#+LATEX_HEADER: \usetikzlibrary{arrows,automata}
+#+LATEX_HEADER: \usetikzlibrary{patterns}
+#+LATEX_HEADER: \usepackage{pgf-umlcd}
+
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \definecolor{dhscodebg}{rgb}{0.95,0.95,0.95}
+#+LATEX_HEADER: \newminted[scala]{hs}{autogobble, tabsize=4, fontsize=\footnotesize, bgcolor=dhscodebg}
+
+#+LATEX_HEADER: \newcommand<>{\green}[1]{{\color#2[rgb]{.5,.85,.5}#1}}
+#+LATEX_HEADER: \newcommand<>{\magenta}[1]{{\color#2[rgb]{.8,.0,.8}#1}}
+#+LATEX_HEADER: \newcommand<>{\blue}[1]{{\color#2[rgb]{.5,.5,1}#1}}
+#+LATEX_HEADER: \newcommand<>{\red}[1]{{\color#2[rgb]{1,.5,.5}#1}}
+#+LATEX_HEADER: \newcommand<>{\black}[1]{{\color#2[rgb]{0,0,0}#1}}
+
+#+LATEX_HEADER: \newsavebox{\rsbox}
+
+#+LATEX_HEADER: \def\shorttitle{Computer Programming with Scala}
+#+LATEX_HEADER:   \newcommand{\HERE}[2]{\underline{\bf\hyperlink{#2}{#1}}}
+#+LATEX_HEADER:   \newcommand{\THERE}[2]{\hyperlink{#2}{#1}}
+
+#+latex: \thispagestyle{empty}
+#+BEGIN_LaTeX
+\begin{frame}{}
+  \thispagestyle{empty}
+  \centering\null\vfill
+  \structure{ \LARGE Computer Programming with Scala}
+  \\[.5\baselineskip]
+
+  \structure{ \large Week 2: Dealing with Complexity (OOP)}
+  \\[2\baselineskip]
+  Martin Quinson\\
+  
+  {\footnotesize November 2015}\\[3.5\baselineskip]
+  \includegraphics[scale=.7]{img/logo-ens.pdf}\\[-3\baselineskip]
+  \vfill
+\end{frame}
+#+END_LaTeX
+#+LaTeX: \newcommand{\Smiley}{{\color{darkgreen}\smiley}}
+
+* Introduction
+#+BEGIN_LaTeX
+  \renewcommand{\footlineSubTitle}{
+    \HERE{Introduction}{sec:intro}~~~~%
+    \THERE{OOP:~Basics}{sec:basics},~%
+    \THERE{Howto}{sec:howto},~%
+    \THERE{Inheritance}{sec:inherit},~%
+    \THERE{Traits}{sec:traits}~~~~%
+    \THERE{FP}{sec:fp}~~~%
+    \THERE{CC}{sec:cc}
+  }\label{sec:intro}
+#+END_LaTeX
+*** Remember Last Week
+**** Computer Science and Informatics
+- \alert{\bf Science of Abstraction:} building hierarchies of symbols and
+  concepts\\
+  Programming computers: surface activity, but the easiest to practice
+  with
+- \structure{Computational Sciences}: simulation as third pilar \small(with observation &
+  theory)\normalsize
+#+BEGIN_LaTeX
+\pause
+\begin{columns}
+  \begin{column}{.65\linewidth}
+    \begin{block}{The Historical Heritages of Computer Science}
+      \begin{itemize}
+      \item \structure{Maths}: proves necessary facts
+      \item \structure{Natural Sciences}: tests contingent facts
+      \item \structure{Engineering}: solves problems
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{.25\linewidth}
+    \includegraphics[width=\linewidth]{img/heritages.pdf}
+  \end{column}
+  \begin{column}{.06\linewidth}
+    ~
+  \end{column}
+\end{columns}
+\medskip
+\concept{Programming Complex Systems is at the core of the discipline}
+
+\centerline{\small(That's the topic of this course :)}
+\vspace{-.3\baselineskip}
+\pause
+#+END_LaTeX
+
+
+**** Scala: \color{black}\normalsize Nice little language, that turns out to be a multi-paradigm beauty (beast?)
+#+LaTeX: \bigskip\pause
+#+LaTeX: \centerline{\framebox{\large This week: \alert{How to cope with complexity in programs?}}}
+
+*** What is the \alert{Right Solution} for my Problem?
+#+LaTeX: \vspace{-.5\baselineskip}
+- The \structure{Correct} one: provides the right answer
+- The \structure{Efficient} one: fast, use little memory, but also: fast write
+- The \structure{Simple} one: KISS! (acronym for \textit{keep it simple, silly})
+#+LaTeX: \pause
+**** Real Problems ain't easy
+- They are \structure{complex:} composed of several interacting entities
+- They are \structure{dynamic:} the specification evolves with the
+  understanding
+
+#+LaTeX: \centerline{\includegraphics[width=.9\linewidth]{img/project-specification.png}}
+
+#+LaTeX: \centerline{\alert{Turning the obvious into the useful} is a living definition of the word \alert{\it frustration}.}
+#+LaTeX:    \vspace{-\baselineskip}\null\hfill\small Alan J. Perlis~~~\normalsize
+*** Dealing with Complexity: Reductionism
+
+/Divide each difficulty into as many parts as is feasible and
+necessary to resolve it./
+
+\vspace{-.7\baselineskip}\small\null\hfill -- René Descartes
+(1596-1650)\normalsize
+
+\bigskip
+
+**** Composite Structure: \normalsize\alert{Software System composed of manageable pieces}
+- The smaller the component, the simpler it is \Smiley
+- The more parts, the more possible interactions \Frownie
+
+#+LaTeX: \pause
+#+LaTeX: \bigskip
+#+LaTeX: \concept{The Complexity Balance is important!}
+
+**** Good Composite Systems?
+- Each component has a carefully specified function
+- Components are easily integrated together
+- \structure{Example:} Audio speakers easily connected to the amplifier
+*** Bad Composite Systems: Rube Goldberg Machines
+#+LaTeX: \centerline{\includegraphics[width=.9\linewidth]{fig/algo_rube-localtaxes.fig}}
+- Utterly complex interactions to reach the point
+- No definitive rule to avoid bad designs. Only bad smells.
+*** The Rube Goldberg's Toothpaste Dispenser
+#+LaTeX:   \centerline{\includegraphics[width=.7\linewidth]{fig/algo_rube-toothpaste.fig}}
+- Such \textbf{over engineered} solutions should obviously remain
+  jokes
+- \structure{Right level of abstraction:} focus on relevant properties
+- \structure{Right composition:} focus on relevant components, that
+  are easily integrated
+* OOP Basics
+#+BEGIN_LaTeX
+  \renewcommand{\footlineSubTitle}{
+    \THERE{Introduction}{sec:intro}~~~~%
+    OOP:~\HERE{Basics}{sec:basics},~%
+    \THERE{Howto}{sec:howto},~%
+    \THERE{Inheritance}{sec:inherit},~%
+    \THERE{Traits}{sec:traits}~~~~%
+    \THERE{FP}{sec:fp}~~~%
+    \THERE{CC}{sec:cc}
+  }\label{sec:basics}
+#+END_LaTeX
+*** First OOP Principle: \alert{Object Encapsulation} 
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+- Group things that go together. Example: (x,y) of the point
+- Give meaning to raw data. Example: an accumulator is (more than) an
+  integer
+
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.4\linewidth}
+    \begin{scala}
+      class Checksum {
+        var sum = 0
+      }
+      val acc1 = new Checksum
+      val acc2 = new Checksum
+    \end{scala}
+  \end{column}
+  \begin{column}{.4\linewidth}
+    \includegraphics[width=\linewidth]{img/code-acc-A.pdf}
+  \end{column}
+\end{columns}
+\bigskip\bigskip
+\pause
+#+END_LaTeX
+
+- You can change the value of the content
+#+BEGIN_LaTeX
+\vspace{-\baselineskip}
+\begin{columns}
+  \begin{column}{.4\linewidth}
+    \begin{scala}
+      acc1.sum = 3
+    \end{scala}
+  \end{column}
+  \begin{column}{.4\linewidth}
+    \includegraphics[width=\linewidth]{img/code-acc-B.pdf}
+  \end{column}
+\end{columns}
+\pause
+#+END_LaTeX
+
+- You still cannot change the \structure{\tt val}ue itself
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.55\linewidth}
+    \begin{scala}
+      scala> acc1 = new Checksum
+      <console>:12: error: reassignment to val
+    \end{scala}
+  \end{column}
+  \begin{column}{.2\linewidth}
+      ~
+  \end{column}
+\end{columns}
+#+END_LaTeX
+
+*** More OOP Syntax
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+#+BEGIN_LaTeX
+\vspace{-\baselineskip}
+\begin{columns}[t]
+  \begin{column}{.4\linewidth}
+    \begin{block}{First version}
+      \medskip
+      \begin{scala}
+        class Checksum {
+          var sum = 0
+          def add(b: Int): Unit = {
+            sum += b
+          }
+          def checksum(): Int = {
+            return ~ (sum & 0xFF) + 1
+          }
+        }
+      \end{scala}
+      \begin{itemize}
+      \item Each Checksum object:\\
+        1 variable + 2 methods
+      \end{itemize}
+    \end{block}
+    \begin{scala}
+      scala> val acc = new Checksum
+      scala> acc.add(346634554)
+      scala> println(acc.checksum)
+      -58
+    \end{scala}
+  \end{column}
+  \begin{column}{.55\linewidth}
+    \begin{block}<2->{Better version: less sugar}
+      \medskip
+      \begin{scala}
+        class Checksum {
+          var sum = 0
+          def add(b: Int): Unit = sum += b
+          def checksum(): Int = ~(sum & 0xFF) + 1
+        }
+      \end{scala}
+    \end{block}
+
+    \bigskip\bigskip
+    \begin{block}<3->{Even better version: hide your data}
+      \medskip
+      \begin{scala}
+        class Checksum {
+          private var sum = 0
+          def add(b: Int): Unit = sum += b
+          def checksum(): Int = ~(sum & 0xFF) + 1
+        }
+      \end{scala}
+    \end{block}
+  \end{column}
+\end{columns}
+
+\begin{block}<3->{The \alert{private} keyword \color{black}\normalsize hides class content from the outer world}
+  \medskip
+  \begin{scala}
+    scala> acc.sum = 3
+    <console>:13: error: variable sum in class Checksum cannot be accessed in Checksum
+  \end{scala}  
+\end{block}
+#+END_LaTeX
+*** Some OOP Vocabulary
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.54\linewidth}
+    \begin{scala}
+        class Checksum {
+          private var sum = 0
+          def add(b: Int): Unit = sum += b
+          def checksum(): Int = ~(sum & 0xFF) + 1
+        }
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+- \structure{\tt sum}: \alert{field} or \alert{member}
+- \structure{\tt add}: \alert{procedure} (does not return a value)
+- \structure{\tt checksum}: \alert{method} (returns a value)
+
+#+BEGIN_LaTeX
+\pause
+\begin{columns}
+  \begin{column}{.3\linewidth}
+    \begin{scala}
+      acc.add(346634554)
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+- The whole is a \alert{method call}
+- \structure{\tt 346634554}: method \alert{parameter} (or explicit parameter)
+- \structure{\tt acc}: method call \alert{receiver} (or implicit
+  parameter)
+
+\medskip\pause
+- \alert{Public Interface:} what you can do from outside
+- \alert{Class:} type of object of acc
+- \alert{Instance:} one of the Checksums' object
+
+**** Don't mix Class vs. Instance
+- It's /Concept/ vs. /Object/
+- e.g.: /Car model/ vs. /actual car/ or to /Human being/ vs. /an individual/
+*** Reducing the Syntaxic Sugar further
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+- Scala allows to omit the . and the ()
+#+BEGIN_LaTeX
+\begin{columns} 
+  \begin{column}{.1\linewidth}
+    ~
+  \end{column}
+  \begin{column}{.26\linewidth}
+    \begin{scala}
+      acc.add(346634554)
+    \end{scala}
+  \end{column}
+  \begin{column}{.1\linewidth}
+    becomes
+  \end{column}
+  \begin{column}{.26\linewidth}
+    \begin{scala}
+      acc add 346634554
+    \end{scala}
+  \end{column}
+  \begin{column}{.1\linewidth}
+    ~
+  \end{column}
+\end{columns}
+\bigskip\bigskip\pause
+#+END_LaTeX
+- This is particularly cool if you define a method called +
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.6\linewidth}
+    \begin{scala}
+      class Checksum {
+        private var sum = 0
+        def +(b: Int): Unit = sum += b
+        def checksum(): Int = ~(sum & 0xFF) + 1
+      }
+      val acc = new Checksum
+      acc + 346634554    // nice, isn't it?
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+*** Singletons: When you need only one instance 
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.6\linewidth}
+    \begin{scala}
+      object checksum {
+        private var sum = 0
+        def +(b: Int): Unit = sum += b
+        def checksum(): Int = ~(sum & 0xFF) + 1
+      }
+     
+      checksum + 346634554
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+\bigskip\bigskip
+
+- You can directly use checksum as an instance of the class
+- You cannot create several instances
+
+*** Functional Objects: objects with no mutable state
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+- \texttt{sum} is a variable, so \texttt{Checksum}s may change without notice
+- \alert{Side effects} $\leadsto$ harder to reason about the object (particularly if multi-threaded)
+#+BEGIN_LaTeX
+\pause
+\begin{columns}
+  \begin{column}{.45\linewidth}
+    \begin{scala}
+      class Rational(n: Int, d: Int) {
+        println("Created "+ n +"/"+ d)
+      }      
+    \end{scala}
+  \end{column}
+  \begin{column}{.45\linewidth}
+    \begin{scala}
+      scala> new Rational(1, 2)
+      Created 1/2
+      res0: Rational = Rational@424c0bc4
+    \end{scala}
+\end{column}
+\end{columns}
+\begin{itemize}
+\item \structure{Problem:} \texttt{Rational@424c0bc4} is neither nice looking nor informative
+\end{itemize}
+\medskip\pause
+#+END_LaTeX
+**** Redefining the \texttt{toString()} method
+\medskip
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.45\linewidth}
+    \begin{scala}
+      class Rational(n: Int, d: Int) {
+        override def toString() = n+"/"+d
+      }      
+    \end{scala}
+  \end{column}
+  \begin{column}{.45\linewidth}
+    \begin{scala}
+      scala> new Rational(1, 2)
+      res0: Rational = 1/2
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+- Notice the \texttt{override} keyword, because \texttt{toString()} is
+  redefined
+\pause
+**** Checking preconditions
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.45\linewidth}
+    \begin{scala}
+      scala> new Rational(5, 0)
+      res0: Rational = 5/0
+    \end{scala}
+    \begin{itemize}
+    \item We want to forbid this
+    \end{itemize}
+  \end{column}
+  \pause
+  \begin{column}{.45\linewidth}
+    \begin{scala}
+      class Rational(n: Int, d: Int) {
+        require(d != 0)
+        override def toString() = n+"/"+d
+      }      
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+- \texttt{new Rational(5,0)} will now fail with an \texttt{IllegalArgumentException}
+*** Adding methods to the \texttt{Rational} class
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+#+BEGIN_LaTeX
+\smallskip
+\begin{columns}
+  \begin{column}{.46\linewidth}
+    \begin{scala}
+      class Rational(n: Int, d: Int) {
+        require(d != 0)
+        override def toString() = n+"/"+d
+        def *(that: Rational): Rational =
+          new Rational(
+            n * that.n, d * that.d)
+      }      
+    \end{scala}
+  \end{column}
+  \pause
+  \begin{column}{.54\linewidth}
+    \concept{Compilation error}
+
+    \smallskip
+    \begin{scala}
+      error: value d is not a member of Rational
+    \end{scala}
+    \bigskip
+    \begin{itemize}
+    \item Indeed, d is not a field of Rational\\
+          (that's a constructor parameter)
+    \end{itemize}
+  \end{column}
+\end{columns}
+\pause
+#+END_LaTeX
+**** Second try
+#+BEGIN_LaTeX
+\smallskip
+\begin{columns}
+  \begin{column}{.49\linewidth}
+    \begin{scala}
+      class Rational(n: Int, d: Int) {
+        require(d != 0)
+        val num: Int = n
+        val den: Int = d
+        override def toString() = num+"/"+den
+        def *(that: Rational): Rational =
+          new Rational(
+            this.num * that.num,
+            this.den * that.den
+          )
+      }      
+    \end{scala}
+  \end{column}
+  \begin{column}{.51\linewidth}
+    \begin{scala}
+      scala> val oneHalf = new Rational(1, 2)
+      oneHalf: Rational = 1/2
+
+      scala> val twoThirds = new Rational(2,3)
+      twoThirds: Rational = 2/3
+
+      scala> oneHalf * twoThirds
+      res0: Rational = 2/6
+    \end{scala}
+    \begin{itemize}
+    \item Much better looking.
+    \item (\structure{\tt val}s don't need to be private)
+    \item (\structure{\tt this}: current object; \texttt{that}: param)
+    \end{itemize}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+*** More flesh to  the \texttt{Rational} class
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** Auxiliary Constructors
+#+BEGIN_LaTeX
+\vspace{-\baselineskip}
+\begin{columns}[t]
+  \begin{column}{.45\linewidth}
+    \begin{scala}
+      scala> val five = new Rational(5)
+      five: Rational = 5/1
+    \end{scala}
+  \end{column}
+  \begin{column}{.51\linewidth}
+    \begin{scala}
+      class Rational(n: Int, d: Int) {
+        require(d != 0)
+        val num: Int = n
+        val den: Int = d
+        // auxiliary constructor
+        def this(n: Int) = this(n, 1) 
+
+        override def toString() = num+"/"+den
+        def *(that: Rational): Rational =
+          new Rational(this.num * that.num, 
+                       this.den * that.den)
+      }      
+    \end{scala}
+  \end{column}
+\end{columns}
+\pause
+#+END_LaTeX
+**** Private Fields and Methods
+#+BEGIN_LaTeX
+\smallskip
+\begin{columns}[t]
+  \begin{column}{.45\linewidth}
+    \begin{scala}
+      scala> new Rational(66,42)
+      res0: Rational = 11/7
+    \end{scala}
+  \end{column}
+  \begin{column}{.51\linewidth}
+    \begin{scala}
+      class Rational(n: Int, d: Int) {
+        require(d != 0)
+        private val g = gcd(n.abs,d.abs)
+        val num: Int = n / g
+        val den: Int = d / g
+        ...
+        private def gcd(a: Int, b: Int): Int =
+          if (b == 0) a else gcd(b, a % b)
+      }      
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+*** Mixing \texttt{Rational}s and \texttt{Int}egers
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+#+BEGIN_LaTeX
+\vspace{-.7\baselineskip}
+\begin{block}{\visible<2->{First try}}
+  \vspace{-.8\baselineskip}
+  \begin{columns}[t]
+    \begin{column}{.41\linewidth}
+      \begin{scala}
+        scala> val x = new Rational(2/3)
+        x: Rational = 2/3
+        
+        scala> x * 2
+        res0: Rational = 4/3
+      \end{scala}      
+    \end{column}
+    \begin{column}{.56\linewidth}
+      \begin{scala}
+        class Rational(n: Int, d: Int) {
+          ...
+          def *(that: Rational): Rational =
+            new Rational(this.num * that.num, 
+                         this.den * that.den)
+          def *(that: Int): Rational =
+            new Rational(this * that.num, this.den)
+        }      
+      \end{scala}
+    \end{column}
+  \end{columns}
+\end{block}
+\pause
+\begin{columns}[t]
+  \begin{column}{.65\linewidth}
+    \begin{scala}
+      scala> 2 * x
+      error: overloaded method value * with alternatives: 
+       (x: Double)Double <and>
+       (x: Float)Float <and>
+       (x: Long)Long <and>
+       (x: Int)Int <and>
+       (x: Char)Int <and>
+       (x: Short)Int <and>
+       (x: Byte)Int
+      cannot be applied to (Rational)
+    \end{scala}
+  \end{column}
+  \begin{column}{.3\linewidth}
+    Indeed, no method\\ \null~~*(x: Rational) \\in class Int
+  \end{column}
+\end{columns}
+\pause
+\begin{block}{Second try}
+  \begin{columns}
+    \begin{column}{.65\linewidth}
+      \begin{scala}
+        implicit def intToRational(x: Int) = new Rational(x)
+      \end{scala}
+    \end{column}
+    \begin{column}{.3\linewidth}
+      \begin{scala}
+        scala> 2 * x
+        res0: Rational = 4/3
+    \end{scala}
+    \end{column}
+  \end{columns}
+\end{block}
+#+END_LaTeX
+- Removes much of the Caml sugar (!), at the price of implicit actions (F34R)
+* OOP Howto
+#+BEGIN_LaTeX
+  \renewcommand{\footlineSubTitle}{
+    \THERE{Introduction}{sec:intro}~~~~%
+    \THERE{OOP:~Basics}{sec:basics},~%
+    \HERE{Howto}{sec:howto},~%
+    \THERE{Inheritance}{sec:inherit},~%
+    \THERE{Traits}{sec:traits}~~~~%
+    \THERE{FP}{sec:fp}~~~%
+    \THERE{CC}{sec:cc}
+  }\label{sec:howto}
+#+END_LaTeX
+*** Designing a good OOP Composition
+#+BEGIN_LaTeX
+  \begin{block}{Abstraction}
+    \begin{itemize}
+    \item Dealing with components and interactions without worrying about details\\
+      {\small Not ``vague'' or ``imprecise'', but focused on few relevant properties}
+    \item Eliminate  the irrelevant and amplify the essential
+    \item Capture commonality between different things
+    \end{itemize}
+  \end{block}
+
+  \begin{columns}
+    \begin{column}{.3\linewidth}
+      \includegraphics[width=\linewidth]{img/algo_abstracting_trees.png}      
+    \end{column}
+
+    \begin{column}{.7\linewidth}
+      \begin{block}<2->{Abstraction in programming}
+        \begin{itemize}
+        \item Think about what your components should do before
+        \item Abstract their \textbf{interface} before coding
+
+        \visible<2->{
+        \centerline{\includegraphics[scale=.8]{fig/algo_contract.fig}}~~~~~~~~~}
+        \item Show your interface, hide your implementation
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+#+END_LaTeX
+*** Good Property: Cohesion
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+\concept{A class = A concept}
+\bigskip
+- Good cohesion if all parts of Public Interface are related to the concept
+- Counter-example:
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.8\linewidth}
+    \begin{scala}
+      class CashRegister {
+        def enterPayment(dollars:Int, quarters:Int, dimes:Int, 
+                         nickels:Int, pennies:Int):Unit = ...
+        val NICKEL_VALUE = 0.05
+        val DIME_VALUE = 0.1
+        val QUARTER_VALUE = 0.25        
+      }
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+- There is two concepts: \structure{\tt CashRegister} and \structure{\tt Coin}s
+- There must be (at least) two classes
+*** Coupling
+- A class /depends/ on another if it utilizes it
+  - CashRegister depends on Coin, Coin does not depend on CashRegister
+- \alert{Low Coupling} \small(few inter-class dependencies)\normalsize{} better than 
+  \alert{Tight Coupling}
+  - Thinking of components in isolation is easier
+#+LaTeX: \pause
+
+**** Representing the coupling with boxes
+#+LaTeX: \smallskip
+#+LaTeX: \includegraphics[width=\linewidth]{img/coupling.png}
+- Cycles in coupling diagrams would have a \textbf{bad smell}
+- UML is the standard way of doing it (but don't get too picky!)
+
+* Polymorphism
+#+BEGIN_LaTeX
+  \renewcommand{\footlineSubTitle}{
+    \THERE{Introduction}{sec:intro}~~~~%
+    \THERE{OOP:~Basics}{sec:basics},~%
+    \THERE{Howto}{sec:howto},~%
+    \HERE{Inheritance}{sec:inherit},~%
+    \THERE{Traits}{sec:traits}~~~~%
+    \THERE{FP}{sec:fp}~~~%
+    \THERE{CC}{sec:cc}
+  }\label{sec:inherit}
+#+END_LaTeX
+*** Beyond Encapsulation
+- A class or object can be seen as a "component" with values and operations
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.2\linewidth}
+    \begin{tikzpicture}
+      \begin{class}[scale=.75,text width=\linewidth]{Vehicule}{0,0}
+        \attribute{maker: String}
+
+        \operation{start(): Unit}
+      \end{class}
+    \end{tikzpicture}
+  \end{column}
+\end{columns}
+\bigskip
+#+END_LaTeX
+- You can build other "components" for other classes
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.2\linewidth}
+    \begin{tikzpicture}
+      \begin{class}[scale=.75,text width=\linewidth]{Vehicule}{0,0}
+        \attribute{maker: String}
+
+        \operation{start(): Unit}
+      \end{class}
+    \end{tikzpicture}
+  \end{column}
+  \begin{column}{.3\linewidth}
+    \begin{tikzpicture}
+      \begin{class}[scale=.75,text width=.66\linewidth]{Tire}{0,0}
+        \attribute{diameter: Float}
+
+        \operation{inflate(): Unit}
+      \end{class}
+    \end{tikzpicture}
+  \end{column}
+\end{columns}
+\bigskip
+\begin{columns}
+  \begin{column}{.2\linewidth}
+    \begin{tikzpicture}
+      \begin{class}[scale=.75,text width=\linewidth]{Driver}{0,0}
+        \attribute{name: String}
+
+        \operation{sayHello(): Unit}
+      \end{class}
+    \end{tikzpicture}
+  \end{column}
+  \begin{column}{.3\linewidth}
+    \begin{tikzpicture}
+      \begin{class}[scale=.75,text width=\linewidth]{Truck}{0,0}
+        \attribute{axleCount: Int}
+
+        \operation{harness(t: Tow): Unit}
+      \end{class}
+    \end{tikzpicture}
+  \end{column}
+\end{columns}
+\bigskip
+#+END_LaTeX
+- To combine them, you can either go for \alert{association} or
+  \alert{inheritance}
+*** Class Association and Inheritance
+**** Reciprocal Association
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.6\linewidth}
+    \begin{itemize}
+    \item \alert{A "have some" B}
+    \item B also "have some" A
+    \item You can specify the amount of A it has\\
+      (but  rarely need to) 
+    \end{itemize}
+  \end{column}
+  \begin{column}{.4\linewidth}
+    \resizebox{\linewidth}{!}{
+      \begin{tikzpicture}[scale=.7]
+        \begin{class}[scale=.75,text width=3cm]{Vehicule}{0,0}
+          \attribute{maker: String}
+          \operation{start(): Unit}
+        \end{class}
+        \begin{class}[scale=.75,text width=3cm]{Driver}{5,0}
+          \attribute{name: String}
+          \operation{sayHello(): Unit}
+        \end{class}
+        \association{Vehicule}{1}{}{Driver}{n}{}
+      \end{tikzpicture}    
+    }
+  \end{column}
+\end{columns}
+\smallskip
+#+END_LaTeX
+**** Unidirectional Association
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.6\linewidth}
+    \begin{itemize}
+    \item \alert{A "have some" B}
+    \item but B don't have any A
+    \end{itemize}
+  \end{column}
+  \begin{column}{.4\linewidth}
+    \resizebox{\linewidth}{!}{
+      \begin{tikzpicture}[scale=.7]
+        \begin{class}[scale=.75,text width=3cm]{Vehicule}{0,0}
+          \attribute{maker: String}
+          \operation{start(): Unit}
+        \end{class}
+        \begin{class}[scale=.75,text width=3cm]{Tire}{5,0}
+          \attribute{diameter: Float}
+          \operation{inflate(): Unit}
+        \end{class}
+        \unidirectionalAssociation{Vehicule}{}{}{Tire}{}{}
+      \end{tikzpicture}    
+    }
+  \end{column}
+\end{columns}
+\bigskip
+#+END_LaTeX
+**** Class inheritance
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.6\linewidth}
+    \begin{itemize}
+    \item \alert{A "is a" B}
+    \item (B cannot "be a" A, or A=B)
+    \end{itemize}
+  \end{column}
+  \begin{column}{.4\linewidth}
+    \resizebox{\linewidth}{!}{
+      \begin{tikzpicture}[scale=.75]
+        \begin{class}[scale=.75,text width=3cm]{Vehicule}{5,0}
+          \attribute{maker: String}
+          \operation{start(): Unit}
+        \end{class}
+        \begin{class}[scale=.75,text width=3cm]{Truck}{0,0}
+          \inherit{Vehicule}
+          \attribute{maker: String}
+          \operation{start(): Unit}
+        \end{class}
+      \end{tikzpicture}    
+    }
+  \end{column}
+\end{columns}
+\bigskip
+\centerline{Don't worry if you forget the arrow shape: I always do too}
+#+END_LaTeX
+*** Quizz: Which Design is Preferable?
+#+BEGIN_LaTeX
+\bigskip
+\begin{columns}
+  \begin{column}{.35\linewidth}
+    \resizebox{\linewidth}{!}{
+      \begin{tikzpicture}[scale=.75]
+        \begin{class}[scale=.75,text width=3cm]{Person}{0,0}
+        \end{class}
+        \begin{class}[scale=.75,text width=3cm]{Student}{2,-2}
+          \inherit{Person}
+        \end{class}
+        \begin{class}[scale=.75,text width=3cm]{Prof}{-2,-4}
+          \inherit{Person}
+        \end{class}
+        \begin{class}[scale=.75,text width=3cm]{Lecture}{2,-4}
+        \end{class}
+        \begin{class}[scale=.75,text width=3cm]{Room}{2,-6}
+        \end{class}
+        \association{Student}{}{}{Lecture}{}{}
+        \association{Prof}{}{}{Lecture}{}{}
+        \association{Room}{}{}{Lecture}{}{}
+      \end{tikzpicture}    
+    }
+    
+    \medskip
+    \centerline{\structure{(A)}}
+  \end{column}
+
+  \begin{column}{.45\linewidth}
+    \resizebox{\linewidth}{!}{
+      \begin{tikzpicture}[scale=.75]
+        \begin{class}[scale=.75,text width=3cm]{Person}{4,0}
+        \end{class}
+        \begin{class}[scale=.75,text width=3cm]{Room}{2,2}
+        \end{class}
+        \begin{class}[scale=.75,text width=3cm]{Prof}{-2,2}
+          \inherit{Person}
+        \end{class}
+        \begin{class}[scale=.75,text width=3cm]{Student}{4,4}
+          \inherit{Person}
+        \end{class}
+        \begin{class}[scale=.75,text width=3cm]{Lecture}{-2,4}
+        \end{class}
+
+        \association{Student}{}{}{Room}{}{}
+        \association{Prof}{}{}{Room}{}{}
+        \association{Room}{}{}{Lecture}{}{}
+      \end{tikzpicture}    
+    }
+    
+    \bigskip
+    \bigskip
+    \bigskip
+    \centerline{\structure{(B)}}
+  \end{column}
+\end{columns}
+\bigskip
+\pause
+#+END_LaTeX
+- \structure{Theory} (n) coherent set of concepts allowing to speak of
+  something
+- These boxes quickly get boring, but notation helps thinking about
+  large systems
+\pause
+**** So? What is a /Good Design?/
+- Much of personal taste involved, even if we framed a bit the idea
+- But how would you define  a /Good Proof?/
+*** Association and Inheritance in Scala
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** Association
+- A "has a" B simply means that B is a field of A
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.4\linewidth}
+    \begin{scala}
+      class A {
+        val x: Set[B]
+      }
+    \end{scala}
+  \end{column}
+  \begin{column}{.4\linewidth}
+    \begin{scala}
+      class B {
+        ...
+      }
+    \end{scala}
+  \end{column}
+\end{columns}
+\bigskip
+\pause
+#+END_LaTeX
+**** Inheritance
+- B "is a" A means that B extends A
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.4\linewidth}
+    \begin{scala}
+      class A {
+        ...
+      }
+    \end{scala}
+  \end{column}
+  \begin{column}{.4\linewidth}
+    \begin{scala}
+      class B extends A {
+        ...
+      }
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+- Methods and fields of A are also in B \small (\texttt{toString()} was already in \texttt{Rational})\normalsize
+- That's a very powerful tool to \alert{factorize code and complexity}
+*** Scala Class Diagram
+\includegraphics[width=\linewidth]{img/scala-classes.pdf}
+*** Polymorphism: Factorizing Complexity
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** Overriding content
+- If B extends A, it can \alert{\tt override} (redefine) definitions of A
+#+BEGIN_LaTeX
+\vspace{-.3\baselineskip}
+\begin{columns}
+  \begin{column}{.55\linewidth}
+    \begin{scala}
+      class A {
+        def fun = println("I'm a A")
+      }
+      class B extends A {
+        override def fun = println("I'm a B")
+      }
+    \end{scala}
+  \end{column}
+  \begin{column}{.35\linewidth}
+    \begin{scala}
+      scala> (new A).fun()
+      I'm a A
+
+      scala> (new B).fun()
+      I'm a B
+    \end{scala}
+  \end{column}
+\end{columns}
+\pause
+#+END_LaTeX
+- The code selection depends on the static and dynamic types
+\medskip
+**** Abstract class
+- When a class is only there to factorize code but shouldn't be used directly
+#+BEGIN_LaTeX
+\vspace{-.3\baselineskip}
+\begin{columns}
+  \begin{column}{.4\linewidth}
+    \begin{scala}
+      abstract class Ordered {
+        def <(that:Ordered):Boolean
+        def >(that:Ordered) = 
+                  !(that < this)
+      }
+    \end{scala}
+  \end{column}
+  \begin{column}{.69\linewidth}
+    \begin{itemize}
+    \item You cannot instanciate that class
+    \item The class can contain \textit{undefined def} \\
+       {\small further factorization opportunities}
+    \item Concrete sub-classes must implement them
+    \end{itemize}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+* Traits and Interface
+#+BEGIN_LaTeX
+  \renewcommand{\footlineSubTitle}{
+    \THERE{Introduction}{sec:intro}~~~~%
+    \THERE{OOP:~Basics}{sec:basics},~%
+    \THERE{Howto}{sec:howto},~%
+    \THERE{Inheritance}{sec:inherit},~%
+    \HERE{Traits}{sec:traits}~~~~%
+    \THERE{FP}{sec:fp}~~~%
+    \THERE{CC}{sec:cc}
+  }\label{sec:traits}
+#+END_LaTeX
+*** Multiple Inheritance
+- C++ lets you inherit of several classes, but gets utterly complex if
+  you do
+  - \structure{Diamond Problem:} A inherits of B and C, which both
+    inherit of D
+  - Both B and C override the same method of D. What should A execute?
+- Scala/Java: extend at most one class \small(simplicity at price of missed
+  factorizations)\normalsize
+\pause\medskip
+**** Safe multiple /is-a/: the Java interfaces
+- \structure{Syntax:} $\approx$ abstract classes without code any code (no diamond
+  problem)
+- Enables several implementations of the same interface
+- In practice, abstract classes and interfaces are different:
+  - abstract class to factorize code; interface =  contract between
+    implementer/user
+\pause
+**** Scala Traits
+- Interface providing concrete members / Abstract class with multiple inheritance
+- \structure{Limitation:} Constructor parameters cannot be objects
+- \structure{Diamond Problem Mitigation:} \pause
+  - Right-most Depth-first trait wins -- other method candidates are
+    ignored
+  - Won't work for constructors: calls cannot be eliminated
+  - But thanks to the limitation above, traits have no dynamic
+    constructor
+* Functional Programming
+#+BEGIN_LaTeX
+  \renewcommand{\footlineSubTitle}{
+    \THERE{Introduction}{sec:intro}~~~~%
+    \THERE{OOP:~Basics}{sec:basics},~%
+    \THERE{Howto}{sec:howto},~%
+    \THERE{Inheritance}{sec:inherit},~%
+    \THERE{Traits}{sec:traits}~~~~%
+    \HERE{FP}{sec:fp}~~~%
+    \THERE{CC}{sec:cc}
+  }\label{sec:fp}
+#+END_LaTeX
+*** Dealing with Complexity
+**** Some classical design principles 
+- \structure{Composition}: split problem in simpler
+      sub-problems and compose pieces
+- \structure{Abstraction}: forget about details and focus on
+      important aspects
+**** Object Oriented Programming
+- Data are the central element
+- \structure{Encapsulation:} Divide complexity into manageable units
+- \structure{Heritage:} Factorize behavior between related units
+- \structure{Polymorphism:} Use a specialized unit instead of the
+  expected one
+
+#+LaTeX: \vspace{-.5\baselineskip}
+**** Functional Programming
+- Functions and behaviors are the central elements
+- Usually produces programs that are easier to reason about
+- Somehow harder to write when not  used to
+
+#+LaTeX: \medskip\concept{No holy war needed: Scala has both :)}
+
+*** "/A cat catches a bird and eats it/"
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.15\linewidth}
+    \includegraphics[width=\linewidth]{img/picasso-cat.jpg}
+  \end{column}
+  \begin{column}{.7\linewidth}
+    \large\alert<1>{How would you design/organize/split this code?}
+  \end{column}
+\end{columns}
+\pause
+\begin{columns}
+   \begin{column}{.48\linewidth}
+     \begin{block}{As a OOP programmer}
+       \begin{itemize}
+       \item There is \alert{two nouns: cat and bird}
+       \item Cat has two verbs associated:\\ catch and eat
+       \end{itemize}
+     \end{block}
+     \begin{Verbatim}[gobble=8,fontsize=\footnotesize,frame=single,commandchars=+[\]]
+        class Bird
+        class Cat {
+           def catch(b: Bird): Unit = ...
+           def eat(): Unit = ...
+        }
+        val cat = new Cat
+        val bird = new Bird
+        cat.catch(bird)
+        cat.eat()
+
+     \end{Verbatim}      
+   \end{column}
+   \pause
+   \begin{column}{.52\linewidth}
+     \begin{block}{As a FP programmer}
+       \begin{itemize}
+       \item There is \alert{two verbs: catch and eat}
+       \item They are composed and apply to\\
+         typed values
+       \end{itemize}
+     \end{block}
+     \begin{Verbatim}[gobble=7,fontsize=\footnotesize,frame=single,commandchars=+[\]]
+       trait Cat
+       trait Bird
+       trait Catch
+       trait FullTummy
+       def catch(hunter: Cat, prey: Bird): 
+           Cat with Catch = ...
+       def eat(consumer: Cat with Catch): 
+           Cat with FullTummy = ...
+       val story = (catch _) andThen (eat _)
+       story(new Cat, new Bird)
+     \end{Verbatim}
+   \end{column}
+ \end{columns}
+\vfill\null\hfill\only<1->{\scriptsize Example and Code from \textit{Scala in Depth}}
+#+END_LaTeX
+*** OOP vs. FP
+**** So, do you prefer nouns or verbs? Well, both.
+| \structure{Object-Oriented Programming} | \structure{Functional Programming}     |
+|-----------------------------------------+----------------------------------------|
+| Composition of objects (nouns)          | Composition of functions (verbs)       |
+| Encapsulated stateful interaction       | Deferred side effects                  |
+| Iterative algorithms                    | Recursive algorithms and continuations |
+| Imperative flow                         | Lazy evaluation                        |
+| Explicit Memory Layout (HW-like)        | Pattern matching                       | 
+**** But they seem somehow incompatible ... until Scala
+- Scala is a convincing attempt to mix them
+- Everything is an object (including functions)
+- Best practices: prefer immutable values, even if mutables exist
+- Large OOP systems were introducing FP in Java anyway 
+  \small(with ugly hacks)\normalsize\\
+  Now the language and compiler helps (but still that Frankenstein
+  smell)
+* Conclusion
+#+BEGIN_LaTeX
+  \renewcommand{\footlineSubTitle}{
+    \THERE{Introduction}{sec:intro}~~~~%
+    \THERE{OOP:~Basics}{sec:basics},~%
+    \THERE{Howto}{sec:howto},~%
+    \THERE{Inheritance}{sec:inherit},~%
+    \THERE{Traits}{sec:traits}~~~~%
+    \THERE{FP}{sec:fp}~~~%
+    \HERE{CC}{sec:cc}%
+  }\label{sec:cc}
+#+END_LaTeX
+*** Conclusion
+#+LaTeX: \vspace{-.3\baselineskip}
+**** Computer Science is the \alert{Science of Abstraction}
+- But sorting the concepts require some technics
+- Computer Scientists are engineers terraforming ideas and concepts :)
+#+LaTeX: \vspace{-.3\baselineskip}\pause
+**** Object-Oriented concepts are meant to help
+- Encapsulation and abstraction to design objects; Association to compose them
+- Inheritance to factorize objects; Abstract class to further
+  factorize concepts
+- \structure{Dynamic binding:} complex problem (more to come in practical)
+- Want more factorization while avoiding the Diamond Problem
+  - Traits goes further than Java's interface without the C++ Diamond madness
+
+#+LaTeX: \vspace{-.3\baselineskip}
+**** Functional Programming: orthogonal approach
+- Focuses on verbs instead of nouns
+- Which is best suited depends on the problem (and programmer)
+#+LaTeX: \vspace{-.3\baselineskip}\pause
+**** Scala gives you both OOP and FP
+- Everything is an object (even functions), and you want to use immutable objects
+* Footer
+# Local Variables:
+# eval:    (setq org-latex-listings 'minted)
+# eval:    (setq org-latex-minted-options '(("bgcolor" "Moccasin") ("style" "tango") ("numbers" "left") ("numbersep" "5pt")))
+# eval:    (org-babel-do-load-languages 'org-babel-load-languages '((sh . t) (scala . t) ))
+# eval:    (setq org-confirm-babel-evaluate nil)
+# End:
