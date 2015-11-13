@@ -12,14 +12,29 @@ your help is welcome to improve the material. Pull requests welcome ;)
 
 ## Syllabus
 
-- Lecture 1:
-  [Introduction](https://github.com/mquinson/prog_scala/raw/master/Lecture1/scala_lect1.pdf).
+- *Lecture 1: [Introduction](https://github.com/mquinson/prog_scala/raw/master/Lecture1/scala_lect1.pdf).*
   We first try to motivate the study of systems programming, and
   discuss the philosophy of Computer Science to show that Programming
   large Systems is absolutely central in Computer Science. After this
   (hopefully) motivating introduction, we present the basics of the
   Scala syntax.
 
+- *Practical 1: First steps with Scala on the PLM.*
+
+- *Lecture 2: [Dealing with Complexity](https://github.com/mquinson/prog_scala/raw/master/Lecture2/scala_lect2.pdf).*
+
+  Large systems are inherently complex and dynamic, so we want to
+  design our systems in a way that mitigates this complexity. 
+  
+  We lengthly discuss the Object Oriented Programming approach(OOP),
+  that is the classical reductionist solution to the system
+  complexity. There is no absolute rule about how to build a Good
+  Design (TM), but we present several rules of thumb to avoid horrible
+  designs, at least.
+
+  As a conclusion (and as an appertizer for next week's lecture) we
+  then shortly contrast this OOP approach with the Functional
+  Programming (FP) way of composing complex systems.
 
 ## Compiling the lessons
 
