@@ -13,18 +13,25 @@ your help is welcome to improve the material. Pull requests welcome ;)
 ## Syllabus
 
 - *Lecture 1: [Introduction](https://github.com/mquinson/prog_scala/raw/master/Lecture1/scala_lect1.pdf).*
+
   We first try to motivate the study of systems programming, and
   discuss the philosophy of Computer Science to show that Programming
-  large Systems is absolutely central in Computer Science. After this
-  (hopefully) motivating introduction, we present the basics of the
-  Scala syntax.
+  large Systems is absolutely central in Computer Science. 
+  
+  After this (hopefully) motivating introduction, we present the
+  basics of the Scala syntax.
 
-- *Practical 1: First steps with Scala on the PLM.*
+- *Practical 1: First steps with Scala on the PLM.* 
+
+  We use the
+  [lesson on Hanoï Towers](https://plm.telecomnancy.univ-lorraine.fr/#/ui/lessons/recursion.hanoi/)
+  of [the PLM](https://github.com/BuggleInc/PLM) to experiment with
+  the Scala syntax.
 
 - *Lecture 2: [Dealing with Complexity](https://github.com/mquinson/prog_scala/raw/master/Lecture2/scala_lect2.pdf).*
 
   Large systems are inherently complex and dynamic, so we want to
-  design our systems in a way that mitigates this complexity. 
+  design our systems in a way that mitigates these issues.
   
   We lengthly discuss the Object Oriented Programming approach(OOP),
   that is the classical reductionist solution to the system
