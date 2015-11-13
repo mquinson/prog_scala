@@ -1025,13 +1025,29 @@ Hello, friends
 *** More Information on Scala
 \vspace{-\baselineskip}\null\hfill
 \includegraphics[width=.3\linewidth]{img/Programming_in_scala.png}
-\hfill
-\includegraphics[width=.25\linewidth]{img/Scala_in_depth.png}
+\hfill\includegraphics[width=.25\linewidth]{img/Scala_in_depth.png}
 \hfill\null
 
 \bigskip
-#+LaTeX: \centerline{\includegraphics[width=.5\linewidth]{img/scala-lang.png}}
-#+LaTeX: \centerline{\url{http://scala-lang.org}}
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.35\linewidth}
+    \includegraphics[width=1.1\linewidth]{img/scala-lang.png}    
+  \end{column}
+  \begin{column}{.65\linewidth}
+    \begin{itemize}
+    \item \alert{\url{http://scala-lang.org}}
+    \small
+    \item \url{https://twitter.github.io/scala_school}
+    \item \url{http://www.cs.columbia.edu/~bauer/cs3101-2}
+    \item \url{https://www.irisa.fr/celtique/genet/GEN}
+    \item \url{http://www.loria.fr/~oster/pmwiki/index.php/Main/OOP}
+    \end{itemize}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+
+
 * Conclusion
 *** Conclusion
 **** Computer Science and Informatics
