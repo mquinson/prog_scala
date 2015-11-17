@@ -1,7 +1,7 @@
 // This demonstrates the major Scala Swing functionalities that we need in this project
 
-// Compile with: scalac -cp scala-swing.jar:. FirstTest.scala
-// Then execute with: scala -cp scala-swing.jar:. FirstTest
+// Compile with: scalac -cp scala-swing.jar:. DemoApp.scala
+// Then execute with: scala -cp scala-swing.jar:. DemoApp
 
 // Usage:
 //   - 'i' to add a moving sprite under the mouse
