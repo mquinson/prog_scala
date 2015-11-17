@@ -14,6 +14,7 @@ import scala.swing.event._
 import java.awt.event.{ ActionEvent, ActionListener }
 import java.awt.{ Color, Graphics2D, Point, geom, MouseInfo }
 import javax.swing.{ ImageIcon, Timer }
+import javax.swing.UIManager
 
 // That object is your application
 object DemoApp extends SimpleSwingApplication {
@@ -24,7 +25,12 @@ object DemoApp extends SimpleSwingApplication {
   object state {
     /* records the images that move on screen */
     // This is a (ugly) set of sprites that are animated on screen. A set of objects would be *much* better
-    val icon:ImageIcon = new ImageIcon("img/bee.gif")
+    var icon:ImageIcon = new ImageIcon("img/bee.png") 
+    if (icon.getIconHeight() <= 0) {
+      println("Cannot find the file img/bee.png. Please install it.")
+      icon = UIManager.getLookAndFeelDefaults().get("html.missingImage").asInstanceOf[ImageIcon]
+    }
+    
     val im = icon.getImage( )
     var imagesPos: List[Point] = Nil
     var imagesSpeed: List[Point] = Nil
