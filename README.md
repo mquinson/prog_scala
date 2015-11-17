@@ -1,4 +1,4 @@
-# System Programming with Scala
+# Programming Large Systems with Scala
 
 This repository contains the teaching material that I use for my
 lectures on System Programming at [ENS Rennes](http://ens-rennes.fr/). 
@@ -12,7 +12,7 @@ your help is welcome to improve the material. Pull requests welcome ;)
 
 ## Syllabus
 
-- *Lecture 1: [Introduction](https://github.com/mquinson/prog_scala/raw/master/Lecture1/scala_lect1.pdf).*
+### *Lecture 1: [Introduction](https://github.com/mquinson/prog_scala/raw/master/Lecture1/scala_lect1.pdf).*
 
   We first try to motivate the study of systems programming, and
   discuss the philosophy of Computer Science to show that Programming
@@ -21,13 +21,13 @@ your help is welcome to improve the material. Pull requests welcome ;)
   After this (hopefully) motivating introduction, we present the
   basics of the Scala syntax.
 
-- *Practical 1: [First steps with Scala on the PLM](https://plm.telecomnancy.univ-lorraine.fr/#/ui/lessons/recursion.hanoi/).*
+### *Practical 1: [First steps with Scala on the PLM](https://plm.telecomnancy.univ-lorraine.fr/#/ui/lessons/recursion.hanoi/).*
 
   We use the lesson on Hanoï Towers of [the PLM](https://github.com/BuggleInc/PLM) 
   to experiment with the Scala syntax. Don't forget to switch to
   Scala with the upper right menu!
 
-- *Lecture 2: [Dealing with Complexity](https://github.com/mquinson/prog_scala/raw/master/Lecture2/scala_lect2.pdf).*
+### *Lecture 2: [Dealing with Complexity](https://github.com/mquinson/prog_scala/raw/master/Lecture2/scala_lect2.pdf).*
 
   Large systems are inherently complex and dynamic, so we want to
   design our systems in a way that mitigates these issues.
@@ -42,7 +42,7 @@ your help is welcome to improve the material. Pull requests welcome ;)
   then shortly contrast this OOP approach with the Functional
   Programming (FP) way of composing complex systems.
 
-- *Project: [Ants vs. SomeBees](https://github.com/mquinson/prog_scala/raw/master/Project_Ants/Ants.pdf)*
+### *Project: [Ants vs. SomeBees](https://github.com/mquinson/prog_scala/raw/master/Project_Ants/Ants.pdf)*
 
   In this project, you will implement a [Tower Defense](https://secure.wikimedia.org/wikipedia/en/wiki/Tower_defense) 
   game inspired from the PopCap Games'
@@ -54,7 +54,7 @@ your help is welcome to improve the material. Pull requests welcome ;)
   assignment, but create another repository elsewhere. Please do not
   post any solution to this assignment online.
 
-## Compiling the lessons
+## Compiling the material
 
 Everything is written with org-mode, of emacs. If you are really new
 to this, check the [little introduction](http://people.irisa.fr/Martin.Quinson/Research/Students/Methodo/)
