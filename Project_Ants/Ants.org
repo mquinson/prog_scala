@@ -1,0 +1,383 @@
+#+Title: Ants Vs. SomeBees
+#+OPTIONS:  H:3 skip:nil num:t toc:nil
+#+LaTeX_CLASS: article
+#+LaTeX_CLASS_OPTIONS: [11pt,twocolumn]
+#+LaTeX_HEADER: \usepackage{ensrennes}
+#+LATEX_HEADER: \usepackage{xcolor,float}
+#+LATEX_HEADER: \hypersetup{urlcolor={blue},colorlinks}
+#+LATEX_HEADER: \usepackage{fullpage}
+#+LATEX_HEADER: \renewcommand{\maketitle}{
+#+LATEX_HEADER:   \noindent\null\hfill\begin{minipage}{.65\linewidth} 
+#+LATEX_HEADER:   \centering
+#+LATEX_HEADER:   %\vspace{-1.2\baselineskip}
+#+LATEX_HEADER:   \textbf{\Large Ant vs. SomeBees}\par%
+#+LATEX_HEADER:     Projet de programmation, L3\par
+#+LATEX_HEADER:    {\footnotesize 2015}
+#+LATEX_HEADER:   \end{minipage}\hfill\null
+#+LATEX_HEADER: }
+#+LATEX_HEADER: \thispagestyle{empty}
+#+BEGIN_LaTeX
+  
+#+END_LaTeX
+
+* Introduction
+In this project, you will implement a [[https://secure.wikimedia.org/wikipedia/en/wiki/Tower_defense][Tower Defense]] called Ants
+Vs. SomeBees.  As the ant queen, you populate your colony with the
+bravest ants you can muster. Your ants must protect their queen from
+the evil bees that invade your territory. Irritate the bees enough by
+throwing leaves at them, and they will be vanquished. Fail to pester
+the airborne intruders adequately, and your queen will succumb to the
+bees' wrath. 
+
+This project is highly inspired by an [[http://nifty.stanford.edu/2014/denero-ants-vs-somebees/ants.html][existing assignment]] from John
+DeNero, Tom Magrino and Eric Tzeng (UC Berkeley), which was inspirated
+by the PopCap Games' [[http://www.popcap.com/games/pvz/web][Plants Vs. Zombie]] ®. The current version was
+adapted from the Python programming language to Scala by myself. It it
+provides you with less pre-written code, but gives you much more
+freedom about how to organize your code. Freedom may be disturbing, at
+first;)
+
+** Core Concepts
+A game of Ants Vs. SomeBees consists of a series of turns. In each
+turn, new bees may enter the ant colony. Then, new ants are
+placed. Finally, all insects (ants, then bees) take individual
+actions: bees sting ants, and ants throw leaves at bees. The game ends
+either when a bee reaches the ant queen (you lose), or the entire bee
+flotilla has been vanquished (you win).
+
+*The Colony*. The colony consists of several places that are chained
+together. The /exit/ of each /Place/ leads to another /Place/.
+
+*Placing Ants*. There are two constraints that limit ant
+production. Placing an ant uses up some amount of the colony's food, a
+different amount for each type of ant. Also, only one ant can occupy
+each /Place/.
+
+*Bees*. When it is time to act, a bee either moves to the exit of its
+current Place if no ant blocks its path, or stings an ant that blocks
+its path.
+
+*Ants*. Each type of ant takes a different action and requires a
+different amount of food to place. The two most basic ant types are
+the /HarvesterAnt/, which adds one food to the colony during each
+turn, and the /ThrowerAnt/, which throws a leaf at a bee each turn.
+
+* Logistics
+** Due date and grading
+
+You are requested form teams for two people for this project, with
+(only) one group of three people. Nobody is allowed to work alone. You
+have turn your code before Sunday December 6. at noon. The defenses
+will be organized on Tuesday December 8. instead of the usual
+practical. You will have to turn in your slides on that day. Finally,
+you will have to send your report before Sunday December 13. No late
+submission will be accepted.
+
+** Technical setup
+
+*** scala-swing
+
+This project must be written in Scala, using the Swing library. You
+really should use the scala-swing library, which provides Scala
+wrappers to the main Java Swing classes. You can download the
+mandatory library from [[https://github.com/mquinson/prog_scala/tree/master/jars][this site]]. 
+
+*** Eclipse
+It is advised (although not mandatory) that you use the Eclipse source
+editor for this assignment. On need, download the [[http://scala-ide.org/][Scala IDE]] and
+install it on your machine. Create a new project, and copy the
+scala-swing jar files into its main directory. Open the project
+properties (from the right-click menu), and select to the "Java Build
+Path" entry. In the "Libraries" tab, add the scala-swing jarfile as a
+(non-external) JAR. This should look as follows before you click OK:
+
+[[./scala-swing-jar.png]]
+
+Once done, the following code should open an empty window:
+
+#+LaTeX: \footnotesize
+#+begin_src scala :results output :exports code
+import java.awt.{Color, Dimension}
+import scala.swing._
+
+object FirstTest extends SimpleSwingApplication{
+  lazy val ui = new Panel {
+    background = Color.white
+    preferredSize = new Dimension(800, 600)
+  }
+  /* Create a new window and populate it */
+  def top = new MainFrame {
+    title = "Simple Demo Application"
+    contents = ui
+  }
+}
+#+end_src
+#+LaTeX: \normalsize
+
+If you don't use Eclipse, you can run this code with the following
+commands:
+
+#+LaTeX: \footnotesize\vspace{-.5\baselineskip}
+#+begin_src shell :export code
+scalac -cp scala-swing.jar:. FirstTest.scala
+scala -cp scala-swing.jar:. FirstTest
+#+end_src
+#+LaTeX: \normalsize
+
+*** Code Versioning
+
+As you will eventually realize, it is very difficult to share code
+with your teammates without the appropriate tools. You are perfectly
+free to use anything you see fit, such as USB key, email attachments
+or pigeons, but you probably want to use a SVN or Git.
+
+* Warm up
+
+You are provided with an initial application called [[https://github.com/mquinson/prog_scala/tree/master/Project_Ants/src/DemoApp.scala][DemoApp]]. It
+exemplifies everything you need to know about the Scala Swing library.
+Download it, and read its code. You see that the code falls in three
+big parts: (1) a /state/ object that contains the whole game state,
+(2) an /ui/ object: a graphical panel on which the game is drawn and
+which listens to the keyboard and mouse events, (3) a /timer/ object
+for the game animation, which calls /state.update/ and /ui.repaint/ 50
+times per second. When the application starts, a window is created at
+the very bottom of this file and populated with the /ui/.
+
+** Introducing a class Insect
+
+Modify the provided code to introduce a proper class named /Insect/
+encapsulating all of the sprite logic.  It should encapsulate the
+position and speed of a Sprite as well as the image displayed
+image. It should provide the necessary methods to make the code of
+your /state/ and /ui/ clean and pleasant to read.
+
+** Introducing a class Place
+
+A place is a location of the game, depicted as a cell on the board. It
+is defined by its name and position (its constructor takes two
+parameters). It can contain one or several bees and at most one
+ant. Each place is connected to an entrance and an exit (the entrance
+of its exit is itself). Define the corresponding class, and populate
+your game with 8 places that form a tunnel.
+
+* First game
+We will first write the main game elements according to the following
+screenshot.
+
+[[./gui_explanation.png]]
+
+The hive is on top. This is where you select the kind of ant that you
+want to place on your board. The hive cell containing the word "Bye"
+is particular: when you select this cell and click on one of your
+existing ant, it is removed from the game.  Under the hive, you can
+see one tunnel of height places, in which you can place ants. Later in
+the game, we will create several tunnels forming several lines one
+under another. On the right, you can see 2 bees that will soon enter
+your tunnel.
+
+\medskip 
+
+** The basics
+
+In this first game, food is not an issue: you can create as many ants
+as you wish until you fill all existing Places. For that, click on the
+one cell of the Hive to select it, and then click on the tunnel place
+in which you want to add an ant of the selected type.
+
+The game is decomposed in several turns (of three seconds each). The
+player can add new ants at any time during the game.  At each turn,
+the following actions occur:
+
+- A bee enters in the right-most place of the tunnel, unless all bees
+  entered the game already.
+- Each ant moves, depending on its type. 
+  - /HarversterAnt:/ adds one Food to the colony (useless for now, but
+    soon crucial).
+  - /ThrowerAnt:/ if a bee is in the same Place, it remove one Armor
+    to the bee. An insect with 0 Armor is removed from the game.
+- Each bee moves.
+  - If there is no ant in its place, it moves to the next place.
+  - If there is an ant in its place, it reduce its Armor by one.
+
+If all bees are defeated, the player wins. If one bee passes the
+left-most place, the player loses.
+
+** Making a real game
+
+Implement the food logic, where you cannot place a new ant if you
+don't have enough food.
+
+#+BEGIN_LaTeX
+\centerline{
+\begin{tabular}{|c|c|c|}\hline
+  Kind &Cost&Armor\\\hline
+  \includegraphics[scale=.6]{img/ant_harvester.png}&&\\
+  Harvester&2&1\\\hline
+  \includegraphics[scale=.6]{img/ant_thrower.png}&&\\
+  Thrower&2&1\\\hline
+\end{tabular}}
+#+END_LaTeX
+
+Now, modify your HaversterAnt so that it shots at the nearest bee on
+its right. Well, it makes the game a bit too easy, so we will
+introduce two new kind of ants. The short-range thrower can only shot
+bees that are at most two entrances away while the long-range thrower
+can only shot bees that are at least three entrances away.
+
+#+BEGIN_LaTeX
+\centerline{
+\begin{tabular}{|c|c|c|}\hline
+  Kind &Cost&Armor\\\hline
+  \includegraphics[scale=.6]{img/ant_shortthrower.png}&&\\
+  Short Thrower&3&1\\\hline
+  \includegraphics[scale=.6]{img/ant_longthrower.png}&&\\
+  Long Thrower&3&1\\\hline
+\end{tabular}}\par\medskip
+#+END_LaTeX
+
+** Graphical Refinements
+
+The insects should move smoothly from one place to another at the end
+of each turn, and the leaves shot by throwers should be animated
+too. The player should still be able to place ants at any point of
+time (provided that there is enough food).
+
+* Water and Fire
+
+** Adding a Fire Ant
+
+Implement the /FireAnt/. A /FireAnt/ has a special /reduceArmor/
+method: when the /FireAnt/'s armor reaches zero or lower, it will
+reduce the armor of all /Bee/s in the same /Place/ as the FireAnt by
+its damage attribute (defaults to 3).
+
+#+BEGIN_LaTeX
+\centerline{
+\begin{tabular}{|c|c|c|}\hline
+  Kind &Cost&Armor\\\hline
+  \includegraphics[scale=.6]{img/ant_fire.png}&&\\
+  Fire Ant&5&1\\\hline
+\end{tabular}}
+#+END_LaTeX
+
+** Adding water to the game
+
+Our tunnels are a bit boring as is, because all places are the same
+(but the hive). To make things more interesting, we're going to create
+a new type of Place called Water.
+
+Only an ant that is /watersafe/ can be deployed to a /Water/ place. In
+order to determine whether an Insect is /watersafe/, add a new
+attribute to the Insect class named /watersafe/ that is /false/ by
+default. Since bees can fly, make their watersafe attribute true,
+overriding the default.
+
+Now, implement the /addInsect/ method for /Water/. First call
+/Place.addInsect/ to add the insect, regardless of whether it is
+/watersafe/. Then, if the insect is not /watersafe/, reduce the
+insect's armor to 0 by invoking /reduceArmor/. Do not copy and paste
+code. Try to use methods that have already been defined and make use
+of inheritance to reuse the functionality of the /Place/ class.
+
+** Adding water to the board
+
+Change the code that create the tunnel to now create 3 tunnels of 8
+places each in which every third place is water. When a bee enters the
+board, it picks a tunnel randomly.
+
+You may also change your code so that bees arrive in waves at
+pre-determined turns (to leave some time to the player to rebuild the base).
+
+** Adding a Scuba ant
+
+ Currently there are no ants that can be placed on Water. Implement
+ the /ScubaThrower/, which is a subclass of /ThrowerAnt/ that is more
+ costly and /watersafe/, but otherwise identical to its base class.
+
+#+BEGIN_LaTeX
+\newcommand{\ant}[4]{%
+  \centerline{%
+  \begin{tabular}{|c|c|c|}\hline%
+  Kind &Cost&Armor\\\hline%
+  \includegraphics[scale=.6]{#1}&&\\%
+  #2&#3&#4\\\hline%
+\end{tabular}}}
+\ant{img/ant_scuba.png}{Scuba Thrower}{5}{1}
+#+END_LaTeX
+* More units
+** Wall Ant
+We are going to add some protection to our glorious /AntColony/ by
+implementing the /WallAnt/, which is an ant that does nothing each turn
+(already the default action of the /Ant/ class). A /WallAnt/ is useful
+because it has a large armor value.
+#+LaTeX: \ant{img/ant_wall.png}{Wall Ant}{4}{4}
+
+** Ninja Ant
+ Implement the /NinjaAnt/, which damages all Bees that pass by, but is
+ never seen. It cannot be attacked by a /Bee/ because it is hidden,
+ nor does it block the path of a /Bee/ that flies by. To implement
+ this behavior, add a new attribute /blocksPath/ to /Ant/ that is
+ /true/ by default and /false/ for /NinjaAnt/.
+#+LaTeX: \ant{img/ant_ninja.png}{Ninja Ant}{6}{1}
+** HungryAnt
+We will now implement the new offensive unit called the /HungryAnt/,
+which will eat a random /Bee/ from its place, instantly killing the
+Bee. After eating a Bee, it must spend 3 turns digesting before eating
+again.
+#+LaTeX: \ant{img/ant_hungry.png}{Hungry Ant}{4}{1}
+
+* God saves the Queen
+** Bodyguard Ant
+A /BodyguardAnt/ differs from a normal /Ant/ because it can occupy the
+same /Place/ as another ant. When a /BodyguardAnt/ is added to the
+same /Place/ as another ant, it shields the other ant and protects it
+from damage. Attacks should damage the /BodyguardAnt/ first and only
+hurt the protected ant after the /BodyguardAnt/ has perished.
+
+A /BodyguardAnt/ has a field /ant/ that stores the ant contained
+within the bodyguard. It should start off as /null/, indicating that
+no ant is currently being protected. Give /BodyguardAnt/ a
+/containAnt/ method that adds the Ant passed as a parameter inti that
+field.
+
+#+LaTeX: \ant{img/ant_weeds.png}{Bodyguard Ant}{4}{2}
+
+Now, change your program so that a BodyguardAnt and another Ant can
+simultaneously occupy the same Place: 
+
+- Add an attribute to /Ant/ indicating whether it is a container. Only
+  /BodyguardAnt/ are containers.
+- Add a a method to /ant/ indicating whether the receiver can contain
+  the parameter. It is so if and only if the receiver is an empty
+  container and the paramter is not a container.
+- Change the /addInsect/ method accordingly.
+** QueenAnt
+
+The queen is a waterproof /ScubaThrower/ that inspires her fellow ants
+through her bravery. Whenever the queen throws a leaf, she also
+doubles the damage of all other ants in the same tunnel with her,
+including any ants protected by a bodyguard. Once any ant's damage has
+doubled, it cannot be doubled again. 
+
+#+LaTeX: \ant{img/ant_queen.png}{Queen Ant}{6}{1}
+
+However, with great power comes great responsibility. The Queen is
+governed by three special rules:
+
+- If a bee ever enters the place occupied by the queen, then the bees
+  immediately win the game. The game ends even if the queen is
+  protected by a bodyguard. The bees also win if any bee reaches the
+  end of a tunnel where the queen normally would reside.
+
+- There can be only one true queen. Any queen beyond the first one is
+  an impostor and should die immediately (its armor reduced to 0) upon
+  taking its first action, without doubling any ant's damage or
+  throwing anything
+
+- The true (first) queen cannot be removed. Attempts to remove the
+  queen should have no effect (but should not cause an error).
+
+
+* Extensions
+
+Feel free to implement any extensions that you may see fit. 

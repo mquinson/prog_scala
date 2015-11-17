@@ -1,0 +1,227 @@
+% Petit package pour ecrire des Tds avec :
+%  - les logos kivonbien
+%  - gestion des questions et des reponses.
+% Arnaud Legrand. 2001
+% Martin Quinson. 2001-2005
+% Gerald Oster. 2008
+% Martin Quinson. 2015
+%
+% E-mail Martin.Quinson@ens-rennes.fr, Gerald.Oster@esial.uhp-nancy.fr
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{esial}
+\typeout{Document Style `ens-rennes'}
+
+%%%
+%%% Dependances
+%%%
+
+\RequirePackage[french]{babel}
+
+\RequirePackage{ifthen}
+\RequirePackage{verbatim,fancyhdr,fancyvrb}
+\RequirePackage{amssymb}
+
+\RequirePackage{figlatex}
+\RequirePackage{graphics}
+\RequirePackage{hyperref}
+%%%
+%%% Definition des modules
+%%%
+
+\newcommand{\@annee}{1A, 2A ou 3A}
+\DeclareRobustCommand{\unA}{\renewcommand{\@annee}{Premi\`ere ann\'ee}}
+\DeclareRobustCommand{\deuxA}{\renewcommand{\@annee}{Deuxi\`eme ann\'ee}}
+\DeclareRobustCommand{\troisA}{\renewcommand{\@annee}{Troisi\`eme ann\'ee}}
+\DeclareRobustCommand{\deuxM}{\renewcommand{\@annee}{Master 2}}
+
+\newcommand{\@module}{Module}
+\DeclareRobustCommand{\NoModuleName}{\renewcommand{\@module}{}}
+\DeclareRobustCommand{\ProgA}{\renewcommand{\@annee}{Premi\ere ann\'ee}\renewcommand{\@module}{Programmation I}}
+
+%%%
+%%% Mecanique pour les corrections
+%%%
+
+\newboolean{ENNONCE@correction}
+\setboolean{ENNONCE@correction}{true}
+\@ifundefined{correct}{\setboolean{ENNONCE@correction}{false}}
+
+\DeclareOption{correction}{
+  \setboolean{ENNONCE@correction}{true}
+}
+
+%%%
+%%% Autres options (logos, marges)
+%%%
+
+\newboolean{TightMargin}
+\setboolean{TightMargin}{false}
+\DeclareOption{tightmargin}{
+  \setboolean{TightMargin}{true}
+}
+
+
+\ProcessOptions
+
+
+\ifthenelse{\boolean{ENNONCE@correction}}{
+    \newenvironment{Reponse}%
+      {\noindent\color{red}%
+        \centerline{\framebox{\textbf{R\'eponse}}}
+
+        \vspace{-.5\baselineskip}\noindent\centerline{\vrule height1pt width.8\textwidth}
+
+      }{\par\noindent\centerline{\vrule height1pt width.8\textwidth}%
+        
+        \vspace{-.2\baselineskip}\centerline{\framebox{\textbf{Fin r\'eponse}}}
+
+                \color{black}}
+    \newenvironment{ReponseSansFin}%
+      {\noindent\color{red}%
+        \centerline{\framebox{\textbf{R\'eponse}}}
+
+        \vspace{-.5\baselineskip}\noindent\centerline{\vrule height1pt width.8\textwidth}
+
+      }{\color{black}}
+    \newcommand{\ifcorrection}[2]{#1}
+    \newcommand{\R}[1]{#1}
+  }{
+    \let\Reponse=\comment
+    \let\ReponseSansFin=\comment
+    \newcommand{\ifcorrection}[2]{#2}
+    \newcommand{\R}[1]{}
+  }
+
+%%%
+%%% Exercices et questions
+%%%
+
+\RequirePackage{amsthm}
+
+\theoremstyle{remark}
+\newtheorem{definition}{Définition}
+
+\newtheoremstyle{exo}% name
+ {3pt}% Space above
+ {3pt}% Space below
+ {}%  Body font
+ {}%  Indent amount (
+ {\bf}% Theorem head font
+ {:}% Punctuation after theorem head
+ {.5em}% Space after theorem head 2
+ {}% Theorem head spec (can be left empty, meaning ‘normal’)
+\theoremstyle{exo}
+\newtheorem{Question}{$\triangleright$ Question}
+\newtheorem{Exercice}{\setcounter{Question}{0}\hspace{-1.3em}$\bigstar$ Exercice}
+\newcommand{\PseudoExo}[1]{\setcounter{Question}{0}\noindent\hspace{-1.3em}$\bigstar$ \textbf{#1}\xspace}
+\newcommand{\QuestionCours}{\PseudoExo{Questions de cours.}}
+
+\newtheoremstyle{part}% name
+ {6pt}% Space above
+ {3pt}% Space below
+ {}%  Body font
+ {}%  Indent amount (
+ {\bf\Large}% Theorem head font
+ {:}% Punctuation after theorem head
+ {3pt}% Space after theorem head 2
+ {}% Theorem head spec (can be left empty, meaning ‘normal’)
+ 
+\theoremstyle{part}
+\newtheorem{Part}{%
+  \setcounter{Exercice}{0}%
+  \noindent\hspace{-1.5em}$\blacktriangleright$  %
+  Partie\xspace%
+}
+\newtheorem{Checkpoint}{\hspace{-1.3em}$\checkmark$ Checkpoint}
+
+
+%%%
+%%% Ce qu'il faut pour afficher du code avec Verbatim
+%%%
+
+\fvset{numbersep=2pt}
+\fvset{obeytabs=true}
+\fvset{resetmargins=true}
+\fvset{baselinestretch=0.7}
+\fvset{frame=single}
+\fvset{numbers=left}
+%\renewcommand{\FancyVerbFormatLine}[1]{\small{#1}}
+
+%%%
+%%% Modification des marges
+%%%
+
+\ifthenelse{\boolean{TightMargin}}{%
+  \usepackage[paper=a4paper,centering,margin=15mm]{geometry}%
+}{%
+  \usepackage[paper=a4paper,centering,margin=25mm]{geometry}%
+}
+
+%%%
+%%% Ce qu'il faut pour faire de beaux entetes avec les logos kivonbien
+%%%
+\DeclareRobustCommand*{\ENSLogo}{\includegraphics*[width=0.15\textwidth]{../img/logo-ens.pdf}}
+
+% Entete
+\pagestyle{fancy}
+\chead{\@title}\lhead{}
+%\cfoot{\ifthenelse{\boolean{ENNONCE@correction}}{\textbf{CORRECTION}}{}}
+
+\newcommand{\fondecran}{
+  \ifthenelse{\boolean{ENNONCE@correction}}{%
+    \vspace{2cm}%
+    \resizebox{\textwidth}{!}{\rotatebox{30.0}{\textcolor{couleurfond}{CORRECTION}}}%
+    \\%
+    \vspace{2cm}%
+    \resizebox{\textwidth}{!}{\rotatebox{30.0}{\textcolor{couleurfond}{CORRECTION}}}%
+  }{}}
+\definecolor{couleurfond}{rgb}{1.0,0.85,0.85}
+\rhead{\vbox to\baselineskip{\fondecran}}%
+
+\newcommand{\MyTitleBody}{%
+        \centering%
+        \ifthenelse{\equal{\@title}{}}{}{%
+          \textbf{\Large \@title}\par%
+          \medskip
+        }%
+        {\large\@module}\par~%{\@annee}%
+}
+\newcommand{\MyTitle}{%
+  %\hypersetup{pdftitle=\@title,pdfsubject=\@module,pdfauthor=\@author}%
+  \thispagestyle{empty}%
+  \vbox to0pt{\fondecran}%
+  \newlength{\plopwidth}%
+  \setlength{\plopwidth}{\textwidth}%
+  \addtolength{\plopwidth}{25mm}%
+  \null\vspace{-2cm}%
+  \begin{figure*}[h]
+    \centering
+a
+    \begin{tabular}{p{.7\textwidth} c}
+      \MyTitleBody&\ENSLogo
+    \end{tabular}
+  \end{figure*}
+  %
+%   \hbox to \plopwidth{%\hspace{-1cm}%
+% %    \parbox{2cm}{~\hspace{-13mm}\ENSLogo\vspace{20mm}}%
+%     \null\vspace{-10mm}%
+%     \begin{minipage}{.73\plopwidth}
+%         \MyTitleBody%
+%     \end{minipage}%
+%     \parbox{4cm}{\hspace{-5mm}\ENSLogo\vspace{20mm}}%
+%     \par%\vspace{-10mm}%
+%    % \bigskip%
+%    % \bigskip\null%
+%    }%
+}
+
+%%%
+%%% Quelques macros que j'utilise par ci par la
+%%%
+\newcommand{\run}[1]{\fbox{\texttt{#1}}}
+\newcommand{\cmd}[1]{\texttt{#1}}
+\newcommand{\file}[1]{{\bf \em #1}}
+\newcommand{\result}[1]{\texttt{#1}}
+\newenvironment{runblock}{\begin{texttt}\beginVerbatim}{\endVerbatim\end{texttt}}
+
+\endinput

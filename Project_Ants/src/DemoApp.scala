@@ -4,7 +4,6 @@
 // Then execute with: scala -cp scala-swing.jar:. FirstTest
 
 // Usage:
-//   - Use the left click to draw on screen
 //   - 'i' to add a moving sprite under the mouse
 //   - 'a'/'z' to increase/decrease the speed of every moving objects 
 //   - 'c' to clear the state (and thus the screen)
@@ -23,12 +22,7 @@ object DemoApp extends SimpleSwingApplication {
   ////////////////////////////////////////////////////
 
   object state {
-    /* Part 1.a: records the dragging performed with the mouse */
-    var path = new geom.GeneralPath
-    def lineTo(p: Point) = path.lineTo(p.x, p.y)
-    def moveTo(p: Point) = path.moveTo(p.x, p.y)
-
-    /* Part 1.b: records the images that move on screen */
+    /* records the images that move on screen */
     // This is a (ugly) set of sprites that are animated on screen. A set of objects would be *much* better
     val icon:ImageIcon = new ImageIcon("img/bee.gif")
     val im = icon.getImage( )
@@ -83,9 +77,25 @@ object DemoApp extends SimpleSwingApplication {
         pos.y /= 2
       }
     }
+    def removeSpriteAt(click:Point) {
+      /* Filter the sprite out. This code is made particularly ugly by the lack of Sprite class :-( */
+      var p2: List[Point] = Nil
+      var s2: List[Point] = Nil
+      for ((pos, speed) <- imagesPos zip imagesSpeed ) {
+        if (pos.x < click.x && click.x < pos.x+icon.getIconWidth() &&
+            pos.y < click.y && click.y < pos.y+icon.getIconHeight()) {
+          /* this object was clicked. Don't readd it */
+        } else {
+          p2 = pos   :: p2
+          s2 = speed :: s2
+        }
+      }
+      imagesPos   = p2
+      imagesSpeed = s2
+    }
+
     /* reset(): empties the screen */
     def reset() = {
-      path = new geom.GeneralPath
       imagesPos = Nil
       imagesSpeed = Nil
     }
@@ -104,12 +114,11 @@ object DemoApp extends SimpleSwingApplication {
 
     reactions += {
       case e: MousePressed => 
-        state.moveTo(e.point)
+        state.removeSpriteAt(e.point) 
         requestFocusInWindow()
-      case e: MouseDragged => state.lineTo(e.point)
-      case e: MouseReleased => state.lineTo(e.point)
-      case KeyTyped(_, 'c', _, _) =>
-        state.reset()
+      case e: MouseDragged  => /* Nothing for now */
+      case e: MouseReleased => /* Nothing for now */
+      case KeyTyped(_, 'c', _, _) => state.reset()
       case KeyTyped(_, 'i', _, _) => state.addImage(getPos())
       case KeyTyped(_, 'a', _, _) => state.speedIncrease()
       case KeyTyped(_, 'z', _, _) => state.speedDecrease()
@@ -118,19 +127,28 @@ object DemoApp extends SimpleSwingApplication {
     }
     
     /* Returns the current position of the mouse (or null if it's not over the panel */
-    def getPos() = peer.getMousePosition() // peer is the java panel under the wrapper
+    def getPos() = peer.getMousePosition() // (note: peer is the java panel under the Scala wrapper)
+
+    /* A nice box */
+    val boxPath = new geom.GeneralPath
+    boxPath.moveTo( 10, 100)
+    boxPath.lineTo( 10,  10)
+    boxPath.lineTo(110,  10)
+    boxPath.lineTo(110, 100)
+    boxPath.lineTo( 10, 100)
 
     /* How to draw the screen when instructed to do so */
     override def paintComponent(g: Graphics2D) = {
       super.paintComponent(g)
       g.setColor(new Color(100, 100, 100))
-      g.drawString("Press left mouse button and drag to paint." +
-        (if (hasFocus) " Press 'i' to add images or 'c' to clear." else ""), 10, size.height - 10)
+      g.drawString(" Press 'i' to add sprites, 'c' to remove them all. Click on sprite to destroy them", 10, size.height - 10)
       val pos = getPos()
       if (pos != null)
         g.drawString("x: "+pos.x+" y: "+pos.y, size.width-85, 15)
+        
       g.setColor(Color.black)
-      g.draw(state.path)
+      g.draw(boxPath)
+      
       for (p <- state.imagesPos) {
         g.drawImage(state.im, p.x, p.y, peer)
       }
@@ -139,7 +157,7 @@ object DemoApp extends SimpleSwingApplication {
   
   // Part 3: Animation timer: calls state.update() and ui.repaint() 50 times per second
   ///////////////////////////
-  object timer extends ActionListener {
+  class MyTimer extends ActionListener {
     /* Configuration */
     val fpsTarget = 50 // Desired amount of frames per second
     var delay = 1000 / fpsTarget
@@ -155,7 +173,7 @@ object DemoApp extends SimpleSwingApplication {
       ui.repaint() // Tell Scala that the image should be redrawn
     }
   }
-  
+  val t = new MyTimer()
 
   // Part 4: Main initialization: Create a new window and populate it
   //////////////////////////////
