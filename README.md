@@ -32,7 +32,7 @@ your help is welcome to improve the material. Pull requests welcome ;)
   Large systems are inherently complex and dynamic, so we want to
   design our systems in a way that mitigates these issues.
   
-  We lengthly discuss the Object Oriented Programming approach(OOP),
+  We lengthly discuss the Object Oriented Programming approach (OOP),
   that is the classical reductionist solution to the system
   complexity. There is no absolute rule about how to build a Good
   Design (TM), but we present several rules of thumb to avoid horrible
@@ -41,6 +41,18 @@ your help is welcome to improve the material. Pull requests welcome ;)
   As a conclusion (and as an appertizer for next week's lecture) we
   then shortly contrast this OOP approach with the Functional
   Programming (FP) way of composing complex systems.
+
+- *Project: [Ants vs. SomeBees](https://github.com/mquinson/prog_scala/raw/master/Project_Ants/Ants.pdf)*
+
+  In this project, you will implement a [Tower Defense](https://secure.wikimedia.org/wikipedia/en/wiki/Tower_defense) 
+  game inspired from the PopCap Games'
+  [Plants vs Zombies](http://www.popcap.com/games/pvz/web) ®.
+  During this assignment, you will explore many of the OOP concepts,
+  as well as some basic concepts of FP.
+  
+  Please **do not fork the current project** to work on your
+  assignment, but create another repository elsewhere. Please do not
+  post any solution to this assignment online.
 
 ## Compiling the lessons
 
