@@ -51,8 +51,9 @@ your help is welcome to improve the material. Pull requests welcome ;)
   as well as some basic concepts of FP.
   
   Please **do not fork the current project** to work on your
-  assignment, but create another repository elsewhere. Please do not
-  post any solution to this assignment online.
+  assignment, but [download the source code](https://github.com/mquinson/prog_scala/raw/master/Project_Ants/Project_Ants.tar.gz)
+  and create another repository elsewhere. Please do not post any
+  solution to this assignment online. 
 
 ## Compiling the material
 
