@@ -101,7 +101,7 @@ you click OK:
 
 [[./scala-swing-jar.png]]
 
-Once done, the [[./src/FirstTest.scala][first provided code]] should open an empty window. To
+Once done, the [[./src/main/scala/FirstTest.scala][first provided code]] should open an empty window. To
 test it, download this file, and copy it in the src/ folder of your
 eclipse project. Then in eclipse, press F5 to see it appear in the
 project explorer, right click on the file and select "Run As" / "Scala
@@ -146,7 +146,7 @@ or pigeons, but you probably want to use a SVN or Git.
 
 * Warm up
 
-You are provided with an initial application called [[https://github.com/mquinson/prog_scala/tree/master/Project_Ants/src/DemoApp.scala][DemoApp]]. It
+You are provided with an initial application called [[https://github.com/mquinson/prog_scala/tree/master/Project_Ants/src/main/scala/DemoApp.scala][DemoApp]] It
 exemplifies everything you need to know about the Scala Swing library.
 Download it, and read its code. You see that the code falls in three
 big parts: (1) a /state/ object that contains the whole game state,
