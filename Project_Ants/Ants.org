@@ -122,7 +122,27 @@ solution.
 If everything else fails, you can always compile your code from the
 command line as follows. You should however really try to get at least
 ~sbt~ working, because such manual compilations are really bothersome
-on the long term.
+on the long term. Download ~sbt~ from its [[http://www.scala-sbt.org/download.html][webpage]], unpack it somewhere
+(e.g. under ~/opt/sbt~) and add the ~bin~ directory to your PATH.
+
+#+LaTeX: \footnotesize\vspace{-.5\baselineskip}
+#+BEGIN_SRC shell :export code
+# Create the directory (needs root password)
+sudo mkdir -p /opt/sbt
+# Give the directory ownership to yourself
+sudo chown -R `logname` /opt/sbt
+# Enter that directory
+cd /opt/sbt 
+# Unpack the archive
+tar xf ~/Téléchargements/sbt-0.13.9.tgz 
+# Add the binary directory into your PATH
+echo 'export PATH=$PATH:/opt/sbt/bin' >> ~/.bashrc
+# Reload the shell configuration
+source ~/.bashrc
+# Launch the tool. It will download some missing parts 
+sbt
+#+END_SRC
+#+LaTeX: \normalsize
 
 #+LaTeX: \footnotesize\vspace{-.5\baselineskip}
 #+begin_src shell :export code
