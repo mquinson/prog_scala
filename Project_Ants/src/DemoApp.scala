@@ -45,7 +45,7 @@ object DemoApp extends SimpleSwingApplication {
     /* update(): gets called 50 times per second to update the game state */
     def update() = {
       // Array(1,2,3) zip Array('a', 'b', 'c') evaluates to Array((1,'a'), (2,'b'), (3, 'c'))
-      // So the following retrieve the pos and speed of a given sprite. Again, having a class for sprites would be WAYS better
+      // So the following retrieves the pos and speed of a given sprite. Again, having a class for sprites would be WAYS better
       for ((pos, speed) <- imagesPos zip imagesSpeed ) {
         /* Apply the change */
         pos.x += speed.x
@@ -90,7 +90,7 @@ object DemoApp extends SimpleSwingApplication {
       for ((pos, speed) <- imagesPos zip imagesSpeed ) {
         if (pos.x < click.x && click.x < pos.x+icon.getIconWidth() &&
             pos.y < click.y && click.y < pos.y+icon.getIconHeight()) {
-          /* this object was clicked. Don't readd it */
+          /* this object was clicked. Don't re-add it */
         } else {
           p2 = pos   :: p2
           s2 = speed :: s2
