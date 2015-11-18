@@ -25,10 +25,13 @@ object DemoApp extends SimpleSwingApplication {
   object state {
     /* records the images that move on screen */
     // This is a (ugly) set of sprites that are animated on screen. A set of objects would be *much* better
-    var icon:ImageIcon = new ImageIcon("img/bee.png") 
-    if (icon.getIconHeight() <= 0) {
-      println("Cannot find the file img/bee.png. Please install it.")
-      icon = UIManager.getLookAndFeelDefaults().get("html.missingImage").asInstanceOf[ImageIcon]
+    val path = Option(getClass.getResource("/img/bee.png"))
+    val icon = path match {
+        case Some(url) => new ImageIcon(url)
+        case None      => {
+            println("Cannot find the file img/bee.png. Please install it.")
+            UIManager.getLookAndFeelDefaults().get("html.missingImage").asInstanceOf[ImageIcon]
+        }
     }
     
     val im = icon.getImage( )
@@ -36,11 +39,11 @@ object DemoApp extends SimpleSwingApplication {
     var imagesSpeed: List[Point] = Nil
     /* addImage(): Add a new image to the game state at the specified position */
     def addImage(position:Point) = {
-		  /* Get the current position of the mouse, and add it to the list of images to draw */
-		  if (position != null) { // position is null if the mouse is out of the screen
-		  	imagesPos = position :: imagesPos
-			  imagesSpeed = new Point(1,1) :: imagesSpeed // Initial speed: dx=1;dy=1
-		  }
+          /* Get the current position of the mouse, and add it to the list of images to draw */
+          if (position != null) { // position is null if the mouse is out of the screen
+            imagesPos = position :: imagesPos
+              imagesSpeed = new Point(1,1) :: imagesSpeed // Initial speed: dx=1;dy=1
+          }
     }
     /* update(): gets called 50 times per second to update the game state */
     def update() = {
