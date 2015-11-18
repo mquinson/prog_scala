@@ -220,15 +220,29 @@ left-most place, the player loses.
 Implement the food logic, where you cannot place a new ant if you
 don't have enough food.
 
+#+BEGIN_HTML
+<div align="center">
+#+END_HTML
 #+CAPTION: Harvester (Cost: 2; Armor: 1)
 #+ATTR_LaTeX: :width .2\linewidth
 [[./src/main/resources/ant_harvester.png]]
+#+BEGIN_HTML
+<b>Harvester</b> (Cost: 2; Armor: 1)
+</div>
+#+END_HTML
 
 #+LaTeX: \vspace{-\baselineskip}
 
+#+BEGIN_HTML
+<div align="center">
+#+END_HTML
 #+CAPTION: Thrower (Cost: 2; Armor: 1)
 #+ATTR_LaTeX: :width .2\linewidth
 [[./src/main/resources/ant_thrower.png]]
+#+BEGIN_HTML
+<b>Thrower</b> (Cost: 2; Armor: 1)
+</div>
+#+END_HTML
 
 Now, modify your HaversterAnt so that it shots at the nearest bee on
 its right. Well, it makes the game a bit too easy, so we will
@@ -238,15 +252,29 @@ can only shot bees that are at least three entrances away.
 
 #+LaTeX: \vspace{-.3\baselineskip}
 
+#+BEGIN_HTML
+<div align="center">
+#+END_HTML
 #+CAPTION: Short Thrower (Cost: 3; Armor: 1)
 #+ATTR_LaTeX: :width .2\linewidth
 [[./src/main/resources/ant_shortthrower.png]]
+#+BEGIN_HTML
+<b>Short Thrower</b> (Cost: 3; Armor: 1)
+</div>
+#+END_HTML
 
 #+LaTeX: \vspace{-\baselineskip}
 
+#+BEGIN_HTML
+<div align="center">
+#+END_HTML
 #+CAPTION: Long Thrower (Cost: 3; Armor: 1)
 #+ATTR_LaTeX: :width .2\linewidth
 [[./src/main/resources/ant_longthrower.png]]
+#+BEGIN_HTML
+<b>Long Thrower</b> (Cost: 3; Armor: 1)
+</div>
+#+END_HTML
 
 ** Graphical Refinements
 
@@ -264,9 +292,16 @@ method: when the /FireAnt/'s armor reaches zero or lower, it will
 reduce the armor of all /Bee/s in the same /Place/ as the FireAnt by
 its damage attribute (defaults to 3).
 
-#+CAPTION: Fire ant (Cost: 5; Armor: 1)
+#+BEGIN_HTML
+<div align="center">
+#+END_HTML
+#+CAPTION: Fire Ant (Cost: 5; Armor: 1)
 #+ATTR_LaTeX: :width .2\linewidth
 [[./src/main/resources/ant_fire.png]]
+#+BEGIN_HTML
+<b>Fire Ant</b> (Cost: 5; Armor: 1)
+</div>
+#+END_HTML
 
 ** Adding water to the game
 
@@ -302,9 +337,16 @@ pre-determined turns (to leave some time to the player to rebuild the base).
  the /ScubaThrower/, which is a subclass of /ThrowerAnt/ that is more
  costly and /watersafe/, but otherwise identical to its base class.
 
+#+BEGIN_HTML
+<div align="center">
+#+END_HTML
 #+CAPTION: Scuba Thrower (Cost: 5; Armor: 1)
 #+ATTR_LaTeX: :width .2\linewidth
 [[./src/main/resources/ant_scuba.png]]
+#+BEGIN_HTML
+<b>Scuba Thrower</b> (Cost: 5; Armor: 1)
+</div>
+#+END_HTML
 
 * More units
 ** Wall Ant
@@ -313,9 +355,16 @@ implementing the /WallAnt/, which is an ant that does nothing each turn
 (already the default action of the /Ant/ class). A /WallAnt/ is useful
 because it has a large armor value.
 
+#+BEGIN_HTML
+<div align="center">
+#+END_HTML
 #+CAPTION: Wall Ant (Cost: 4; Armor: 4)
 #+ATTR_LaTeX: :width .15\linewidth
 [[./src/main/resources/ant_wall.png]]
+#+BEGIN_HTML
+<b>Wall Ant</b> (Cost: 4; Armor: 4)
+</div>
+#+END_HTML
 
 ** Ninja Ant
  Implement the /NinjaAnt/, which damages all Bees that pass by, but is
@@ -324,9 +373,16 @@ because it has a large armor value.
  this behavior, add a new attribute /blocksPath/ to /Ant/ that is
  /true/ by default and /false/ for /NinjaAnt/.
 
-#+CAPTION: Wall Ant (Cost: 6; Armor: 1)
+#+BEGIN_HTML
+<div align="center">
+#+END_HTML
+#+CAPTION: Ninja Ant (Cost: 6; Armor: 1)
 #+ATTR_LaTeX: :width .2\linewidth
 [[./src/main/resources/ant_ninja.png]]
+#+BEGIN_HTML
+<b>Ninja Ant</b> (Cost: 6; Armor: 1)
+</div>
+#+END_HTML
 
 ** HungryAnt
 We will now implement the new offensive unit called the /HungryAnt/,
@@ -334,9 +390,16 @@ which will eat a random /Bee/ from its place, instantly killing the
 Bee. After eating a Bee, it must spend 3 turns digesting before eating
 again.
 
+#+BEGIN_HTML
+<div align="center">
+#+END_HTML
 #+CAPTION: Hungry Ant (Cost: 4; Armor: 1)
 #+ATTR_LaTeX: :width .2\linewidth
 [[./src/main/resources/ant_hungry.png]]
+#+BEGIN_HTML
+<b>Hungry Ant</b> (Cost: 4; Armor: 1)
+</div>
+#+END_HTML
 
 * God saves the Queen
 ** Bodyguard Ant
@@ -352,9 +415,16 @@ no ant is currently being protected. Give /BodyguardAnt/ a
 /containAnt/ method that adds the Ant passed as a parameter inti that
 field.
 
+#+BEGIN_HTML
+<div align="center">
+#+END_HTML
 #+CAPTION: Bodyguard (Cost: 4; Armor: 2)
-#+ATTR_LaTeX: :width .1\linewidth
+#+ATTR_LaTeX: :width .1\linewidth 
 [[./src/main/resources/ant_weeds.png]]
+#+BEGIN_HTML
+<b>Bodyguard</b> (Cost: 4; Armor: 2)
+</div>
+#+END_HTML
 
 
 Now, change your program so that a BodyguardAnt and another Ant can
@@ -374,9 +444,16 @@ doubles the damage of all other ants in the same tunnel with her,
 including any ants protected by a bodyguard. Once any ant's damage has
 doubled, it cannot be doubled again. 
 
+#+BEGIN_HTML
+<div align="center">
+#+END_HTML
 #+CAPTION: Queen ant (Cost: 6; Armor: 2)
 #+ATTR_LaTeX: :width .2\linewidth
 [[./src/main/resources/ant_queen.png]]
+#+BEGIN_HTML
+<b>Queen ant</b> (Cost: 6; Armor: 2)
+</div>
+#+END_HTML
 
 However, with great power comes great responsibility. The Queen is
 governed by three special rules:
