@@ -16,9 +16,10 @@
 #+LATEX_HEADER:   \end{minipage}\hfill\null
 #+LATEX_HEADER: }
 #+LATEX_HEADER: \thispagestyle{empty}
-#+BEGIN_LaTeX
+
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \captionsetup{labelformat=empty,textfont=bf}
   
-#+END_LaTeX
 
 * Introduction
 In this project, you will implement a [[https://secure.wikimedia.org/wikipedia/en/wiki/Tower_defense][Tower Defense]] called Ants
@@ -203,11 +204,10 @@ the following actions occur:
 
 - A bee enters in the right-most place of the tunnel, unless all bees
   entered the game already.
-- Each ant moves, depending on its type. 
-  - /HarversterAnt:/ adds one Food to the colony (useless for now, but
-    soon crucial).
-  - /ThrowerAnt:/ if a bee is in the same Place, it remove one Armor
-    to the bee. An insect with 0 Armor is removed from the game.
+- Each ant moves, depending on its type.  The ~HarversterAnt~ adds one
+  Food to the colony (useless for now, but soon crucial). If a bee is
+  in the same Place, the ~ThrowerAnt~ removes one Armor to the bee. An
+  insect with 0 Armor is killed.
 - Each bee moves.
   - If there is no ant in its place, it moves to the next place.
   - If there is an ant in its place, it reduce its Armor by one.
@@ -220,16 +220,15 @@ left-most place, the player loses.
 Implement the food logic, where you cannot place a new ant if you
 don't have enough food.
 
-#+BEGIN_LaTeX
-\centerline{
-\begin{tabular}{|c|c|c|}\hline
-  Kind &Cost&Armor\\\hline
-  \includegraphics[scale=.6]{src/main/resources/ant_harvester.png}&&\\
-  Harvester&2&1\\\hline
-  \includegraphics[scale=.6]{src/main/resources/ant_thrower.png}&&\\
-  Thrower&2&1\\\hline
-\end{tabular}}
-#+END_LaTeX
+#+CAPTION: Harvester (Cost: 2; Armor: 1)
+#+ATTR_LaTeX: :width .2\linewidth
+[[./src/main/resources/ant_harvester.png]]
+
+#+LaTeX: \vspace{-\baselineskip}
+
+#+CAPTION: Thrower (Cost: 2; Armor: 1)
+#+ATTR_LaTeX: :width .2\linewidth
+[[./src/main/resources/ant_thrower.png]]
 
 Now, modify your HaversterAnt so that it shots at the nearest bee on
 its right. Well, it makes the game a bit too easy, so we will
@@ -237,16 +236,17 @@ introduce two new kind of ants. The short-range thrower can only shot
 bees that are at most two entrances away while the long-range thrower
 can only shot bees that are at least three entrances away.
 
-#+BEGIN_LaTeX
-\centerline{
-\begin{tabular}{|c|c|c|}\hline
-  Kind &Cost&Armor\\\hline
-  \includegraphics[scale=.6]{src/main/resources/ant_shortthrower.png}&&\\
-  Short Thrower&3&1\\\hline
-  \includegraphics[scale=.6]{src/main/resources/ant_longthrower.png}&&\\
-  Long Thrower&3&1\\\hline
-\end{tabular}}\par\medskip
-#+END_LaTeX
+#+LaTeX: \vspace{-.3\baselineskip}
+
+#+CAPTION: Short Thrower (Cost: 3; Armor: 1)
+#+ATTR_LaTeX: :width .2\linewidth
+[[./src/main/resources/ant_shortthrower.png]]
+
+#+LaTeX: \vspace{-\baselineskip}
+
+#+CAPTION: Long Thrower (Cost: 3; Armor: 1)
+#+ATTR_LaTeX: :width .2\linewidth
+[[./src/main/resources/ant_longthrower.png]]
 
 ** Graphical Refinements
 
@@ -264,14 +264,9 @@ method: when the /FireAnt/'s armor reaches zero or lower, it will
 reduce the armor of all /Bee/s in the same /Place/ as the FireAnt by
 its damage attribute (defaults to 3).
 
-#+BEGIN_LaTeX
-\centerline{
-\begin{tabular}{|c|c|c|}\hline
-  Kind &Cost&Armor\\\hline
-  \includegraphics[scale=.6]{src/main/resources/ant_fire.png}&&\\
-  Fire Ant&5&1\\\hline
-\end{tabular}}
-#+END_LaTeX
+#+CAPTION: Fire ant (Cost: 5; Armor: 1)
+#+ATTR_LaTeX: :width .2\linewidth
+[[./src/main/resources/ant_fire.png]]
 
 ** Adding water to the game
 
@@ -307,23 +302,20 @@ pre-determined turns (to leave some time to the player to rebuild the base).
  the /ScubaThrower/, which is a subclass of /ThrowerAnt/ that is more
  costly and /watersafe/, but otherwise identical to its base class.
 
-#+BEGIN_LaTeX
-\newcommand{\ant}[4]{%
-  \centerline{%
-  \begin{tabular}{|c|c|c|}\hline%
-  Kind &Cost&Armor\\\hline%
-  \includegraphics[scale=.6]{#1}&&\\%
-  #2&#3&#4\\\hline%
-\end{tabular}}}
-\ant{src/main/resources/ant_scuba.png}{Scuba Thrower}{5}{1}
-#+END_LaTeX
+#+CAPTION: Scuba Thrower (Cost: 5; Armor: 1)
+#+ATTR_LaTeX: :width .2\linewidth
+[[./src/main/resources/ant_scuba.png]]
+
 * More units
 ** Wall Ant
 We are going to add some protection to our glorious /AntColony/ by
 implementing the /WallAnt/, which is an ant that does nothing each turn
 (already the default action of the /Ant/ class). A /WallAnt/ is useful
 because it has a large armor value.
-#+LaTeX: \ant{src/main/resources/ant_wall.png}{Wall Ant}{4}{4}
+
+#+CAPTION: Wall Ant (Cost: 4; Armor: 4)
+#+ATTR_LaTeX: :width .15\linewidth
+[[./src/main/resources/ant_wall.png]]
 
 ** Ninja Ant
  Implement the /NinjaAnt/, which damages all Bees that pass by, but is
@@ -331,13 +323,20 @@ because it has a large armor value.
  nor does it block the path of a /Bee/ that flies by. To implement
  this behavior, add a new attribute /blocksPath/ to /Ant/ that is
  /true/ by default and /false/ for /NinjaAnt/.
-#+LaTeX: \ant{src/main/resources/ant_ninja.png}{Ninja Ant}{6}{1}
+
+#+CAPTION: Wall Ant (Cost: 6; Armor: 1)
+#+ATTR_LaTeX: :width .2\linewidth
+[[./src/main/resources/ant_ninja.png]]
+
 ** HungryAnt
 We will now implement the new offensive unit called the /HungryAnt/,
 which will eat a random /Bee/ from its place, instantly killing the
 Bee. After eating a Bee, it must spend 3 turns digesting before eating
 again.
-#+LaTeX: \ant{src/main/resources/ant_hungry.png}{Hungry Ant}{4}{1}
+
+#+CAPTION: Hungry Ant (Cost: 4; Armor: 1)
+#+ATTR_LaTeX: :width .2\linewidth
+[[./src/main/resources/ant_hungry.png]]
 
 * God saves the Queen
 ** Bodyguard Ant
@@ -353,7 +352,10 @@ no ant is currently being protected. Give /BodyguardAnt/ a
 /containAnt/ method that adds the Ant passed as a parameter inti that
 field.
 
-#+LaTeX: \ant{src/main/resources/ant_weeds.png}{Bodyguard Ant}{4}{2}
+#+CAPTION: Bodyguard (Cost: 4; Armor: 2)
+#+ATTR_LaTeX: :width .1\linewidth
+[[./src/main/resources/ant_weeds.png]]
+
 
 Now, change your program so that a BodyguardAnt and another Ant can
 simultaneously occupy the same Place: 
@@ -372,7 +374,9 @@ doubles the damage of all other ants in the same tunnel with her,
 including any ants protected by a bodyguard. Once any ant's damage has
 doubled, it cannot be doubled again. 
 
-#+LaTeX: \ant{src/main/resources/ant_queen.png}{Queen Ant}{6}{1}
+#+CAPTION: Queen ant (Cost: 6; Armor: 2)
+#+ATTR_LaTeX: :width .2\linewidth
+[[./src/main/resources/ant_queen.png]]
 
 However, with great power comes great responsibility. The Queen is
 governed by three special rules:
