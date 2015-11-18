@@ -100,7 +100,7 @@ and select to the "Java Build Path" entry. In the "Libraries" tab, add
 the scala-swing jarfile as a JAR. This should look as follows before
 you click OK:
 
-[[./scala-swing-jar.png]]
+[[./img/scala-swing-jar.png]]
 
 Once done, the [[./src/main/scala/FirstTest.scala][first provided code]] should open an empty window. To
 test it, download this file, and copy it in the src/ folder of your
@@ -109,7 +109,7 @@ project explorer, right click on the file and select "Run As" / "Scala
 application". Once you've done it one time, you can directly run the
 program by clicking on the little button above the code green arrow.
 
-[[./eclipse-run.png]]
+[[./img/eclipse-run.png]]
 
 ** Compiling with ~sbt~
 
@@ -198,7 +198,7 @@ your game with 8 places that form a tunnel.
 We will first write the main game elements according to the following
 screenshot.
 
-[[./gui_explanation.png]]
+[[./img/gui_explanation.png]]
 
 The hive is on top. This is where you select the kind of ant that you
 want to place on your board. The hive cell containing the word "Bye"
