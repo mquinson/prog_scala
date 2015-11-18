@@ -35,7 +35,7 @@ by the PopCap Games' [[http://www.popcap.com/games/pvz/web][Plants Vs. Zombie]] 
 adapted from the Python programming language to Scala by myself. It it
 provides you with less pre-written code, but gives you much more
 freedom about how to organize your code. Freedom may be disturbing, at
-first;)
+first, but you'll get used to it ;)
 
 ** Core Concepts
 A game of Ants Vs. SomeBees consists of a series of turns. In each
@@ -62,7 +62,6 @@ different amount of food to place. The two most basic ant types are
 the /HarvesterAnt/, which adds one food to the colony during each
 turn, and the /ThrowerAnt/, which throws a leaf at a bee each turn.
 
-* Logistics
 ** Due date and grading
 
 You are requested form teams for two people for this project, with
@@ -73,49 +72,56 @@ practical. You will have to turn in your slides on that day. Finally,
 you will have to send your report before Sunday December 13. No late
 submission will be accepted.
 
-** Technical setup
+* Technical setup
 
-*** scala-swing
+** scala-swing
 
 This project must be written in Scala, using the Swing library. You
 really should use the scala-swing library, which provides Scala
 wrappers to the main Java Swing classes. You can download the
 mandatory library from [[https://github.com/mquinson/prog_scala/tree/master/jars][this site]]. 
 
-*** Eclipse
+** Editing with Eclipse
 It is advised (although not mandatory) that you use the Eclipse source
-editor for this assignment. On need, download the [[http://scala-ide.org/][Scala IDE]] and
-install it on your machine. Create a new project, and copy the
-scala-swing jar files into its main directory. Open the project
-properties (from the right-click menu), and select to the "Java Build
-Path" entry. In the "Libraries" tab, add the scala-swing jarfile as a
-(non-external) JAR. This should look as follows before you click OK:
+editor for this assignment. That's a huge machinery, but it's really
+worth learning. When you know it, this tool can greatly increase your
+code productivity. Don't miss this [[http://scala-ide.org/download/current.html][introductive video]]. Its major
+drawback however is its size. Eclipse is really the programming
+caterpilar, and you have to have a good laptop with at least 4 Gb of
+RAM to use it comfortably.
+
+First, download the [[http://scala-ide.org/][Scala IDE]] and install it on your machine, or add
+the its update site to your existing Eclipse installation.
+
+Create a new project, and copy the [[https://github.com/mquinson/prog_scala/raw/master/jars/scala-swing_2.11-2.0.0-M2.jar][scala-swing.jar]] files into its main
+directory. Open the project properties (from the right-click menu),
+and select to the "Java Build Path" entry. In the "Libraries" tab, add
+the scala-swing jarfile as a JAR. This should look as follows before
+you click OK:
 
 [[./scala-swing-jar.png]]
 
-Once done, the following code should open an empty window:
+Once done, the [[./src/FirstTest.scala][first provided code]] should open an empty window. To
+test it, download this file, and copy it in the src/ folder of your
+eclipse project. Then in eclipse, press F5 to see it appear in the
+project explorer, right click on the file and select "Run As" / "Scala
+application". Once you've done it one time, you can directly run the
+program by clicking on the little button above the code green arrow.
 
-#+LaTeX: \footnotesize
-#+begin_src scala :results output :exports code
-import java.awt.{Color, Dimension}
-import scala.swing._
+[[./eclipse-run.png]]
 
-object FirstTest extends SimpleSwingApplication{
-  lazy val ui = new Panel {
-    background = Color.white
-    preferredSize = new Dimension(800, 600)
-  }
-  /* Create a new window and populate it */
-  def top = new MainFrame {
-    title = "Simple Demo Application"
-    contents = ui
-  }
-}
-#+end_src
-#+LaTeX: \normalsize
+** Compiling with ~sbt~
 
-If you don't use Eclipse, you can run this code with the following
-commands:
+[[http://www.scala-sbt.org/][Simple Build Tool]] (sbt for short) is a very pleasant tool to compile
+your Scala code. If you (or your computer) are alergic to Eclipse,
+using sbt with any decent editor (such as [[http://www.geany.org/][Geany]]) is probably the best
+solution. 
+
+** Compiling manually
+If everything else fails, you can always compile your code from the
+command line as follows. You should however really try to get at least
+~sbt~ working, because such manual compilations are really bothersome
+on the long term.
 
 #+LaTeX: \footnotesize\vspace{-.5\baselineskip}
 #+begin_src shell :export code
@@ -123,6 +129,13 @@ scalac -cp scala-swing.jar:. FirstTest.scala
 scala -cp scala-swing.jar:. FirstTest
 #+end_src
 #+LaTeX: \normalsize
+
+For that to work, you need to copy the [[https://github.com/mquinson/prog_scala/raw/master/jars/scala-swing_2.11-2.0.0-M2.jar][scala-swing.jar]] file in your
+directory, under that exact name.
+
+When your code evolves, you need to replace ~FirstTest.scala~ on
+the first line by the name of your source files. On the second line,
+give the name of your main class instead of ~FirstTest~. 
 
 *** Code Versioning
 
@@ -211,9 +224,9 @@ don't have enough food.
 \centerline{
 \begin{tabular}{|c|c|c|}\hline
   Kind &Cost&Armor\\\hline
-  \includegraphics[scale=.6]{img/ant_harvester.png}&&\\
+  \includegraphics[scale=.6]{src/main/resources/ant_harvester.png}&&\\
   Harvester&2&1\\\hline
-  \includegraphics[scale=.6]{img/ant_thrower.png}&&\\
+  \includegraphics[scale=.6]{src/main/resources/ant_thrower.png}&&\\
   Thrower&2&1\\\hline
 \end{tabular}}
 #+END_LaTeX
@@ -228,9 +241,9 @@ can only shot bees that are at least three entrances away.
 \centerline{
 \begin{tabular}{|c|c|c|}\hline
   Kind &Cost&Armor\\\hline
-  \includegraphics[scale=.6]{img/ant_shortthrower.png}&&\\
+  \includegraphics[scale=.6]{src/main/resources/ant_shortthrower.png}&&\\
   Short Thrower&3&1\\\hline
-  \includegraphics[scale=.6]{img/ant_longthrower.png}&&\\
+  \includegraphics[scale=.6]{src/main/resources/ant_longthrower.png}&&\\
   Long Thrower&3&1\\\hline
 \end{tabular}}\par\medskip
 #+END_LaTeX
@@ -255,7 +268,7 @@ its damage attribute (defaults to 3).
 \centerline{
 \begin{tabular}{|c|c|c|}\hline
   Kind &Cost&Armor\\\hline
-  \includegraphics[scale=.6]{img/ant_fire.png}&&\\
+  \includegraphics[scale=.6]{src/main/resources/ant_fire.png}&&\\
   Fire Ant&5&1\\\hline
 \end{tabular}}
 #+END_LaTeX
@@ -302,7 +315,7 @@ pre-determined turns (to leave some time to the player to rebuild the base).
   \includegraphics[scale=.6]{#1}&&\\%
   #2&#3&#4\\\hline%
 \end{tabular}}}
-\ant{img/ant_scuba.png}{Scuba Thrower}{5}{1}
+\ant{src/main/resources/ant_scuba.png}{Scuba Thrower}{5}{1}
 #+END_LaTeX
 * More units
 ** Wall Ant
@@ -310,7 +323,7 @@ We are going to add some protection to our glorious /AntColony/ by
 implementing the /WallAnt/, which is an ant that does nothing each turn
 (already the default action of the /Ant/ class). A /WallAnt/ is useful
 because it has a large armor value.
-#+LaTeX: \ant{img/ant_wall.png}{Wall Ant}{4}{4}
+#+LaTeX: \ant{src/main/resources/ant_wall.png}{Wall Ant}{4}{4}
 
 ** Ninja Ant
  Implement the /NinjaAnt/, which damages all Bees that pass by, but is
@@ -318,13 +331,13 @@ because it has a large armor value.
  nor does it block the path of a /Bee/ that flies by. To implement
  this behavior, add a new attribute /blocksPath/ to /Ant/ that is
  /true/ by default and /false/ for /NinjaAnt/.
-#+LaTeX: \ant{img/ant_ninja.png}{Ninja Ant}{6}{1}
+#+LaTeX: \ant{src/main/resources/ant_ninja.png}{Ninja Ant}{6}{1}
 ** HungryAnt
 We will now implement the new offensive unit called the /HungryAnt/,
 which will eat a random /Bee/ from its place, instantly killing the
 Bee. After eating a Bee, it must spend 3 turns digesting before eating
 again.
-#+LaTeX: \ant{img/ant_hungry.png}{Hungry Ant}{4}{1}
+#+LaTeX: \ant{src/main/resources/ant_hungry.png}{Hungry Ant}{4}{1}
 
 * God saves the Queen
 ** Bodyguard Ant
@@ -340,7 +353,7 @@ no ant is currently being protected. Give /BodyguardAnt/ a
 /containAnt/ method that adds the Ant passed as a parameter inti that
 field.
 
-#+LaTeX: \ant{img/ant_weeds.png}{Bodyguard Ant}{4}{2}
+#+LaTeX: \ant{src/main/resources/ant_weeds.png}{Bodyguard Ant}{4}{2}
 
 Now, change your program so that a BodyguardAnt and another Ant can
 simultaneously occupy the same Place: 
@@ -359,7 +372,7 @@ doubles the damage of all other ants in the same tunnel with her,
 including any ants protected by a bodyguard. Once any ant's damage has
 doubled, it cannot be doubled again. 
 
-#+LaTeX: \ant{img/ant_queen.png}{Queen Ant}{6}{1}
+#+LaTeX: \ant{src/main/resources/ant_queen.png}{Queen Ant}{6}{1}
 
 However, with great power comes great responsibility. The Queen is
 governed by three special rules:

@@ -14,6 +14,9 @@ Ants.tex: Ants.org
 	cat $@.bak >> $@
 	rm $@.bak
 
+Project_Ants.tar.gz: $(wildcard src/*/*)
+	cd ..; tar cvfz Project_Ants/Project_Ants.tar.gz --exclude-backups Project_Ants/src
+
 4up.pdf: Ants.pdf
 	beamer2handout Ants.pdf 4up 4up.pdf
 8up.pdf: Ants.pdf
