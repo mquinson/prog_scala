@@ -23,15 +23,19 @@ object DemoApp extends SimpleSwingApplication {
   ////////////////////////////////////////////////////
 
   object state {
-    /* records the images that move on screen */
-    // This is a (ugly) set of sprites that are animated on screen. A set of objects would be *much* better
-    var icon:ImageIcon = new ImageIcon("img/bee.png") 
-    if (icon.getIconHeight() <= 0) {
-      println("Cannot find the file img/bee.png. Please install it.")
-      icon = UIManager.getLookAndFeelDefaults().get("html.missingImage").asInstanceOf[ImageIcon]
+    /* Load the images that move on screen. Search in two locations so that it works with sbt and eclipse */
+    val path = Option(getClass.getResource("/resources/bee.png"))
+    val path2 = if (path != None) path else Option(getClass.getResource("bee.png")) 
+    val icon = path2 match {
+      case Some(url) => new ImageIcon(url)
+      case None      => {
+    	  println("Cannot find the file ../resources/bee.png. Please install it.")
+    	  UIManager.getLookAndFeelDefaults().get("html.missingImage").asInstanceOf[ImageIcon]        
+      }
     }
-    
     val im = icon.getImage( )
+    
+		// This is a (ugly) set of sprites that are animated on screen. A set of objects would be *much* better
     var imagesPos: List[Point] = Nil
     var imagesSpeed: List[Point] = Nil
     /* addImage(): Add a new image to the game state at the specified position */
