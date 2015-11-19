@@ -527,7 +527,7 @@ is particularly interesting to programming learners. I am an absolute
 fan of its subtitle: "It's not about technology for its own sake. It's
 about being able to implement your ideas". Yeah! Exactly!
 
-This [[https://michaelshaw.github.io/game_talk/game.htm][other presentation]] presents the organization of a rather large
+This [[https://michaelshaw.github.io/game_talk/game.html][other presentation]] presents the organization of a rather large
 game using the functional approach with Scala. This is probably larger
 than what you will need for your project, but that's still very
 interesting. 
