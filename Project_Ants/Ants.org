@@ -519,6 +519,8 @@ provide ant updates that come at some price. But such work is more
 centered on the game design. While interesting, this is not the topic
 of this assignment. Please check [[http://people.irisa.fr/Martin.Quinson/Hacking/Curiosa/#game][that page]] for more pointers.
 
+** Functional Programming
+
 But it is much more interesting to experiment with Functional
 Programming once your project is fully working in OOP. This topic is
 covered in a short [[http://prog21.dadgum.com/23.html][set of blog posts]] discussing the programming of
@@ -534,3 +536,21 @@ interesting.
 
 Remember, you should finish your project following the OOP approach
 before even thinking of the FP approach.
+
+** Complex Simulation
+
+Another over-simplification lays in the handling of the time. Our game
+is currently turn-based while time is rarely discrete out there. But
+making a full-featured simulation engine has a lot of
+implications. You should read [[http://cs.wellesley.edu/~games349/][this paper]] on the game aspects. From a
+Computer Science perspective, you will end up writing a
+[[https://en.wikipedia.org/wiki/Discrete_event_simulation][Discrete-Events Simulator]] (DES). If you want to make your game
+efficient even with huge amounts of entities (turning it into a real
+ant simulator), you may need to use [[http://www.acm-sigsim-mskr.org/Courseware/Fujimoto/Slides/FujimotoSlides-03-FutureEventList.pdf][advanced future events list]]
+structures and cleaver routing algorithm. You will also need to not
+animate the entities that are [[http://gameprogrammingpatterns.com/spatial-partition.html][not currently on screen]], but this will
+require to untangle the time of graphical animations from the time of
+logical updates. The former must occur at least 50 times per second
+for the entities on screen while the latter is well adapted to DES,
+with irregular updates. This brain teaser is mandatory to have a large
+but resource efficient simulation game...
