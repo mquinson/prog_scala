@@ -174,7 +174,7 @@ When your code evolves, you need to replace ~FirstTest.scala~ on
 the first line by the name of your source files. On the second line,
 give the name of your main class instead of ~FirstTest~. 
 
-*** Code Versioning
+** Code Versioning
 
 As you will eventually realize, it is very difficult to share code
 with your teammates without the appropriate tools. You are perfectly
