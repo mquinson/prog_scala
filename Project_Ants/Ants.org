@@ -70,8 +70,9 @@ You are requested form teams for two people for this project, with
 have turn your code before Sunday December 6. at noon. The defenses
 will be organized on Tuesday December 8. instead of the usual
 practical. You will have to turn in your slides on that day. Finally,
-you will have to send your report before Sunday December 13. No late
-submission will be accepted.
+you will have to send your report *and a 60-seconds long screencast* of
+your application before Sunday December 13. No late submission will be
+accepted. Kazam is a nice application to take screencasts.
 
 * Technical setup
 
@@ -80,7 +81,9 @@ submission will be accepted.
 This project must be written in Scala, using the Swing library. You
 really should use the scala-swing library, which provides Scala
 wrappers to the main Java Swing classes. You can download the
-mandatory library from [[https://github.com/mquinson/prog_scala/tree/master/jars][this site]]. 
+mandatory library from [[https://github.com/mquinson/prog_scala/tree/master/jars][this site]]. If you feel brave, you can try to
+use ScalaFX, which will be a much better solution to build GUI in
+Scala. But unfortunately, ScalaFX is still under construction.
 
 ** Editing with Eclipse
 It is advised (although not mandatory) that you use the Eclipse source
@@ -116,14 +119,18 @@ program by clicking on the little button above the code green arrow.
 [[http://www.scala-sbt.org/][Simple Build Tool]] (sbt for short) is a very pleasant tool to compile
 your Scala code. If you (or your computer) are alergic to Eclipse,
 using sbt with any decent editor (such as [[http://www.geany.org/][Geany]]) is probably the best
-solution. 
+solution. Simply edit in Geany and compile in a separate
+terminal. That's the easiest: use an editor to edit and an builder to
+build your code\ldots
 
-** Compiling manually
-If everything else fails, you can always compile your code from the
-command line as follows. You should however really try to get at least
-~sbt~ working, because such manual compilations are really bothersome
-on the long term. Download ~sbt~ from its [[http://www.scala-sbt.org/download.html][webpage]], unpack it somewhere
-(e.g. under ~/opt/sbt~) and add the ~bin~ directory to your PATH.
+Download ~sbt~ from its [[http://www.scala-sbt.org/download.html][webpage]], unpack it somewhere (e.g. under
+~/opt/sbt~) and add the ~bin~ directory to your PATH with the
+following commands. This approach is better to the one [[http://www.scala-sbt.org/0.13/tutorial/Installing-sbt-on-Linux.html][described in
+the official sbt documentation]] because it does not install anything
+with the super-user privileges. You are asked for your root password,
+but only to create a new directory. No installed file have the root
+privilege: I never install stuff from untrusted source with the root
+privilege.
 
 #+LaTeX: \footnotesize\vspace{-.5\baselineskip}
 #+BEGIN_SRC shell :export code
@@ -139,10 +146,19 @@ tar xf ~/Téléchargements/sbt-0.13.9.tgz
 echo 'export PATH=$PATH:/opt/sbt/bin' >> ~/.bashrc
 # Reload the shell configuration
 source ~/.bashrc
-# Launch the tool. It will download some missing parts 
-sbt
+# Launch your code.
+sbt run
+# This first run will download some dependencies
 #+END_SRC
 #+LaTeX: \normalsize
+
+Please see the [[http://www.scala-sbt.org/documentation.html][sbt documentation]] for more information.
+
+** Compiling manually
+If everything else fails, you can always compile your code from the
+command line as follows. You should however really try to get at least
+~sbt~ working, because such manual compilations are really bothersome
+on the long term.
 
 #+LaTeX: \footnotesize\vspace{-.5\baselineskip}
 #+begin_src shell :export code
@@ -151,8 +167,8 @@ scala -cp scala-swing.jar:. FirstTest
 #+end_src
 #+LaTeX: \normalsize
 
-For that to work, you need to copy the [[https://github.com/mquinson/prog_scala/raw/master/jars/scala-swing_2.11-2.0.0-M2.jar][scala-swing.jar]] file in your
-directory, under that exact name.
+For that, you need to copy the [[https://github.com/mquinson/prog_scala/raw/master/jars/scala-swing_2.11-2.0.0-M2.jar][scala-swing.jar]] file in your directory,
+under that exact name.
 
 When your code evolves, you need to replace ~FirstTest.scala~ on
 the first line by the name of your source files. On the second line,
@@ -165,6 +181,7 @@ with your teammates without the appropriate tools. You are perfectly
 free to use anything you see fit, such as USB key, email attachments
 or pigeons, but you probably want to use a SVN or Git.
 
+#+LaTeX: \newpage
 * Warm up
 
 You are provided with an initial application called [[https://github.com/mquinson/prog_scala/tree/master/Project_Ants/src/main/scala/DemoApp.scala][DemoApp]] It
