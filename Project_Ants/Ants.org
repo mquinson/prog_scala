@@ -511,4 +511,26 @@ governed by three special rules:
 
 * Extensions
 
-Feel free to implement any extensions that you may see fit. 
+Feel free to implement any extensions that you may see fit. Some
+gameplay elements may be interesting, such as new units or new
+enemies. You can also change your game to a more classical tower
+defense where the units can move freely over a given path and/or
+provide ant updates that come at some price. But such work is more
+centered on the game design. While interesting, this is not the topic
+of this assignment. Please check [[http://people.irisa.fr/Martin.Quinson/Hacking/Curiosa/#game][that page]] for more pointers.
+
+But it is much more interesting to experiment with Functional
+Programming once your project is fully working in OOP. This topic is
+covered in a short [[http://prog21.dadgum.com/23.html][set of blog posts]] discussing the programming of
+purely functional retrogames, focused on a simple Pac-Man. This blog
+is particularly interesting to programming learners. I am an absolute
+fan of its subtitle: "It's not about technology for its own sake. It's
+about being able to implement your ideas". Yeah! Exactly!
+
+This [[https://michaelshaw.github.io/game_talk/game.htm][other presentation]] presents the organization of a rather large
+game using the functional approach with Scala. This is probably larger
+than what you will need for your project, but that's still very
+interesting. 
+
+Remember, you should finish your project following the OOP approach
+before even thinking of the FP approach.
