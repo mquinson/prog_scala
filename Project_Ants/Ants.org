@@ -9,7 +9,6 @@
 #+LATEX_HEADER: \renewcommand{\maketitle}{
 #+LATEX_HEADER:   \noindent\null\hfill\begin{minipage}{.65\linewidth} 
 #+LATEX_HEADER:   \centering
-#+LATEX_HEADER:   %\vspace{-1.2\baselineskip}
 #+LATEX_HEADER:   \textbf{\Large Ant vs. SomeBees}\par%
 #+LATEX_HEADER:     Projet de programmation, L3\par
 #+LATEX_HEADER:    {\footnotesize 2015}
@@ -267,8 +266,6 @@ don't have enough food.
 <b>Harvester</b> (Cost: 2; Armor: 1)
 </div>
 #+END_HTML
-
-#+LaTeX: \vspace{-\baselineskip}
 
 #+BEGIN_HTML
 <div align="center">
