@@ -12,7 +12,8 @@
 #+LATEX_HEADER: \usedescriptionitemofwidthas{bl}
 #+LATEX_HEADER: \usepackage{ifthen,figlatex,amsmath,amstext}
 #+LATEX_HEADER: \usepackage{boxedminipage,xspace,multicol,multirow,pdfpages}
-#+LATEX_HEADER: \usetheme{Emptty3}
+#+LATEX_HEADER: \usepackage{../tex/beamerthemeEmptty3}
+#+LATEX_HEADER: \usepackage{../tex/pgf-umlcd}
 #+LATEX_HEADER: \usepackage{pgf,tikz,color}
 #+LATEX_HEADER: \usetikzlibrary{decorations.pathmorphing,backgrounds,fit,arrows}
 #+LATEX_HEADER: \usetikzlibrary{decorations.pathreplacing}
@@ -20,7 +21,6 @@
 #+LATEX_HEADER: \usetikzlibrary{positioning}
 #+LATEX_HEADER: \usetikzlibrary{arrows,automata}
 #+LATEX_HEADER: \usetikzlibrary{patterns}
-#+LATEX_HEADER: \usepackage{pgf-umlcd}
 
 #+LATEX_HEADER: \usepackage{minted}
 #+LATEX_HEADER: \definecolor{dhscodebg}{rgb}{0.95,0.95,0.95}
@@ -51,7 +51,7 @@
   Martin Quinson\\
   
   {\footnotesize November 2015}\\[3.5\baselineskip]
-  \includegraphics[scale=.7]{img/logo-ens.pdf}\\[-3\baselineskip]
+  \includegraphics[scale=.7]{../img/logo-ens.pdf}\\[-3\baselineskip]
   \vfill
 \end{frame}
 #+END_LaTeX
