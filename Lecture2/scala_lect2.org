@@ -1063,10 +1063,9 @@ necessary to resolve it./
   \end{column}
   \begin{column}{.35\linewidth}
     \begin{scala}
-      scala> (new A).fun()
+      scala> val a = new A; a.fun
       I'm a A
-
-      scala> (new B).fun()
+      scala> val b = new B; b.fun
       I'm a B
     \end{scala}
   \end{column}
@@ -1112,14 +1111,29 @@ necessary to resolve it./
   }\label{sec:traits}
 #+END_LaTeX
 *** Multiple Inheritance
-- C++ lets you inherit of several classes, but gets utterly complex if
-  you do
-  - \structure{Diamond Problem:} A inherits of B and C, which both
-    inherit of D
-  - Both B and C override the same method of D. What should A execute?
-- Scala/Java: extend at most one class \small(simplicity at price of missed
-  factorizations)\normalsize
-\pause\medskip
+**** Diamond Problem: \color{black} Multiple Inheritance is not easy
+- D inherits of B and C, which both inherit of A
+- Both ~B.fun~ and ~C.fun~ override the same method  ~A.fun~
+- ~D.fun~ is called.
+  - Which to call between ~B.fun~ & ~C.fun~ ? If both, order? ~A.fun~ called twice?  
+#+BEGIN_LaTeX
+\medskip
+\begin{columns}
+  \begin{column}{.3\linewidth}
+    \includegraphics[height=5\baselineskip]{fig/Diamond_inheritance.pdf}  
+  \end{column}
+  \begin{column}{.7\linewidth}
+    \pause
+    \begin{block}{Simple Solution: don't do that.}
+      \begin{itemize}
+      \item Scala and Java forbid multiple class inheritance
+      \item Simpler, but missed factorizations opportunities
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+\medskip
 **** Safe multiple /is-a/: the Java interfaces
 - \structure{Syntax:} $\approx$ abstract classes without code any code (no diamond
   problem)
@@ -1127,16 +1141,108 @@ necessary to resolve it./
 - In practice, abstract classes and interfaces are different:
   - abstract class to factorize code; interface =  contract between
     implementer/user
-\pause
-**** Scala Traits
+*** Scala Traits: Mixing Orthogonal Concerns
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
 - Interface providing concrete members / Abstract class with multiple inheritance
-- \structure{Limitation:} Constructor parameters cannot be objects
-- \structure{Diamond Problem Mitigation:} \pause
-  - Right-most Depth-first trait wins -- other method candidates are
-    ignored
-  - Won't work for constructors: calls cannot be eliminated
-  - But thanks to the limitation above, traits have no dynamic
-    constructor
+- \structure{Not exactly a class:} cannot take constructor parameters 
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.5\linewidth}
+    \begin{scala}
+      abstract class IntQueue {
+        def get(): Int
+        def put(x: Int)
+      }
+      class BasicIntQueue extends IntQueue {
+        private val buf = new ArrayBuffer[Int]
+        def get() = buf.remove(0)
+        def put(x: Int) { buf += x }
+      }
+    \end{scala}    
+  \end{column}
+  \begin{column}{.5\linewidth}
+    \begin{scala}
+      scala> val queue = new BasicIntQueue
+      queue: BasicIntQueue = BasicIntQueue@24655f
+      scala> queue.put(10)
+      scala> queue.put(20)
+      scala> queue.get()
+      res9: Int = 10
+      scala> queue.get()
+      res10: Int = 20
+    \end{scala}
+  \end{column}
+\end{columns}
+
+
+\medskip
+\begin{columns}
+  \begin{column}{.5\linewidth}
+    \begin{scala}
+      trait Doubling extends IntQueue {
+        abstract override def put(x: Int) { 
+          super.put(2 * x) }
+      }
+    \end{scala}    
+  \end{column}
+  \begin{column}{.5\linewidth}
+    \pause
+    \begin{scala}
+      scala> class DQ extends 
+        BasicIntQueue with Doubling
+      scala> val q = new DQ; q.put(10); q.get()
+      res12: Int = 20
+    \end{scala}
+  \end{column}
+\end{columns}
+
+\medskip
+\begin{columns}
+  \begin{column}{.5\linewidth}
+    \begin{scala}
+      trait Filtering extends IntQueue {
+        abstract override def put(x: Int) { 
+          if (x>=0) super.put(x) }
+      }
+    \end{scala}    
+  \end{column}
+  \begin{column}{.5\linewidth}
+    \begin{scala}
+      scala> class DFQ extends BasicIntQueue\
+         with Doubling with Filtering
+      scala> val q=new DFQ;q.put(-1);q.put(10)
+      scala> q.get()
+      res12: Int = 20
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+- \structure{Evaluation Order} \approx traits further to the right take
+  effect first
+*** Traits and Diamond Problem
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+
+#+BEGIN_LaTeX
+\begin{scala}
+  class Animal
+  trait Furry extends Animal
+  trait HasLegs extends Animal
+  trait FourLegged extends HasLegs
+  class Cat extends Animal with Furry with FourLegged
+\end{scala}
+#+END_LaTeX
+
+\bigskip
+#+LaTeX: \centerline{\includegraphics[scale=.8]{fig/linearization.pdf}}
+**** Linearization
+- Strictily defined (but complex) order of traits and classes
+- First found implementation wins -- other method candidates are
+  ignored
+- ~super~ is not who you think, but it's for the best
 * Functional Programming
 #+BEGIN_LaTeX
   \renewcommand{\footlineSubTitle}{
