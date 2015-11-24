@@ -5,8 +5,8 @@
 #+TAGS: noexport(n)
 #+LaTeX_CLASS: beamer
 #+startup: indent
-#+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,presentation]
-# non #+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,handout]
+# non #+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,presentation]
+#+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,handout]
 #+OPTIONS:   H:3 skip:nil num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+startup: beamer
 #+LATEX_HEADER: \usedescriptionitemofwidthas{bl}
@@ -208,7 +208,7 @@
   1, 2, 3, 4, 5,
 \end{scala}
 #+END_LaTeX
-*** Folding ~List~ ~:/~ and ~:\~
+*** Folding ~List~ ~/:~ and ~\:~
 :PROPERTIES:
 :BEAMER_opt: fragile
 :END:
@@ -236,20 +236,21 @@
   \end{column}
 \end{columns}
 \begin{itemize}
-\item \framebox{\tt(z :/ xs) (op)} \texttt{z}: initial value, \texttt{xs}: list,
+\item \framebox{\tt(z /: xs) (op)} \texttt{z}: initial value, \texttt{xs}: list,
   \texttt{op}: operation to apply
 \end{itemize}
 
 \begin{columns}
+
   \begin{column}{.45\linewidth}
-    \begin{block}{\texttt{(z \alert{:/} List(a,b,c)) (op)}}
+    \begin{block}{\texttt{(z \alert{/:} List(a,b,c)) (op)}}
       \medskip
       \centerline{\includegraphics{fig/foldLeft.pdf}}
       \centerline{\structure{Fold Left}}
     \end{block}
   \end{column}
   \begin{column}{.45\linewidth}
-    \begin{block}{\texttt{(z \alert{:$\backslash$} List(a,b,c)) (op)}}
+    \begin{block}{\texttt{(z \alert{$\backslash$:} List(a,b,c)) (op)}}
       \medskip
       \centerline{\includegraphics{fig/foldRight.pdf}}
       \centerline{\structure{Fold Right}}
@@ -382,7 +383,7 @@
 \end{columns}
 #+END_LaTeX
 - Q4: Write a function that adds 1 to every elements of a List[Int]
-- Q5: Define $S = \{a\times 2 \mid a\in [1,100] \wedge a² < 99 \wedge
+- Q5: Define $S = \{a\times 2 \mid a\in [1,100] \wedge a^2 < 99 \wedge
   a^3 > 9\}$
 - Q6: Explain \framebox{((\_:Double)+2)} and
   \framebox{(\_:String).size}
