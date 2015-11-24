@@ -1,0 +1,782 @@
+* Header
+
+#+BIND: org-latex-title-command ""
+
+#+TAGS: noexport(n)
+#+LaTeX_CLASS: beamer
+#+startup: indent
+#+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,presentation]
+# non #+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,handout]
+#+OPTIONS:   H:3 skip:nil num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+startup: beamer
+#+LATEX_HEADER: \usedescriptionitemofwidthas{bl}
+#+LATEX_HEADER: \usepackage{ifthen,figlatex,amsmath,amstext}
+#+LATEX_HEADER: \usepackage{boxedminipage,xspace,multicol,multirow,pdfpages}
+#+LATEX_HEADER: \usepackage{../tex/beamerthemeEmptty3}
+#+LATEX_HEADER: \usepackage{pgf,tikz,color}
+#+LATEX_HEADER: \usetikzlibrary{decorations.pathmorphing,backgrounds,fit,arrows}
+#+LATEX_HEADER: \usetikzlibrary{decorations.pathreplacing}
+#+LATEX_HEADER: \usetikzlibrary{shapes}
+#+LATEX_HEADER: \usetikzlibrary{positioning}
+#+LATEX_HEADER: \usetikzlibrary{arrows,automata}
+#+LATEX_HEADER: \usetikzlibrary{patterns}
+#+LATEX_HEADER: \usepackage{pgf-umlcd}
+
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \definecolor{dhscodebg}{rgb}{0.95,0.95,0.95}
+#+LATEX_HEADER: \newminted[scala]{hs}{autogobble, tabsize=4, fontsize=\footnotesize, bgcolor=dhscodebg}
+
+#+LATEX_HEADER: \newcommand<>{\green}[1]{{\color#2[rgb]{.5,.85,.5}#1}}
+#+LATEX_HEADER: \newcommand<>{\magenta}[1]{{\color#2[rgb]{.8,.0,.8}#1}}
+#+LATEX_HEADER: \newcommand<>{\blue}[1]{{\color#2[rgb]{.5,.5,1}#1}}
+#+LATEX_HEADER: \newcommand<>{\red}[1]{{\color#2[rgb]{1,.5,.5}#1}}
+#+LATEX_HEADER: \newcommand<>{\black}[1]{{\color#2[rgb]{0,0,0}#1}}
+
+#+LATEX_HEADER: \newsavebox{\rsbox}
+
+#+LATEX_HEADER: \def\shorttitle{Computer Programming with Scala}
+#+LATEX_HEADER:   \newcommand{\HERE}[2]{\underline{\bf\hyperlink{#2}{#1}}}
+#+LATEX_HEADER:   \newcommand{\THERE}[2]{\hyperlink{#2}{#1}}
+
+#+latex: \thispagestyle{empty}
+#+BEGIN_LaTeX
+\begin{frame}{}
+  \thispagestyle{empty}
+  \centering\null\vfill
+  \structure{ \LARGE Computer Programming with Scala}
+  \\[.5\baselineskip]
+
+  \structure{ \large Week 3: Functional Programming (FP)}
+  \\[2\baselineskip]
+  Martin Quinson\\
+  
+  {\footnotesize November 2015}\\[3.5\baselineskip]
+  \centerline{\includegraphics[scale=.7]{../img/logo-ens.pdf}}
+\end{frame}
+#+END_LaTeX
+#+LaTeX: \newcommand{\Smiley}{{\color{darkgreen}\smiley}}
+
+* Defining and Calling Functions
+#+BEGIN_LaTeX
+% \renewcommand{\footlineSubTitle}{
+%   \HERE{Functions}{sec:functions}~~~~%
+%   \THERE{OOP:~Basics}{sec:basics},~%
+%   \THERE{Howto}{sec:howto},~%
+%   \THERE{Inheritance}{sec:inherit},~%
+%   \THERE{Traits}{sec:traits}~~~~%
+%   \THERE{FP}{sec:fp}~~~%
+%   \THERE{CC}{sec:cc}
+% }\label{sec:functions}
+#+END_LaTeX
+*** Named and Default Parameters
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** Refering paramters by name
+#+BEGIN_LaTeX
+\bigskip
+\begin{scala}
+  scala> def speed ( distance: Double , time: Double ): Double =
+         distance / time
+  speed: ( distance: Double , time: Double ) Double
+
+  scala> speed (100 , 20)
+  res0: Double = 5.0
+  scala> speed ( time = 20 , distance = 100)
+  res1: Double = 5.0
+\end{scala}
+#+END_LaTeX
+**** Default Parameter values
+#+BEGIN_LaTeX
+\bigskip
+\begin{scala}
+  scala> def speed ( distance: Double=0.1 , time: Double ): Double =
+         distance / time
+  speed: ( distance: Double , time: Double ) Double
+
+  scala> val Bolt = speed (time=0.00266111)    # 9.58s = 0.00266111h
+  Bolt: Double = 37.578303790523506
+\end{scala}
+#+END_LaTeX
+
+*** Local Functions
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+
+- Functions can be defined within other functions
+- Functions are only visible in surrounding scope
+- Inner function can access namespace of surrounding function
+#+BEGIN_LaTeX
+\begin{scala}
+  def filterEven(name: String, li:List[Int]):List[Int] = {
+    def isEven(i:Int) = {
+      println(name + " contains " + i)
+      (i%2 == 0)
+    }
+    li match {
+      case Nil => Nil
+      case x::xs if (isEven(x)) => x::filterEven(name, xs)
+      case x::xs                =>    filterEven(name, xs)
+    }
+  }
+  scala> filterEven("my list", List(1,2,3,4,5) )
+  my list contains 1
+  my list contains 2
+  my list contains 3
+  my list contains 4
+  res0: List[Int] = List(2, 4)
+
+\end{scala}
+#+END_LaTeX
+
+*** Higher Order Functions
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** First Class Functions \color{black} $\leadsto$ Functions are regular values
+- Can be assigned to a variable
+- Can be passed as arguments to functions
+- Can be returned by other functions
+**** Higher Order Functions \color{black} = Functions taking function as parameter
+- Powerful abstraction mechanism
+#+BEGIN_LaTeX
+\begin{scala}
+  def my_map (lst: List[Int] , fun: Int => Int) :List[Int] =
+     for (l <- lst) yield fun (l)
+
+  val numbers = List (2 ,3 ,4 ,5)
+  def addone ( n : Int ) = n + 1
+
+  scala> my_map ( numbers , addone )
+  res0: List[Int] = List (3 , 4 , 5 , 6)  
+\end{scala}
+#+END_LaTeX
+*** Higher Order Functions on class ~List~
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** Filtering and Partitioning
+#+BEGIN_LaTeX
+\medskip
+\begin{columns}
+  \begin{column}{.4\linewidth}
+    \begin{itemize}
+    \item Functions as (named) values
+    \end{itemize}
+    \begin{scala}
+      val li = List(1, 2, 3, 4, 5)
+      def isEven (n: Int) = n%2 == 0
+      scala> li filter isEven
+      res0: List[Int] = List(2, 4)
+    \end{scala}    
+  \end{column}
+  \begin{column}{.45\linewidth}
+    \begin{itemize}
+    \item With an anonymous functions
+    \end{itemize}
+    \begin{scala}
+      scala> li filter (i => i%2 == 0)
+      res1: List[Int] = List(2, 4)
+      scala> li filter (_%2 == 0)
+      res2: List[Int] = List(2, 4)
+    \end{scala}
+  \end{column}
+\end{columns}
+
+\medskip
+
+\begin{columns}
+  \begin{column}{.92\linewidth}
+    \begin{scala}
+      scala> li partition (_%2 == 0)
+      res3: (List[Int], List[Int]) = (List(2, 4),List(1, 3, 5))
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+
+- Also defined: ~find~, ~takeWhile~, ~dropWhile~  and ~span~. Check
+  the doc
+**** Mapping over elements
+#+BEGIN_LaTeX
+\medskip
+\begin{scala}
+  scala> li map (_ + 1)
+  res4: List[Int] = List (2, 3 , 4 , 5 , 6)  
+  scala> li foreach (x => print(x + ", ") )
+  1, 2, 3, 4, 5,
+\end{scala}
+#+END_LaTeX
+*** Folding ~List~ ~:/~ and ~:\~
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+- Reduce  all elements into a single value using the provided function
+
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.8\linewidth}
+    \hspace{-2.1mm}
+    \begin{scala}
+      scala> def sum(xs: List[Int]): Int = (0 /: xs) (_ + _)
+      scala> sum( List(1,2,3,4) ) 
+      res0:Int = 10    # = 0 + 1 + 2 + 3 + 4
+    \end{scala}
+    \pause
+
+    \begin{scala}
+      scala> def sumRight(xs: List[Int]): Int = (0 \: xs) (_ + _)
+      scala> sum( List(1,2,3,4) ) 
+      res0:Int = 10    # = 0 + 4 + 3 + 2 + 1
+    \end{scala}
+  \end{column}
+  \begin{column}{.05\linewidth}
+    ~
+  \end{column}
+\end{columns}
+\begin{itemize}
+\item \framebox{\tt(z :/ xs) (op)} \texttt{z}: initial value, \texttt{xs}: list,
+  \texttt{op}: operation to apply
+\end{itemize}
+
+\begin{columns}
+  \begin{column}{.45\linewidth}
+    \begin{block}{\texttt{(z \alert{:/} List(a,b,c)) (op)}}
+      \medskip
+      \centerline{\includegraphics{fig/foldLeft.pdf}}
+      \centerline{\structure{Fold Left}}
+    \end{block}
+  \end{column}
+  \begin{column}{.45\linewidth}
+    \begin{block}{\texttt{(z \alert{:$\backslash$} List(a,b,c)) (op)}}
+      \medskip
+      \centerline{\includegraphics{fig/foldRight.pdf}}
+      \centerline{\structure{Fold Right}}
+    \end{block}
+    
+  \end{column}
+\end{columns}
+#+END_LaTeX
+- Same result if ~op~ is associative; performance may vary
+*** Partially Applied Functions: Functions as Objects
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+- Passing _ in place of parameter list creates a partially applied
+  function
+- \alert{Function Object}  automatically built by the compiler
+#+BEGIN_LaTeX
+\begin{scala}
+  scala> def sum(a: Int, b: Int, c: Int) = a + b + c
+  sum: (a: Int, b: Int, c: Int)Int
+
+  scala> sum(1, 2, 3)
+  res0: Int = 6
+                                             # This creates an object of type
+  scala> val a = sum _                       # <function3> (because sum takes
+  a: (Int, Int, Int) => Int = <function3>    # 3 parameters)
+                                             
+  scala> a(1,2,3)                            # Apply parameters to partially
+  res1: Int = 6                              # applied function => function call
+
+  scala> a.apply(1,2,3)                      # Exactly as before
+  res2: Int = 6
+
+  scala> val b = sum(1, _:Int , 3)           # Here, only one parameter remains
+  b: Int => Int = <function1>                # free. Thus the type <function1>
+\end{scala}
+#+END_LaTeX
+*** Function Objects and Implicits
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+- Underscore optional in contexts that require a function (and only there)
+#+BEGIN_LaTeX
+\begin{scala}
+  scala> someNumbers.foreach(print)  # no need to write (print _) here
+  1234
+
+  scala> val c = sum
+  <console>:5: error: missing arguments for method sum...
+  follow this method with `_' if you want to treat it as a partially applied function                ˆ
+\end{scala}
+\bigskip
+#+END_LaTeX
+
+- Haskell doesn't require the _ for the partially applied function (implicit)
+- But Scala targets Java developers $\leadsto$ needs to detect missing
+  parameters
+- Thus the need for _ in general context
+- _ is still optional where it can be no mistake
+
+*** Closures
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+- \structure{Free variable:} variable without a value; \structure{Bound variable:} variable with a value
+\vspace{-.4\baselineskip}
+**** \alert{Closure = when a function refers to an external free variable}
+#+BEGIN_LaTeX
+\medskip
+\begin{scala}
+  scala> var more = 1
+  scala> val addMore = (x: Int) => x + more
+  addMore: (Int) => Int = <function1>
+  scala> addMore(10)
+  res0: Int = 11
+\end{scala}
+#+END_LaTeX
+- This function object is a \structure{closure}, because it
+  en\structure{closes} (packs) the free variables
+- In scala, \alert{captures the variables}, not the values\hfill\small (Java
+  captures constants)\normalsize
+#+BEGIN_LaTeX
+\begin{scala}
+  scala> more = 3 ; addMore(10)
+  res1: Int = 13
+\end{scala}
+#+END_LaTeX
+**** Building Closures
+#+BEGIN_LaTeX
+\vspace{.4\baselineskip}
+\begin{scala}
+  scala> def makeIncreaser(more: Int) = (x: Int) => x + more
+  makeIncreaser: (more: Int)Int => Int
+
+  scala> val inc9999 = makeIncreaser(9999)
+  inc9999: (Int) => Int = <function1>
+\end{scala}
+#+END_LaTeX
+- Each closure gets its own copy of the captured elements
+*** Other Considerations
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** Code Factorization with Higher Order Functions
+#+BEGIN_LaTeX
+\medskip
+\begin{columns}
+  \begin{column}{.5\linewidth}
+    \begin{scala}
+      def withOdd(nums: List[Int]): Boolean={
+        var exists = false
+        for (num <- nums)
+          if (num % 2 == 1)
+            exists = true
+        exists
+      }
+    \end{scala}    
+  \end{column}
+  \begin{column}{.48\linewidth}
+    \begin{scala}
+      def withOdd(nums: List[Int]): Boolean=
+           nums.exists(_%2 == 1)
+    \end{scala}
+    \begin{itemize}
+    \item Q1: Implement List.length with :/
+    \item Q2: List.reverse() with :/
+    \item Q3: Type of  \framebox{\small((x:Double) => x+1)}
+    \end{itemize}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+- Q4: Write a function that adds 1 to every elements of a List[Int]
+- Q5: Define $S = \{a\times 2 \mid a\in [1,100] \wedge a² < 99 \wedge
+  a^3 > 9\}$
+- Q6: Explain \framebox{((\_:Double)+2)} and
+  \framebox{(\_:String).size}
+# Q1: def len[T](xs: List[T]) = (0 /: xs) { (sum, _) => sum + 1}
+# Q2: def reverseLeft[T](xs: List[T]) = (List[T]() /: xs) {(ys, y) => y :: ys}
+# Q3: Double => Double = <function1>
+# Q4: def plusOne(xs:List[Int]) = xs map (_ +1)
+# Q5: for {x <- 0 to 100 if x * x > 3} yield  x * 2
+#     (0 to 100).filter(x => x * x > 3).map(_ * 2)
+# Q6: Double => Double= <function1>   and   String => Int = <function1>  
+**** Tail Recusion Optimization
+- Scala can optimize every tail recursive functions into a while loop
+- Works only for basic forms (not mutually recursive, not partially
+  applied)
+#+LaTeX: \vspace{-.5\baselineskip}
+**** Lazy variables \color{black}\framebox{\tt\small lazy val ui = ...}
+- Only evaluated on need (usually, scala values are evaluated when
+  defined)
+*** Currying
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+- Defining functions with multiple parameter lists
+#+BEGIN_LaTeX
+\begin{scala}
+  scala> def curriedSum(x: Int)(y: Int) = x + y
+  curriedSum: (x: Int)(y: Int)Int
+
+  scala> curriedSum(1)(2)
+  res5: Int = 3
+\end{scala}
+#+END_LaTeX
+- You are actually defining two functions back to back
+#+BEGIN_LaTeX
+\begin{scala}
+  scala> def first(x: Int) = (y: Int) => x + y
+  first: (x: Int)(Int) => Int
+
+  scala> val second = first(1)
+  second: (Int) => Int = <function1>
+\end{scala}
+#+END_LaTeX
+- Currying and Partially applied function
+#+BEGIN_LaTeX
+\begin{scala}
+  scala> curriedSum(1)
+  <console>:14: error: missing arguments for method curriedSum; follow this method with ‘_ ’ if you want to treat it as a partially applied function
+
+  scala> curriedSum(1)_
+  res6: Int => Int = <function1>
+\end{scala}
+#+END_LaTeX
+- This explains the :/ syntax
+*** Function Composition
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+#+BEGIN_LaTeX
+\begin{scala}
+  def f(s: String) = "f(" + s + ")"
+  def g(s: String) = "g(" + s + ")"
+\end{scala}
+#+END_LaTeX
+**** ~compose~ makes a new function that composes its parameters: \alert{f(g(x))}
+#+BEGIN_LaTeX
+\smallskip
+\begin{scala}
+  scala> val FoG = f _ compose g _
+  FoG: String => String = <function1>
+
+  scala> FoG("yah")
+  res0: String = f(g(yah))
+\end{scala}
+#+END_LaTeX
+**** ~andThen~ does the same in the reverse order: \alert{g(f(x))}
+#+BEGIN_LaTeX
+\smallskip
+\begin{scala}
+  scala> val FthenG = f _ andThen g _
+  FthenG: String => String = <function1>
+
+  scala> FthenG("yah")
+  res1: String = g(f(yah))
+\end{scala}
+#+END_LaTeX
+
+*** PartialFunction
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+- It's a function that is not defined for every parameter value
+- It is not a Partially Applied Function
+#+BEGIN_LaTeX
+\smallskip
+\begin{scala}
+  scala> val one: PartialFunction[Int, String] = { case 1 => "one" }
+  one: PartialFunction[Int,String] = <function1>
+
+  scala> one.isDefinedAt(1)                      scala> one.isDefinedAt(2)
+  res0: Boolean = true                           res1: Boolean = false
+\end{scala}
+#+END_LaTeX
+- You can chain PartialFunctions with orElse
+#+BEGIN_LaTeX
+\smallskip
+\begin{scala}
+  scala> val two: PartialFunction[Int, String] = { case 2 => "two" }
+  two: PartialFunction[Int,String] = <function1>
+  scala> val three: PartialFunction[Int, String] = { case 3 => "three" }
+  scala> val wildcard: PartialFunction[Int, String] = { case _ => "something else" }
+  scala> val partial = one orElse two orElse three orElse wildcard
+  partial: PartialFunction[Int,String] = <function1>
+
+  scala> partial(5)                     scala> partial(3)
+  res1: String = something else         res2: String = three
+
+  scala> partial(2)                     scala> partial(1)
+  res3: String = two                    res4: String = two
+\end{scala}
+#+END_LaTeX
+*** ~case class~ and Pattern Matching
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** Defining a case class
+#+BEGIN_LaTeX
+\smallskip
+\begin{scala}
+  abstract class Tree
+  case class Branch(left: Tree, right: Tree) extends Tree
+  case class Leaf(x: Int) extends Tree
+\end{scala}
+#+END_LaTeX
+**** Declaring  a value
+#+BEGIN_LaTeX
+\smallskip
+\begin{scala}
+  val t = Branch(Branch(Leaf(1), Leaf(2)), Branch(Leaf(3), Leaf(4)))
+\end{scala}
+#+END_LaTeX
+**** Pattern Matching
+#+BEGIN_LaTeX
+\smallskip
+\begin{scala}
+  def sumLeaves(t: Tree): Int = t match {
+    case Branch(l, r) => sumLeaves(l) + sumLeaves(r)
+    case Leaf(x) => x
+  }
+\end{scala}
+#+END_LaTeX
+**** Matching on Variable Declaration
+#+BEGIN_LaTeX
+\medskip
+\begin{scala}
+  scala> val b = Branch(Leaf(1), Leaf(2))
+  b: Branch
+
+  scala> val Branch(_, l) = b
+  l: Tree = Leaf(2)
+\end{scala}
+#+END_LaTeX
+
+*** Parametrized types
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** Defining a Tree[String] \normalsize(without duplication)
+#+BEGIN_LaTeX
+\medskip
+\begin{scala}
+  abstract class Tree[A]
+  case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
+  case class Leaf[A](x: A) extends Tree[A]
+
+  scala> val t = Branch(Branch(Leaf("a"), Leaf("b")), Branch(Leaf("c"), Leaf("d")))
+  t: Branch[String] = Branch(Branch(Leaf(a),Leaf(b)),Branch(Leaf(c),Leaf(d)))
+\end{scala}
+#+END_LaTeX
+- ~Tree~ is a trait while ~Tree[Int]~ is a type  
+\vspace{-.5\baselineskip}
+\pause
+**** The ~Option~ type
+- When you search for a value in a list, you don't know whether you'll
+  find it
+- An ~Option[A]~ can either be a ~Some~ (containing a value) or a ~None~
+#+BEGIN_LaTeX
+\begin{scala}
+  val capitals = Map("France" -> "Paris", "Japan" -> "Tokyo")
+  
+  scala> capitals get "France"
+  res0: Option[java.lang.String] = Some(Paris)
+
+  scala> capitals get "North Pole"
+  res1: Option[java.lang.String] = None
+\end{scala}
+#+END_LaTeX
+- Q: Define the follwing methods over Tree[A]: find, map, foreach,
+  filter
+*** Variance
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+- Would you say that a ~Tree[Int]~ \alert{ is-a } ~Tree[Any]~? 
+- Is it ok to provide a ~Tree[Int]~ where a ~Tree[Any]~ was expected?
+\pause\vspace{-.5\baselineskip}
+- Intuitively, yes, but by default, Scala generic types are
+  \alert{nonvariant}
+- If your type ~Tree~ is \alert{covariant} (flexible), just say so:
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.9\linewidth}
+    \begin{scala}
+      trait Tree[+T] { ... }    # a Tree[Int] is indeed a Tree[Any]
+    \end{scala}    
+  \end{column}
+\end{columns}
+#+END_LaTeX
+- In some cases, you can tell that your type is \alert{contravariant}
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.9\linewidth}
+    \begin{scala}
+      trait Tree[-T] { ... }    # WRONG! a Tree[Any] cannot be a Tree[Int]!
+    \end{scala}    
+  \end{column}
+\end{columns}
+#+END_LaTeX
+- Purely functionnal types are often covariant
+\pause
+**** Mutable Data is often not Covariant
+#+BEGIN_LaTeX
+\medskip
+\begin{columns}
+  \begin{column}{.5\linewidth}
+    \begin{scala}
+      class Cell[+T](init: T) { # WRONG
+        private[this] var current = init
+        def get = current
+        def set(x: T) { current = x }
+      }
+      val c1 = new Cell[String]("abc")
+      val c2: Cell[Any] = c1
+      c2.set(1)
+      val s: String = c1.get   # WOOOOPS
+    \end{scala}    
+  \end{column}
+  \begin{column}{.5\linewidth}
+    \begin{itemize}
+    \item This would sets the string to 1!
+    \item Type system actually prevents this
+    \end{itemize}
+    \begin{scala}
+      Cell.scala:7: error: covariant type T 
+      occurs in contravariant position in 
+      type T of value x
+      def set(x: T) = current = x
+                 ˆ
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+*** Variance and subtyping
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+
+#+BEGIN_LaTeX
+\begin{scala}
+  class Animal { val sound = "rustle" }
+  class Bird extends Animal { override val sound = "call" }
+  class Chicken extends Bird { override val sound = "cluck" }
+\end{scala}
+#+END_LaTeX
+**** Specialization:\color{black}\normalsize{} You need a ~Bird~ and have a ~Chicken~. That's OK.
+- This is the \alert{Liskov Substitution Principle}
+#+BEGIN_LaTeX
+\begin{scala}
+  scala> val a:Bird = new Chicken                scala> a.sound
+  a: Bird = Chicken@1fcaea93                     res8: String = cluck
+\end{scala}
+#+END_LaTeX
+- But you cannot use an ~Animal~ in place of a ~Bird~
+\vspace{-.5\baselineskip}
+\pause
+**** Function parameters are contravariants
+- Can't use a function that takes a ~Chicken~ for a function that
+  takes a ~Bird~
+  - It would choke on a ~Duck~; But a function that takes an ~Animal~ is OK
+#+BEGIN_LaTeX
+\begin{scala}
+  scala> val getTweet: (Bird => String) = ((a: Animal) => a.sound )
+  getTweet: Bird => String = <function1>
+\end{scala}
+#+END_LaTeX
+\pause
+**** Function return value are covariant
+- Need a function that returns a ~Bird~? A function returning a ~Chicken~
+  is OK
+#+BEGIN_LaTeX
+\begin{scala}
+  scala> val hatch: (() => Bird) = ((_) => new Chicken )
+  hatch: () => Bird = <function0>
+\end{scala}
+#+END_LaTeX
+
+*** Polymorphism Bounds
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** Refine your polymorphism
+#+BEGIN_LaTeX
+\medskip
+\begin{scala}
+  scala> def cacophony[T](things: Seq[T]) = things map (_.sound)
+  <console>:7: error: value sound is not a member of type parameter T
+         def cacophony[T](things: Seq[T]) = things map (_.sound)
+                                                          ^
+
+  scala> def biophony[T <: Animal](things: Seq[T]) = things map (_.sound)
+  biophony: [T <: Animal](things: Seq[T])Seq[java.lang.String]
+
+  scala> biophony(Seq(new Chicken, new Bird))
+  res5: Seq[java.lang.String] = List(cluck, call)
+\end{scala}
+#+END_LaTeX
+- ~biophony~ takes any T that /is-a/ Animal
+\pause
+**** Lower bound: \color{black}\normalsize{} List[T] defines ::(elem T) but also ::(U >: T)
+#+BEGIN_LaTeX
+\medskip
+\begin{scala}
+  scala> val flock = List(new Bird, new Bird)
+  flock: List[Bird] = List(Bird@7e1ec70e, Bird@169ea8d2)
+
+  scala> new Chicken :: flock
+  res6: List[Bird] = List(Chicken@56fbda05, Bird@7e1ec70e, Bird@169ea8d2)
+  scala> new Animal :: flock
+  res7: List[Animal] = List(Animal@56fbda05, Bird@7e1ec70e, Bird@169ea8d2)
+\end{scala}
+#+END_LaTeX
+
+*** More on Polymorphism 
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+
+**** Quantification: \color{black}\normalsize{} When one you don't care about one type
+#+BEGIN_LaTeX
+\medskip
+\begin{scala}
+  scala> def count[A](l: List[A]) = l.size
+  count: [A](List[A])Int                    # A is useless
+
+  scala> def count(l: List[_]) = l.size
+  count: (List[_])Int                       # It's thus omitted
+\end{scala}
+#+END_LaTeX
+\pause
+**** Structural Types: \color{black}\normalsize{} specify type requirements by interface structure
+#+BEGIN_LaTeX
+\medskip
+\begin{scala}
+  scala> def foo(x: { def get: Int }) = 123 + x.get
+  foo: (x: AnyRef{def get: Int})Int
+
+  scala> foo(new { def get = 10 })                 
+  res0: Int = 133
+\end{scala}
+#+END_LaTeX
+- ~x~ parameter must be provided with a ~get~ function to be concrete
+- The second class makes an ad-hoc anonymous class
+\pause
+**** Erasure
+- Unfortunately, the JVM erases every type specialization
+- From ~List[Int]~, only ~List[_]~ remains at runtime
+*** Take home messages
+**** Functional Programming
+- Avoid mutable values, prefer expressions over statements
+- \structure{Higher Order:} pass functions as parameters  (to factorize behavior)
+- \structure{Partially Applied Functions:} Function objects as first-class citizens
+- \structure{Closures:} functions that encapsulate some external state
+- \structure{Currying:} functions with multiple parameter lists
+- \structure{Parametrized types:} containers such as ~Tree[A]~
+- \structure{Variance} permits to refine what we expect (the type system to our rescue)
+**** FP in Scala
+- Having both OOP and FP is nice and funny, but that's a lot of tools
+- Getting used to them requires a lot of practice
+- Some Scala choices are very debatable (it targets the Java
+  ecosystem)
+* Footer
+** 
+# Local Variables:
+# eval:    (setq org-latex-listings 'minted)
+# eval:    (setq org-latex-minted-options '(("bgcolor" "Moccasin") ("style" "tango") ("numbers" "left") ("numbersep" "5pt")))
+# eval:    (org-babel-do-load-languages 'org-babel-load-languages '((sh . t) (scala . t) ))
+# eval:    (setq org-confirm-babel-evaluate nil)
+# End:
