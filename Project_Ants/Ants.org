@@ -2,7 +2,7 @@
 #+OPTIONS:  H:3 skip:nil num:t toc:nil
 #+LaTeX_CLASS: article
 #+LaTeX_CLASS_OPTIONS: [11pt,twocolumn]
-#+LaTeX_HEADER: \usepackage{ensrennes}
+#+LaTeX_HEADER: \usepackage{../tex/ensrennes}
 #+LATEX_HEADER: \usepackage{xcolor,float}
 #+LATEX_HEADER: \hypersetup{urlcolor={blue},colorlinks}
 #+LATEX_HEADER: \usepackage{fullpage}
