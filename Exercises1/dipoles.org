@@ -25,15 +25,14 @@
   
 #+BEGIN_LaTeX
 
-\begin{abstract}
-  In this assignment, you will  write a program modeling 
-  electical dipoles  to  compute their impedance. To that extend,
-  you will design and implement a hierarchy of classes.
-\end{abstract}
+%\begin{abstract}
+%  In this assignment, you will  write a program modeling 
+%  electical dipoles  to  compute their impedance. To that extend,
+%  you will design and implement a hierarchy of classes.
+%\end{abstract}
 #+END_LaTeX
 
-
-* Computing the Impedance of Electrical Circuit
+* Electrical Dipoles
 
 Every electrical circuit is composed of differing components such as
 resistors, capacitors, diodes and electromagnetic coils. They can be
@@ -123,7 +122,7 @@ $i=1\angle \frac{\pi}{2} = e^{j\frac{\pi}{2}}$).
 \end{tabular}
 
 #+END_LaTeX
-* Modeling
+** Modeling ~Dipole~
 We will use the following class hierarchy to model the electrical
 dipoles.
 
@@ -165,7 +164,7 @@ of the hierarchy. The parameter ~omega~ represents the angular
 frequency of the current. The impedance is a complex number (only
 resistors have a real impedance).
 
-* Implementing ~Dipole~
+** Implementing ~Dipole~
 Download and unpack the [[https://github.com/mquinson/prog_scala/raw/master/Exercises1/Exo1_template.tar.gz][provided code]] to your local disk. Rename the
 ~template~ directory to ~src~\footnote{mv template src}, open the
 sources with your favorite editor (or ~geany~ if you have no favorite
@@ -320,3 +319,4 @@ instances of dipoles:
   \end{minipage}
 \end{figure}
 \end{document}
+
