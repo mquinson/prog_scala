@@ -24,14 +24,6 @@
 #+LATEX_HEADER: \usepackage{caption}
 #+LATEX_HEADER: \captionsetup{labelformat=empty,textfont=bf}
   
-#+BEGIN_LaTeX
-
-%\begin{abstract}
-%  In this assignment, you will  write a program modeling 
-%  electical dipoles  to  compute their impedance. To that extend,
-%  you will design and implement a hierarchy of classes.
-%\end{abstract}
-#+END_LaTeX
 
 * Electrical Dipoles
 
