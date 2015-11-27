@@ -128,32 +128,3 @@ class DipolesSpec extends FlatSpec with Matchers with Inside with Inspectors {
     
   }
 }
-/*
-public class TestsAutomatiques {
-        
-         @Test
-    public void testInstances() {
-        double omega = 314.16 ; 
-    	Dipole dip1 = Instances.dip1();
- 
-	   	String expectedS = "Parallele(Resistance(100.0), Serie(Self(5.0E-5), Resistance(12000.0)), Capacite(9.000000000000001E-9))";
-	    String gotS = dip1.toString();
-	    org.junit.Assert.assertEquals("Echec de l'instanciation de dip1", expectedS, gotS);
-
-		Complexe expected = new Complexe(99.17354592177011, -0.02780791066116556);
-        Complexe got = dip1.impedance(omega);
-        org.junit.Assert.assertEquals("Echec de l'instanciation de dip1", expected, got);
-
-    	
-    	Dipole dip2 = Instances.dip2();
-
-    	String expectedS2="Serie(Resistance(100.0), Parallele(Serie(Parallele(Serie(Resistance(1000.0), Self(5.0E-5)), Capacite(0.009000000000000001), Serie(Capacite(9.000000000000001E-4), Capacite(1.0E-5))), Resistance(330.0)), Serie(Resistance(1000.0), Self(0.2))), Capacite(1.0E-6))";
-    	String gotS2 =dip2.toString();
-        org.junit.Assert.assertEquals("Echec de l'instanciation de dip2", expectedS2, gotS2);
-
-		Complexe expected2 = new Complexe(348.30897600031903, -3179.4318289334137);
-        Complexe got2 = dip2.impedance(omega);
-        org.junit.Assert.assertEquals("Echec de l'instanciation de dip2", expected2, got2);
-    }
-}
-*/
