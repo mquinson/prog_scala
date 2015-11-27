@@ -14,11 +14,13 @@ scala_exo2.tex: scala_exo2.org
 	cat $@.bak >> $@
 	rm $@.bak
 
-scala_exo2.tar.gz: $(wildcard src/*/*/*/*) build.sbt killparts
-	rm -rf template
+scala_exo2.tar.gz: $(wildcard src/*/*/*/*) build.sbt killparts Makefile
+	rm -rf scala_exo2
+	mkdir scala_exo2
 	for n in `find src -name '*.scala'` ; do \
-	  m=`echo $$n|sed -e 's|src/|template/|'`; \
+	  m=`echo $$n|sed -e 's|^|scala_exo2/|'`; \
 	  mkdir -p `dirname $$m` ; \
 	  ./killparts  $$n $$m ; \
 	done
-	cd ..; tar cvfz Practical2/scala_exo2.tar.gz --exclude-backups Practical2/template Practical2/build.sbt
+	cp build.sbt scala_exo2
+	tar cvfz scala_exo2.tar.gz --exclude-backups scala_exo2

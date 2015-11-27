@@ -8,6 +8,7 @@
 #+LATEX_HEADER: \usepackage{tikz}\usetikzlibrary{arrows}
 #+LATEX_HEADER: \usepackage[american inductor]{circuitikz}
 #+LATEX_HEADER: \usepackage{../tex/pgf-umlcd}
+# non #+LATEX_HEADER: \usepackage{../tex/starsection}
 
 #+LATEX_HEADER: \hypersetup{urlcolor={blue},colorlinks}
 #+LATEX_HEADER: \usepackage{fullpage}
@@ -158,14 +159,14 @@ frequency of the current. The impedance is a complex number (only
 resistors have a real impedance).
 
 ** Implementing ~Dipole~
-Download and unpack the [[https://github.com/mquinson/prog_scala/raw/master/Exercises1/Exo1_template.tar.gz][provided code]] to your local disk. Rename the
-~template~ directory to ~src~\footnote{mv template src}, open the
-sources with your favorite editor (or ~geany~ if you have no favorite
-editor yet). The provided code contains a ~build.sbt~ file for easy
+Download, unpack the [[https://github.com/mquinson/prog_scala/raw/master/Practical2/scala_exo2.tar.gz][provided code]] to your local disk and open it with
+your favorite editor (or ~geany~ if you have no favorite editor
+yet). The provided code contains a ~build.sbt~ file for easy
 compilation, as well as a set of unit tests checking the features that
 you should implement.  You should run the tests often during your
-work\footnote{sbt test} to track your progress. Of course, the tests
-for a given feature will fail until you implement that feature.
+work\footnote{Run the tests with the following command: ~sbt test~} to
+track your progress. Of course, the tests for a given feature will
+fail until you implement that feature.
 
 \Question We will first implement the simple dipoles. Fill the classes
 ~Resistor~, ~Capacitor~ and ~Inductor~ in file ~src/main/scala/~
@@ -255,8 +256,8 @@ enabling to build a new circuit by appending a dipole to the currently
 defined one.
 
 \Question You will now fill the file
-~src/main/scala/dipole/Instances.scala~ to define the following
-instances of dipoles:
+~src/main/scala/dipole/Instances.scala~ to define the instances of
+dipoles depicted below.
 
 #+BEGIN_LaTeX
 \begin{figure}[h]
