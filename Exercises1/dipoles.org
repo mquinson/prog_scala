@@ -7,6 +7,7 @@
 #+LATEX_HEADER: \usepackage{xcolor,float,array}
 #+LATEX_HEADER: \usepackage{tikz}\usetikzlibrary{arrows}
 #+LATEX_HEADER: \usepackage[american inductor]{circuitikz}
+#+LATEX_HEADER: \usepackage{../tex/pgf-umlcd}
 
 #+LATEX_HEADER: \hypersetup{urlcolor={blue},colorlinks}
 #+LATEX_HEADER: \usepackage{fullpage}
@@ -265,6 +266,7 @@ defined one.
 ~src/main/scala/dipole/Instances.scala~ to define the following
 instances of dipoles:
 
+#+BEGIN_LaTeX
 \begin{figure}[h]
   \centering
 
@@ -318,5 +320,72 @@ instances of dipoles:
     \caption{The \texttt{dip2}  dipole.}\label{fig:dip2}
   \end{minipage}
 \end{figure}
-\end{document}
+#+END_LaTeX
 
+
+* Blogging 
+#+LaTeX: \setcounter{Question}{0}
+#+LaTeX: \newcommand{\meth}[1]{\fbox{\texttt{#1}}}
+We will now implement a blogging micro-system: a web site constituted
+of posts aggregated over time. These posts can be text messages,
+images or videos.  \emph{Tags} can be attached to images or videos, to
+select the ones that match a given set of keywords. The textual
+messages cannot be tagged, but the textual search should operate on
+their content directly.
+
+#+BEGIN_LaTeX
+\begin{figure}[htb]
+\noindent%
+\resizebox{\linewidth}{!}{
+\begin{tikzpicture}[]%[show background grid]
+  \begin{class}[text width=5cm]{case Publishable}{3.5,-4.5}
+    \attribute{date:Long}
+    \attribute{author:String}
+  \end{class}
+
+  \begin{interface}[text width=4.5cm]{Taggable}{-2.5,-2.5}
+         \attribute{tags: List[String]}
+	 \operation{addTag(tag:String)}
+	 \operation{removeTag(tag:String)}
+	 \operation{tagCount() :Integer)}
+	 \operation{getTags() :List[String]}
+  \end{interface}
+
+  \begin{class}[text width=3cm]{Message}{5.5,-7.5}
+	 \inherit{case Publishable}
+	 \attribute{content:String}
+  \end{class}
+
+  \begin{class}[text width=3cm]{Picture}{1.5,-7.5}
+	 \inherit{case Publishable}
+	 \implement{Taggable}
+	 \attribute{url: String}
+  \end{class}
+
+  \begin{class}[text width=3cm]{Video}{-2.5,-7.5}
+	 \inherit{case Publishable}
+	 \implement{Taggable}
+	 \attribute{url: String}
+  \end{class}
+
+  \begin{class}[text width=10cm]{BlogService}{13.5,-2.6}
+    \attribute{title :String}
+    \operation{post(item:Publishable)}
+    \operation{getItems() :List[Publishable]}
+    \operation{getPublishableItemsCount() :Integer}
+    \operation{getTaggableItemsCount() :Integer}
+    \operation{getLatestItem(): Publishable }
+    \operation{find(filter: Publishable => Boolean): List[Publishable]}
+    \operation{byTags(tags:List[String]) :List[Publishable]}
+    \operation{byContent(keywords:List[String]) :List[Publishable]}
+    \operation{byTagsOrContent(words:List[String]) :List[Publishable]}
+  \end{class}
+
+  \aggregation{BlogService}{items}{0..*}{case Publishable}
+\end{tikzpicture}
+}
+\end{figure}
+#+END_LaTeX
+
+\Question Implement this hierarchy of classes, and test your work with
+an appropriate specification.
