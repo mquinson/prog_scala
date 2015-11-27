@@ -14,11 +14,11 @@ dipoles.tex: dipoles.org
 	cat $@.bak >> $@
 	rm $@.bak
 
-Exo1_template.tar.gz: $(wildcard src/*/*/*/*) build.sbt killparts
+Practical2_template.tar.gz: $(wildcard src/*/*/*/*) build.sbt killparts
 	rm -rf template
 	for n in `find src -name '*.scala'` ; do \
 	  m=`echo $$n|sed -e 's|src/|template/|'`; \
 	  mkdir -p `dirname $$m` ; \
 	  ./killparts  $$n $$m ; \
 	done
-	cd ..; tar cvfz Exercises1/Exo1_template.tar.gz --exclude-backups Exercises1/template Exercises1/build.sbt
+	cd ..; tar cvfz Practical2/Practical2_template.tar.gz --exclude-backups Practical2/template Practical2/build.sbt

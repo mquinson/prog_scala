@@ -55,11 +55,11 @@ your help is welcome to improve the material. Pull requests welcome ;)
   and create another repository elsewhere. Please do not post any
   solution to this assignment online. 
 
-## *Exercise Sheet 1: [Inheritance, Overriding and Dynamic Binding](https://github.com/mquinson/prog_scala/raw/master/Exercises1/dipoles.pdf)*
+## *Practical 2: [Inheritance, Overriding and Dynamic Binding](https://github.com/mquinson/prog_scala/raw/master/Practical2/dipoles.pdf)*
 
   This first exercise sheet will let you work on OOP code
   organization. You will have to design two class hierarchies. Don't
-  forget to download the associated [source template](https://github.com/mquinson/prog_scala/raw/master/Exercises1/Exo1_template.tar.gz).
+  forget to download the associated [source template](https://github.com/mquinson/prog_scala/raw/master/Practical2/Practical2_template.tar.gz).
   
 ## Compiling the material
 
