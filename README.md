@@ -84,4 +84,4 @@ possible with Mac OSX.
 This material is distributed under the CC-BY-SA licence: as with
 wikipedia material, you are free to contribute or distribute this
 content, but you cannot restrict the rights of your own copy. Your
-readers must also be allowed to contribute and modify your version.
+readers must also be allowed to modify and contribute to your version.
