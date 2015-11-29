@@ -55,6 +55,12 @@ your help is welcome to improve the material. Pull requests welcome ;)
   and create another repository elsewhere. Please do not post any
   solution to this assignment online. 
 
+### *Lecture 3: [Functional Programming](https://github.com/mquinson/prog_scala/raw/master/Lecture3/scala_lect3.pdf).*
+  
+  This week we explore another way of sorting your bits, centered on
+  the behaviors. We speak of higher order functions and closures, but
+  also of variance, covariance, invariance and friends.
+
 ## *Practical 2: [Inheritance, Overriding and Dynamic Binding](https://github.com/mquinson/prog_scala/raw/master/Practical2/scala_exo2.pdf)*
 
   This exercise sheet will let you work on OOP code organization. You
