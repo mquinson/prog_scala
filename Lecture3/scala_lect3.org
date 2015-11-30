@@ -56,17 +56,16 @@
 #+END_LaTeX
 #+LaTeX: \newcommand{\Smiley}{{\color{darkgreen}\smiley}}
 
-* Defining and Calling Functions
+* Higher Order Functions
 #+BEGIN_LaTeX
-% \renewcommand{\footlineSubTitle}{
-%   \HERE{Functions}{sec:functions}~~~~%
-%   \THERE{OOP:~Basics}{sec:basics},~%
-%   \THERE{Howto}{sec:howto},~%
-%   \THERE{Inheritance}{sec:inherit},~%
-%   \THERE{Traits}{sec:traits}~~~~%
-%   \THERE{FP}{sec:fp}~~~%
-%   \THERE{CC}{sec:cc}
-% }\label{sec:functions}
+\renewcommand{\footlineSubTitle}{
+  \HERE{HigherOrder}{sec:higher},~%
+  \THERE{FunctionObjects}{sec:funobj},~%
+  \THERE{Closures}{sec:closures},~%
+  \THERE{Currying}{sec:currying}~~~~%
+  \THERE{Variance}{sec:variance}~~~~%
+  \THERE{CC}{sec:cc}
+}\label{sec:higher}
 #+END_LaTeX
 *** Named and Default Parameters
 :PROPERTIES:
@@ -260,6 +259,19 @@
 \end{columns}
 #+END_LaTeX
 - Same result if ~op~ is associative; performance may vary
+* Function Objects
+# TODO:  difference between methods and functions
+# http://stackoverflow.com/questions/2529184/difference-between-method-and-function-in-scala
+#+BEGIN_LaTeX
+\renewcommand{\footlineSubTitle}{
+  \THERE{HigherOrder}{sec:higher},~%
+  \HERE{FunctionObjects}{sec:funobj},~%
+  \THERE{Closures}{sec:closures},~%
+  \THERE{Currying}{sec:currying}~~~~%
+  \THERE{Variance}{sec:variance}~~~~%
+  \THERE{CC}{sec:cc}
+}\label{sec:funobj}
+#+END_LaTeX
 *** Partially Applied Functions: Functions as Objects
 :PROPERTIES:
 :BEAMER_opt: fragile
@@ -311,6 +323,17 @@
 - Thus the need for _ in general context
 - _ is still optional where it can be no mistake
 
+* Closures
+#+BEGIN_LaTeX
+\renewcommand{\footlineSubTitle}{
+  \THERE{HigherOrder}{sec:higher},~%
+  \THERE{FunctionObjects}{sec:funobj},~%
+  \HERE{Closures}{sec:closures},~%
+  \THERE{Currying}{sec:currying}~~~~%
+  \THERE{Variance}{sec:variance}~~~~%
+  \THERE{CC}{sec:cc}
+}\label{sec:closures}
+#+END_LaTeX
 *** Closures
 :PROPERTIES:
 :BEAMER_opt: fragile
@@ -402,6 +425,17 @@
 **** Lazy variables \color{black}\framebox{\tt\small lazy val ui = ...}
 - Only evaluated on need (usually, scala values are evaluated when
   defined)
+* Currying
+#+BEGIN_LaTeX
+\renewcommand{\footlineSubTitle}{
+  \THERE{HigherOrder}{sec:higher},~%
+  \THERE{FunctionObjects}{sec:funobj},~%
+  \THERE{Closures}{sec:closures},~%
+  \HERE{Currying}{sec:currying}~~~~%
+  \THERE{Variance}{sec:variance}~~~~%
+  \THERE{CC}{sec:cc}
+}\label{sec:currying}
+#+END_LaTeX
 *** Currying
 :PROPERTIES:
 :BEAMER_opt: fragile
@@ -546,6 +580,17 @@
 \end{scala}
 #+END_LaTeX
 
+* Variance
+#+BEGIN_LaTeX
+\renewcommand{\footlineSubTitle}{
+  \THERE{HigherOrder}{sec:higher},~%
+  \THERE{FunctionObjects}{sec:funobj},~%
+  \THERE{Closures}{sec:closures},~%
+  \THERE{Currying}{sec:currying}~~~~%
+  \HERE{Variance}{sec:variance}~~~~%
+  \THERE{CC}{sec:cc}
+}\label{sec:variance}
+#+END_LaTeX
 *** Parametrized types
 :PROPERTIES:
 :BEAMER_opt: fragile
@@ -582,6 +627,7 @@
 #+END_LaTeX
 - Q: Define the follwing methods over Tree[A]: find, map, foreach,
   filter
+
 *** Variance
 :PROPERTIES:
 :BEAMER_opt: fragile
