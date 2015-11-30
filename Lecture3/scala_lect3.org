@@ -60,7 +60,7 @@
 #+BEGIN_LaTeX
 \renewcommand{\footlineSubTitle}{
   \HERE{HigherOrder}{sec:higher},~%
-  \THERE{FunctionObjects}{sec:funobj},~%
+  \THERE{FunctionLiterals}{sec:funobj},~%
   \THERE{Closures}{sec:closures},~%
   \THERE{Currying}{sec:currying}~~~~%
   \THERE{Variance}{sec:variance}~~~~%
@@ -265,7 +265,7 @@
 #+BEGIN_LaTeX
 \renewcommand{\footlineSubTitle}{
   \THERE{HigherOrder}{sec:higher},~%
-  \HERE{FunctionObjects}{sec:funobj},~%
+  \HERE{FunctionLiterals}{sec:funobj},~%
   \THERE{Closures}{sec:closures},~%
   \THERE{Currying}{sec:currying}~~~~%
   \THERE{Variance}{sec:variance}~~~~%
@@ -298,6 +298,11 @@
 
   scala> val b = sum(1, _:Int , 3)           # Here, only one parameter remains
   b: Int => Int = <function1>                # free. Thus the type <function1>
+
+  # Manual and bothersome definition (much simpler if it takes only one parameter) 
+  scala> val f = {case(a,b,c) => a + b + c}: (Int,Int,Int)=>Int
+  f: (Int, Int, Int) => Int = <function3>
+
 \end{scala}
 #+END_LaTeX
 *** Function Objects and Implicits
@@ -327,7 +332,7 @@
 #+BEGIN_LaTeX
 \renewcommand{\footlineSubTitle}{
   \THERE{HigherOrder}{sec:higher},~%
-  \THERE{FunctionObjects}{sec:funobj},~%
+  \THERE{FunctionLiterals}{sec:funobj},~%
   \HERE{Closures}{sec:closures},~%
   \THERE{Currying}{sec:currying}~~~~%
   \THERE{Variance}{sec:variance}~~~~%
@@ -429,7 +434,7 @@
 #+BEGIN_LaTeX
 \renewcommand{\footlineSubTitle}{
   \THERE{HigherOrder}{sec:higher},~%
-  \THERE{FunctionObjects}{sec:funobj},~%
+  \THERE{FunctionLiterals}{sec:funobj},~%
   \THERE{Closures}{sec:closures},~%
   \HERE{Currying}{sec:currying}~~~~%
   \THERE{Variance}{sec:variance}~~~~%
@@ -584,7 +589,7 @@
 #+BEGIN_LaTeX
 \renewcommand{\footlineSubTitle}{
   \THERE{HigherOrder}{sec:higher},~%
-  \THERE{FunctionObjects}{sec:funobj},~%
+  \THERE{FunctionLiterals}{sec:funobj},~%
   \THERE{Closures}{sec:closures},~%
   \THERE{Currying}{sec:currying}~~~~%
   \HERE{Variance}{sec:variance}~~~~%
@@ -805,7 +810,7 @@
 **** Erasure
 - Unfortunately, the JVM erases every type specialization
 - From ~List[Int]~, only ~List[_]~ remains at runtime
-*** Take home messages
+*** Take Home Messages
 **** Functional Programming
 - Avoid mutable values, prefer expressions over statements
 - \structure{Higher Order:} pass functions as parameters  (to factorize behavior)
