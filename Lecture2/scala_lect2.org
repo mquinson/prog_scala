@@ -64,7 +64,8 @@
     \THERE{OOP:~Basics}{sec:basics},~%
     \THERE{Howto}{sec:howto},~%
     \THERE{Inheritance}{sec:inherit},~%
-    \THERE{Traits}{sec:traits}~~~~%
+    \THERE{Traits}{sec:traits},~%
+    \THERE{Pkg}{sec:pkg}~~~~%
     \THERE{FP}{sec:fp}~~~%
     \THERE{CC}{sec:cc}
   }\label{sec:intro}
@@ -164,7 +165,8 @@ necessary to resolve it./
     OOP:~\HERE{Basics}{sec:basics},~%
     \THERE{Howto}{sec:howto},~%
     \THERE{Inheritance}{sec:inherit},~%
-    \THERE{Traits}{sec:traits}~~~~%
+    \THERE{Traits}{sec:traits},~%
+    \THERE{Pkg}{sec:pkg}~~~~%
     \THERE{FP}{sec:fp}~~~%
     \THERE{CC}{sec:cc}
   }\label{sec:basics}
@@ -690,7 +692,8 @@ necessary to resolve it./
     \THERE{OOP:~Basics}{sec:basics},~%
     \HERE{Howto}{sec:howto},~%
     \THERE{Inheritance}{sec:inherit},~%
-    \THERE{Traits}{sec:traits}~~~~%
+    \THERE{Traits}{sec:traits},~%
+    \THERE{Pkg}{sec:pkg}~~~~%
     \THERE{FP}{sec:fp}~~~%
     \THERE{CC}{sec:cc}
   }\label{sec:howto}
@@ -771,7 +774,8 @@ necessary to resolve it./
     \THERE{OOP:~Basics}{sec:basics},~%
     \THERE{Howto}{sec:howto},~%
     \HERE{Inheritance}{sec:inherit},~%
-    \THERE{Traits}{sec:traits}~~~~%
+    \THERE{Traits}{sec:traits},~%
+    \THERE{Pkg}{sec:pkg}~~~~%
     \THERE{FP}{sec:fp}~~~%
     \THERE{CC}{sec:cc}
   }\label{sec:inherit}
@@ -1105,7 +1109,8 @@ necessary to resolve it./
     \THERE{OOP:~Basics}{sec:basics},~%
     \THERE{Howto}{sec:howto},~%
     \THERE{Inheritance}{sec:inherit},~%
-    \HERE{Traits}{sec:traits}~~~~%
+    \HERE{Traits}{sec:traits},~%
+    \THERE{Pkg}{sec:pkg}~~~~%
     \THERE{FP}{sec:fp}~~~%
     \THERE{CC}{sec:cc}
   }\label{sec:traits}
@@ -1243,6 +1248,110 @@ necessary to resolve it./
 - First found implementation wins -- other method candidates are
   ignored
 - ~super~ is not who you think, but it's for the best
+* Packages
+#+BEGIN_LaTeX
+  \renewcommand{\footlineSubTitle}{
+    \THERE{Introduction}{sec:intro}~~~~%
+    \THERE{OOP:~Basics}{sec:basics},~%
+    \THERE{Howto}{sec:howto},~%
+    \THERE{Inheritance}{sec:inherit},~%
+    \THERE{Traits}{sec:traits},~%
+    \HERE{Pkg}{sec:pkg}~~~~%
+    \THERE{FP}{sec:fp}~~~%
+    \THERE{CC}{sec:cc}
+  }\label{sec:pkg}
+#+END_LaTeX
+*** Packages
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+\vspace{-2\baselineskip}
+**** \alert{Purpose:} \color{black}group together objects (reduce coupling)\vspace{-2\baselineskip}
+
+**** Declaration Syntax \vspace{-\baselineskip}
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}[t]{.5\linewidth}
+    \begin{itemize}
+    \item Statement at beginning of file
+    \end{itemize}
+
+    ~~~~~~\begin{minipage}{.8\linewidth}
+      \begin{scala}
+        package bobsrockets.navigation
+        
+        class Navigator
+
+      \end{scala}
+    \end{minipage}
+
+    \begin{itemize}
+    \item Several packages in the same file
+    \end{itemize}
+
+    ~~~~~~\begin{minipage}{.8\linewidth}
+      \begin{scala}
+        package bobsrockets.navigation {
+          class Navigator
+        }
+      \end{scala}
+    \end{minipage}
+  \end{column}
+  
+  \begin{column}[t]{.5\linewidth}
+    \begin{itemize}
+    \item Nested packages
+    \end{itemize}
+
+    ~~~~~~\begin{minipage}{.8\linewidth}
+      \begin{scala}
+        package bobsrocket {
+          package navigation {
+            class Navigator
+            package tests {
+              class NavigatorSuite
+            }
+          }
+        }
+      \end{scala}
+    \end{minipage}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+**** Usage Syntax: Imports \vspace{-\baselineskip}
+
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}[t]{.45\linewidth}
+    \begin{itemize}
+    \item Statement at beginning of file
+    \end{itemize}
+
+    ~~~~~~\begin{minipage}{.8\linewidth}
+      \begin{scala}
+        import bobsrockets.navigation
+        import alicehost._
+      \end{scala}
+    \end{minipage}
+  \end{column}
+  
+  \begin{column}[t]{.6\linewidth}
+    \begin{itemize}
+    \item Fully qualified names
+    \end{itemize}
+
+    ~~~~~~\begin{minipage}{.8\linewidth}
+      \begin{scala}
+        val n = new bobsrocket.navigation.Navigator
+      \end{scala}
+    \end{minipage}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+- Flexible ~import~: even within a function, or import methods as
+  singletons
+- Class files must be in right relative subdirectory: \scriptsize ~bobsrocket/navigation/Navigator.class~\normalsize
+
 * Functional Programming
 #+BEGIN_LaTeX
   \renewcommand{\footlineSubTitle}{
@@ -1250,7 +1359,8 @@ necessary to resolve it./
     \THERE{OOP:~Basics}{sec:basics},~%
     \THERE{Howto}{sec:howto},~%
     \THERE{Inheritance}{sec:inherit},~%
-    \THERE{Traits}{sec:traits}~~~~%
+    \THERE{Traits}{sec:traits},~%
+    \THERE{Pkg}{sec:pkg}~~~~%
     \HERE{FP}{sec:fp}~~~%
     \THERE{CC}{sec:cc}
   }\label{sec:fp}
@@ -1360,7 +1470,8 @@ necessary to resolve it./
     \THERE{OOP:~Basics}{sec:basics},~%
     \THERE{Howto}{sec:howto},~%
     \THERE{Inheritance}{sec:inherit},~%
-    \THERE{Traits}{sec:traits}~~~~%
+    \THERE{Traits}{sec:traits},~%
+    \THERE{Pkg}{sec:pkg}~~~~~%
     \THERE{FP}{sec:fp}~~~%
     \HERE{CC}{sec:cc}%
   }\label{sec:cc}
