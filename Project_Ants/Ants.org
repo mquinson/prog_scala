@@ -216,14 +216,14 @@ screenshot.
 
 [[./img/gui_explanation.png]]
 
-The hive is on top. This is where you select the kind of ant that you
-want to place on your board. The hive cell containing the word "Bye"
+The colony is on top. This is where you select the kind of ant that you
+want to place on your board. The colony cell containing the word "Bye"
 is particular: when you select this cell and click on one of your
-existing ant, it is removed from the game.  Under the hive, you can
-see one tunnel of height places, in which you can place ants. Later in
+existing ant, it is removed from the game.  Under the colony, you can
+see one tunnel of eight places, in which you can place ants. Later in
 the game, we will create several tunnels forming several lines one
-under another. On the right, you can see 2 bees that will soon enter
-your tunnel.
+under another. On the right, you can see the hive, containing 2 bees
+that will soon enter your tunnel.
 
 \medskip 
 
@@ -231,7 +231,7 @@ your tunnel.
 
 In this first game, food is not an issue: you can create as many ants
 as you wish until you fill all existing Places. For that, click on the
-one cell of the Hive to select it, and then click on the tunnel place
+one cell of the Colony to select it, and then click on the tunnel place
 in which you want to add an ant of the selected type.
 
 The game is decomposed in several turns (of three seconds each). The
