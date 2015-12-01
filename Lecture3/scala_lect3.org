@@ -555,7 +555,7 @@
 #+BEGIN_LaTeX
 \smallskip
 \begin{scala}
-  abstract class Tree
+  trait Tree
   case class Branch(left: Tree, right: Tree) extends Tree
   case class Leaf(x: Int) extends Tree
 \end{scala}
@@ -609,7 +609,7 @@
 #+BEGIN_LaTeX
 \medskip
 \begin{scala}
-  abstract class Tree[A]
+  trait Tree[A]
   case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
   case class Leaf[A](x: A) extends Tree[A]
 

@@ -1383,7 +1383,7 @@ necessary to resolve it./
       } catch {
         case ex: FileNotFoundException => // Handle 
         case ex: IOException => // Handle I/O pb
-      } finaly {
+      } finally {
         file.close() // Do that in any case
       }
       // Stuff

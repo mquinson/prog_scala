@@ -5,7 +5,8 @@
 #+TAGS: noexport(n)
 #+LaTeX_CLASS: beamer
 #+startup: indent
-#+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,presentation]
+# non #+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,presentation]
+#+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,handout]
 #+OPTIONS:   H:3 skip:nil num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+startup: beamer
 #+LATEX_HEADER: \usedescriptionitemofwidthas{bl}
