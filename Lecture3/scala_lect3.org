@@ -5,8 +5,8 @@
 #+TAGS: noexport(n)
 #+LaTeX_CLASS: beamer
 #+startup: indent
-# non #+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,presentation]
-#+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,handout]
+#+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,presentation]
+# non #+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,handout]
 #+OPTIONS:   H:3 skip:nil num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+startup: beamer
 #+LATEX_HEADER: \usedescriptionitemofwidthas{bl}
@@ -717,8 +717,7 @@
 \end{scala}
 #+END_LaTeX
 - But you cannot use an ~Animal~ in place of a ~Bird~
-\vspace{-.5\baselineskip}
-\pause
+\pause\vspace{-.5\baselineskip}
 **** Function parameters are contravariants
 - Can't use a function that takes a ~Chicken~ for a function that
   takes a ~Bird~
@@ -728,8 +727,8 @@
   scala> val getTweet: (Bird => String) = ((a: Animal) => a.sound )
   getTweet: Bird => String = <function1>
 \end{scala}
-#+END_LaTeX
 \pause
+#+END_LaTeX
 **** Function return value are covariant
 - Need a function that returns a ~Bird~? A function returning a ~Chicken~
   is OK
@@ -739,7 +738,60 @@
   hatch: () => Bird = <function0>
 \end{scala}
 #+END_LaTeX
-
+*** Don't mix Parameters' and Receiver Variances
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+#+BEGIN_LaTeX
+\smallskip
+\begin{columns}
+  \begin{column}{.35\linewidth}
+    \begin{scala}
+class Top
+class Middle extends Top
+class Bottom extends Middle
+class Up {
+  def cv(t:Top) = "Up"
+  def inv(m:Middle) = "Up"
+  def ctv(b:Bottom) = "Up"
+}
+class Down extends Up {
+  def cv(m:Middle) = "Down"
+  def inv(m:Middle) ="Down"
+  def ctv(m:Middle) = "Down"
+}
+val u: Up  = new Up
+val d: Down= new Down
+val ud:Up  = new Down
+    \end{scala}    
+  \end{column}
+  \begin{column}{.65\linewidth}
+    \begin{tabular}{|l|c|c|c|}\hline
+                   &u.??()          &d.??()                  &ud.??()       \\\hline
+      ?.cv(Top)    &\visible<2->{Up}   &\visible<5->{\alert{Up}}   &\visible<8->{Up}\\
+      ?.cv(Middle) &\visible<2->{Up}   &\visible<5->{Down}         &\visible<8->{Up}\\
+      ?.cv(Bottom) &\visible<2->{Up}   &\visible<5->{Down}         &\visible<8->{Up}\\\hline
+      ?.inv(Top)   &\visible<3->{Error}&\visible<6->{Error}        &\visible<9->{Error}\\ 
+      ?.inv(Middle)&\visible<3->{Up}   &\visible<6->{Down}         &\visible<9->{Down}\\
+      ?.inv(Bottom)&\visible<3->{Up}   &\visible<6->{Down}         &\visible<9->{Down}\\\hline
+      ?.ctv(Top)   &\visible<4->{Error}&\visible<7->{Error}        &\visible<10->{Error}\\ 
+      ?.ctv(Middle)&\visible<4->{Error}&\visible<7->{Down}         &\visible<10->{Error}\\
+      ?.ctv(Bottom)&\visible<4->{Up}   &\visible<7->{\alert{Error}}&\visible<10->{Up}\\\hline
+    \end{tabular}
+    
+    ~\\
+    \visible<6->{d.cv(Top)=Up because parameters are contravariant}\\
+    \visible<7->{d.ctv(Bot) ambiguous: Up.ctv(Bot) $\approx$ Down.ctv(Mid)}
+    \end{column}
+\end{columns}
+#+END_LaTeX
+**** Scala 2.x algorithm to select the Right Call
+- /Get signature from static types; Linearize receiver dynamic type to find it/
+- Other languages (and Scala 1.x) use other algorithms
+- \alert{Don't do it in Real Projects}
+\vspace{-\baselineskip}
+#+LaTeX: \vfill\hfill\small \textit{Courtesy of Antoine Beugnard (Telecom Bretagne)}\\
+#+LaTeX: \footnotesize\centerline{\url{http://public.enst-bretagne.fr/~beugnard/papiers/lb-sem.shtml}}\normalsize
 *** Polymorphism Bounds
 :PROPERTIES:
 :BEAMER_opt: fragile
@@ -818,7 +870,9 @@
 - \structure{Closures:} functions that encapsulate some external state
 - \structure{Currying:} functions with multiple parameter lists
 - \structure{Parametrized types:} containers such as ~Tree[A]~
-- \structure{Variance} permits to refine what we expect (the type system to our rescue)
+- \structure{Variance} permits to refine what we expect (the type
+  system to our rescue)\\
+  But don't mess with Receiver and Parameters' variances at the same time
 **** FP in Scala
 - Having both OOP and FP is nice and funny, but that's a lot of tools
 - Getting used to them requires a lot of practice
