@@ -63,7 +63,8 @@
   \THERE{FunctionLiterals}{sec:funobj},~%
   \THERE{Closures}{sec:closures},~%
   \THERE{Currying}{sec:currying}~~~~%
-  \THERE{Variance}{sec:variance}~~~~%
+  \THERE{Variance}{sec:variance},~%
+  \THERE{TypeBound}{sec:bounds}~~~~%
   \THERE{CC}{sec:cc}
 }\label{sec:higher}
 #+END_LaTeX
@@ -268,7 +269,8 @@
   \HERE{FunctionLiterals}{sec:funobj},~%
   \THERE{Closures}{sec:closures},~%
   \THERE{Currying}{sec:currying}~~~~%
-  \THERE{Variance}{sec:variance}~~~~%
+  \THERE{Variance}{sec:variance},~%
+  \THERE{TypeBound}{sec:bounds}~~~~%
   \THERE{CC}{sec:cc}
 }\label{sec:funobj}
 #+END_LaTeX
@@ -335,7 +337,8 @@
   \THERE{FunctionLiterals}{sec:funobj},~%
   \HERE{Closures}{sec:closures},~%
   \THERE{Currying}{sec:currying}~~~~%
-  \THERE{Variance}{sec:variance}~~~~%
+  \THERE{Variance}{sec:variance},~%
+  \THERE{TypeBound}{sec:bounds}~~~~%
   \THERE{CC}{sec:cc}
 }\label{sec:closures}
 #+END_LaTeX
@@ -437,7 +440,8 @@
   \THERE{FunctionLiterals}{sec:funobj},~%
   \THERE{Closures}{sec:closures},~%
   \HERE{Currying}{sec:currying}~~~~%
-  \THERE{Variance}{sec:variance}~~~~%
+  \THERE{Variance}{sec:variance},~%
+  \THERE{TypeBound}{sec:bounds}~~~~%
   \THERE{CC}{sec:cc}
 }\label{sec:currying}
 #+END_LaTeX
@@ -592,7 +596,8 @@
   \THERE{FunctionLiterals}{sec:funobj},~%
   \THERE{Closures}{sec:closures},~%
   \THERE{Currying}{sec:currying}~~~~%
-  \HERE{Variance}{sec:variance}~~~~%
+  \HERE{Variance}{sec:variance},~%
+  \THERE{TypeBound}{sec:bounds}~~~~%
   \THERE{CC}{sec:cc}
 }\label{sec:variance}
 #+END_LaTeX
@@ -792,6 +797,18 @@ val ud:Up  = new Down
 \vspace{-\baselineskip}
 #+LaTeX: \vfill\hfill\small \textit{Courtesy of Antoine Beugnard (Telecom Bretagne)}\\
 #+LaTeX: \footnotesize\centerline{\url{http://public.enst-bretagne.fr/~beugnard/papiers/lb-sem.shtml}}\normalsize
+* Type Bounds
+#+BEGIN_LaTeX
+\renewcommand{\footlineSubTitle}{
+  \THERE{HigherOrder}{sec:higher},~%
+  \THERE{FunctionLiterals}{sec:funobj},~%
+  \THERE{Closures}{sec:closures},~%
+  \THERE{Currying}{sec:currying}~~~~%
+  \THERE{Variance}{sec:variance},~%
+  \HERE{TypeBound}{sec:bounds}~~~~%
+  \THERE{CC}{sec:cc}
+}\label{sec:bounds}
+#+END_LaTeX
 *** Polymorphism Bounds
 :PROPERTIES:
 :BEAMER_opt: fragile
@@ -828,11 +845,23 @@ val ud:Up  = new Down
 \end{scala}
 #+END_LaTeX
 
-*** More on Polymorphism 
+*** Other Polymorphism Bounds
 :PROPERTIES:
 :BEAMER_opt: fragile
 :END:
 
+**** View bounds: \color{black}\normalsize{} Filter things that can be /viewed as/
+#+BEGIN_LaTeX
+\medskip
+\begin{scala}
+  scala> math.max("123", 111)
+  res1: Int = 123    # Works thanks to the (String -> Int) implicit conversion
+
+  scala> class Container[A <% Int] { def addIt(x: A) = 123 + x }
+  defined class Container   # Accepts everything that can be converted to an Int
+\end{scala}
+#+END_LaTeX
+\pause
 **** Quantification: \color{black}\normalsize{} When one you don't care about one type
 #+BEGIN_LaTeX
 \medskip
@@ -850,18 +879,27 @@ val ud:Up  = new Down
 \medskip
 \begin{scala}
   scala> def foo(x: { def get: Int }) = 123 + x.get
-  foo: (x: AnyRef{def get: Int})Int
+  foo: (x: AnyRef{def get: Int})Int   # Abstract until a get() function is defined
 
-  scala> foo(new { def get = 10 })                 
+  scala> foo(new { def get = 10 })    # This creates an ad-hoc anonymous class
   res0: Int = 133
 \end{scala}
 #+END_LaTeX
-- ~x~ parameter must be provided with a ~get~ function to be concrete
-- The second class makes an ad-hoc anonymous class
-\pause
+*** Type Erasure and Manifest
 **** Erasure
 - Unfortunately, the JVM erases every type specialization
 - From ~List[Int]~, only ~List[_]~ remains at runtime
+- Generics added in Java5 (2004); Erasure avoids major changes on
+  runtime
+- Unfortunate: some cast errors may be missed
+**** Manifest and TypeTags
+- Scala stores the erased information, You can retrieve it at run time
+- But the interface is still changing (Manifest in pre-2.10, TypeTags after)
+- And it's still rather cumbersome. It will probably further evolve
+- Or the Valhalla Project will sucess and the JVM will get fixed at
+  least\\
+  \url{http://openjdk.java.net/projects/valhalla/}
+
 *** Take Home Messages
 **** Functional Programming
 - Avoid mutable values, prefer expressions over statements
@@ -876,8 +914,8 @@ val ud:Up  = new Down
 **** FP in Scala
 - Having both OOP and FP is nice and funny, but that's a lot of tools
 - Getting used to them requires a lot of practice
-- Some Scala choices are very debatable (it targets the Java
-  ecosystem)
+- Some Scala choices debatable: targets Java ecosystem, bound to
+  technology
 * Footer
 ** 
 # Local Variables:

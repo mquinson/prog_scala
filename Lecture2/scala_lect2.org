@@ -1352,6 +1352,56 @@ necessary to resolve it./
   singletons
 - Class files must be in right relative subdirectory: \scriptsize ~bobsrocket/navigation/Navigator.class~\normalsize
 
+*** Exceptions
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** \alert{Purpose}: Mechanism to deal with unexpected failures, \normalsize eg system errors
+- \structure{Throw}n exception fly up in the call stack until it gets
+  catched
+**** Throwing an exception
+- Exceptions are object, with a large hierarchy of [causes]
+- You can (and should) create your own Exceptions, too
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.9\linewidth}
+    \begin{scala}
+      throw new IllegalArgumentException  
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+**** Catching an exception
+#+BEGIN_LaTeX
+\medskip
+\begin{columns}
+  \begin{column}{.56\linewidth}
+    \begin{scala}
+      try {
+        val f = new FileReader("input.txt")
+        // Use that file
+      } catch {
+        case ex: FileNotFoundException => // Handle 
+        case ex: IOException => // Handle I/O pb
+      } finaly {
+        file.close() // Do that in any case
+      }
+      // Stuff
+    \end{scala}
+  \end{column}
+  \begin{column}{.44\linewidth}
+    \begin{itemize}
+    \item Execution flow gets changed
+    \item Breaks in the \texttt{try} block at first exception
+    \item Branches to \texttt{catch} case (or out)
+    \item Always runs the \texttt{finally} block
+    \item Only catch the exceptions that you can deal with
+
+    \end{itemize}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+
 * Functional Programming
 #+BEGIN_LaTeX
   \renewcommand{\footlineSubTitle}{
