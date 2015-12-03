@@ -72,7 +72,7 @@
 :PROPERTIES:
 :BEAMER_opt: fragile
 :END:
-**** Refering paramters by name
+**** Referring to parameters by name
 #+BEGIN_LaTeX
 \bigskip
 \begin{scala}
@@ -425,7 +425,7 @@
 # Q5: for {x <- 0 to 100 if x * x > 3} yield  x * 2
 #     (0 to 100).filter(x => x * x > 3).map(_ * 2)
 # Q6: Double => Double= <function1>   and   String => Int = <function1>  
-**** Tail Recusion Optimization
+**** Tail Recursion Optimization
 - Scala can optimize every tail recursive functions into a while loop
 - Works only for basic forms (not mutually recursive, not partially
   applied)
@@ -635,7 +635,7 @@
   res1: Option[java.lang.String] = None
 \end{scala}
 #+END_LaTeX
-- Q: Define the follwing methods over Tree[A]: find, map, foreach,
+- Q: Define the following methods over Tree[A]: find, map, foreach,
   filter
 
 *** Variance
@@ -667,7 +667,7 @@
   \end{column}
 \end{columns}
 #+END_LaTeX
-- Purely functionnal types are often covariant
+- Purely functional types are often covariant
 \pause
 **** Mutable Data is often not Covariant
 #+BEGIN_LaTeX
@@ -701,7 +701,7 @@
   \end{column}
 \end{columns}
 #+END_LaTeX
-*** Variance and subtyping
+*** Variance and sub-typing
 :PROPERTIES:
 :BEAMER_opt: fragile
 :END:
@@ -896,7 +896,7 @@ val ud:Up  = new Down
 - Scala stores the erased information, You can retrieve it at run time
 - But the interface is still changing (Manifest in pre-2.10, TypeTags after)
 - And it's still rather cumbersome. It will probably further evolve
-- Or the Valhalla Project will sucess and the JVM will get fixed at
+- Or the Valhalla Project will success and the JVM will get fixed at
   least\\
   \url{http://openjdk.java.net/projects/valhalla/}
 
