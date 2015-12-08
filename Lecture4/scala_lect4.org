@@ -485,7 +485,7 @@
   \end{column}
 \end{columns}
 #+END_LaTeX
-*** The Pattern Bestiary (1/2)
+*** The Pattern Bestiary (1/3)
 **** Creational Patterns
 - \structure{Abstract Factory:} Factory for building related objects
 - \structure{Builder:} Factory for building complex objects
@@ -504,8 +504,7 @@
 - \structure{Facade:} Simplifies the interface for a subsystem
 - \structure{Flyweight:} Many fine-grained objects shared efficiently.
 - \structure{Proxy:} One object approximates another
-*** The Pattern Bestiary (2/2)
-#+LaTeX: \vspace{-.8\baselineskip}
+*** The Pattern Bestiary (2/3)
 **** Behavioral Patterns
 - \structure{Chain of Responsibility:} Request delegated to the
   responsible service provider
@@ -522,15 +521,17 @@
   derived class
 - \structure{Visitor:} Operations applied to elements of a
   heterogeneous object structure
-#+LaTeX: \vspace{-.5\baselineskip}
+*** The Pattern Bestiary (3/3)
+**** Patterns Interactions
+#+LaTeX: \medskip\centerline{\includegraphics[width=.8\textwidth]{img/pattern-relationships.pdf}}
 **** Conclusion on Design Patterns
-#+LaTeX: \vspace{-.3\baselineskip}
 - These are only the 23 presented in  seminal work. Maaaany more can
   be found
-- Learning them is boring, Knowing helps building on elder's
+- Learning them is boring, Knowing them helps building on elder's
   experience
 
   \hfill\small\url{https://speakerdeck.com/pavelfatin/design-patterns-in-scala}\normalsize
+
 * Anti-Patterns, Code smell
 #+BEGIN_LaTeX
  \renewcommand{\footlineSubTitle}{
@@ -688,8 +689,8 @@ it again/
 :END:
 \concept{A function is a standalone thing, not attached to a class}
 - You can manipulate functions as any other values
-- Advice: do as many pure functions as possible; avoid mutable objects
-- Advice: Parametrize all the things (Don't repeat yourself)
+- \structure{Advice:} Do as many pure functions as possible; \textbf{Avoid mutable objects}
+- \structure{Advice:} Parametrize all the things (Don't repeat yourself)
 #+BEGIN_LaTeX
 \begin{columns}
   \begin{column}{.45\textwidth}
@@ -713,8 +714,14 @@ it again/
   \begin{column}{.45\textwidth}
     \begin{scala}
       def product(n:Int) = 
+          (1 to n).foldLeft(1)(_ * _)
+
+      def product(n:Int) = 
           (1 /: (1 to n)) (_ * _)
 
+
+      def product(n:Int) = 
+          (1 to n).foldLeft(0)(_ + _)
 
       def sum(n:Int)     = 
           (0 /: (1 to n)) (_ + _)
