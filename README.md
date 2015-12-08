@@ -68,6 +68,12 @@ your help is welcome to improve the material. Pull requests welcome ;)
   [source template](https://github.com/mquinson/prog_scala/raw/master/Practical2/scala_exo2.tar.gz)
   is provided to save your time.
   
+### *Lecture 4: [Sorting your bits](https://github.com/mquinson/prog_scala/raw/master/Lecture4/scala_lect4.pdf).*
+  
+  This week we speak of code clarity and understandable design. This
+  will lead us through the notions of Design Patterns, code smell,
+  Functionnal Programming Principles and Programming Style.
+
 ## Compiling the material
 
 Everything is written with org-mode, of emacs. If you are really new
