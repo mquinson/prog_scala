@@ -42,7 +42,7 @@ your help is welcome to improve the material. Pull requests welcome ;)
   then shortly contrast this OOP approach with the Functional
   Programming (FP) way of composing complex systems.
 
-### *Project: [Ants vs. SomeBees](https://github.com/mquinson/prog_scala/blob/master/Project_Ants/Ants.org)* ([pdf](https://github.com/mquinson/prog_scala/raw/master/Project_Ants/Ants.pdf))
+### *Project: [Ants vs. SomeBees](https://github.com/mquinson/prog_scala/blob/master/Coursework_Ants/Ants.org)* ([pdf](https://github.com/mquinson/prog_scala/raw/master/Coursework_Ants/Ants.pdf))
 
   In this project, you will implement a [Tower Defense](https://secure.wikimedia.org/wikipedia/en/wiki/Tower_defense) 
   game inspired from the PopCap Games'
@@ -51,7 +51,7 @@ your help is welcome to improve the material. Pull requests welcome ;)
   as well as some basic concepts of FP.
   
   Please **do not fork the current project** to work on your
-  assignment, but [download the source code](https://github.com/mquinson/prog_scala/raw/master/Project_Ants/Project_Ants.tar.gz)
+  assignment, but [download the source code](https://github.com/mquinson/prog_scala/raw/master/Coursework_Ants/Coursework_Ants.tar.gz)
   and create another repository elsewhere. Please do not post any
   solution to this assignment online. 
 

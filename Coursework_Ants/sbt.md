@@ -20,8 +20,8 @@ Add a file `build.sbt`  with the following content (empty lines are important!)
 
 Get the demo code
 
-	wget -O src/main/scala/DemoApp.scala https://raw.githubusercontent.com/mquinson/prog_scala/master/Project_Ants/src/DemoApp.scala
-	wget -O src/main/resources/bee.png https://raw.githubusercontent.com/mquinson/prog_scala/master/Project_Ants/img/bee.png
+	wget -O src/main/scala/DemoApp.scala https://raw.githubusercontent.com/mquinson/prog_scala/master/Coursework_Ants/src/DemoApp.scala
+	wget -O src/main/resources/bee.png https://raw.githubusercontent.com/mquinson/prog_scala/master/Coursework_Ants/img/bee.png
 
 Edit `src/main/scala/DemoApp.scala`  as follow :
 
