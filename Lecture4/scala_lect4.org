@@ -1,0 +1,1270 @@
+* Header
+
+#+BIND: org-latex-title-command ""
+
+#+TAGS: noexport(n)
+#+LaTeX_CLASS: beamer
+#+startup: indent
+#+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,presentation]
+# non #+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,handout]
+#+OPTIONS:   H:3 skip:nil num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+startup: beamer
+#+LATEX_HEADER: \usedescriptionitemofwidthas{bl}
+#+LATEX_HEADER: \usepackage{ifthen,figlatex,amsmath,amstext,setspace,ulem}
+#+LATEX_HEADER: \usepackage{boxedminipage,xspace,multicol,multirow,pdfpages}
+#+LATEX_HEADER: \usepackage{../tex/beamerthemeEmptty3}
+#+LATEX_HEADER: \usepackage{pgf,tikz,color}
+#+LATEX_HEADER: \usetikzlibrary{decorations.pathmorphing,backgrounds,fit,arrows}
+#+LATEX_HEADER: \usetikzlibrary{decorations.pathreplacing}
+#+LATEX_HEADER: \usetikzlibrary{shapes}
+#+LATEX_HEADER: \usetikzlibrary{positioning}
+#+LATEX_HEADER: \usetikzlibrary{arrows,automata}
+#+LATEX_HEADER: \usetikzlibrary{patterns}
+#+LATEX_HEADER: \usepackage{pgf-umlcd}
+
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \definecolor{dhscodebg}{rgb}{0.95,0.95,0.95}
+#+LATEX_HEADER: \newminted[scala]{hs}{autogobble, tabsize=4, fontsize=\footnotesize, bgcolor=dhscodebg}
+
+#+LATEX_HEADER: \newcommand<>{\green}[1]{{\color#2[rgb]{.5,.85,.5}#1}}
+#+LATEX_HEADER: \newcommand<>{\magenta}[1]{{\color#2[rgb]{.8,.0,.8}#1}}
+#+LATEX_HEADER: \newcommand<>{\blue}[1]{{\color#2[rgb]{.5,.5,1}#1}}
+#+LATEX_HEADER: \newcommand<>{\red}[1]{{\color#2[rgb]{1,.5,.5}#1}}
+#+LATEX_HEADER: \newcommand<>{\black}[1]{{\color#2[rgb]{0,0,0}#1}}
+
+#+LATEX_HEADER: \newsavebox{\rsbox}
+
+#+LATEX_HEADER: \def\shorttitle{Computer Programming with Scala}
+#+LATEX_HEADER:   \newcommand{\HERE}[2]{\underline{\bf\hyperlink{#2}{#1}}}
+#+LATEX_HEADER:   \newcommand{\THERE}[2]{\hyperlink{#2}{#1}}
+
+#+latex: \thispagestyle{empty}
+#+BEGIN_LaTeX
+\begin{frame}{}
+  \thispagestyle{empty}
+  \centering\null\vfill
+  \structure{ \LARGE Computer Programming with Scala}
+  \\[.5\baselineskip]
+
+  \structure{ \large Week 4: Sorting Bits}
+  \\[2\baselineskip]
+  Martin Quinson\\
+  
+  {\footnotesize December 2015}\\[3.5\baselineskip]
+  \centerline{\includegraphics[scale=.7]{../img/logo-ens.pdf}}
+\end{frame}
+#+END_LaTeX
+#+LaTeX: \newcommand{\Smiley}{{\color{darkgreen}\smiley}}
+
+* Introduction
+#+BEGIN_LaTeX
+ \renewcommand{\footlineSubTitle}{
+   \HERE{Intro}{sec:intro},~~~%
+   \THERE{Design Patterns}{sec:patterns},~%
+   \THERE{Code Smell}{sec:smell},~%
+   \THERE{FP Principles}{sec:fp-principle},~%
+   \THERE{Programming Style}{sec:style},~~~%
+   \THERE{CC}{sec:cc}
+ }\label{sec:intro}
+#+END_LaTeX
+*** Introduction
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.3\linewidth}
+    \includegraphics[width=\linewidth]{img/Programming_in_scala.png}
+  \end{column}
+  \begin{column}{.7\linewidth}
+    \begin{block}{What we saw so far}
+      \begin{itemize}
+      \item We covered the base book (or almost)
+      \item You received the language syntax and content
+      \item Basics, OOP and FP syntax, some stylistic advices
+        \medskip
+      \item You know your letters, some know to read/write
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\vspace{-\baselineskip}
+\begin{columns}
+  \begin{column}{.72\linewidth}
+    \begin{block}{Coming next}
+      \begin{itemize}
+      \item \alert{How can you become a mature journalist?} (\sout{poet})
+      \item Train your programming skill
+        \begin{itemize}
+        \item Experience comes from exercising
+        \item You don't learn swimming or skiing in the books
+        \end{itemize}
+      \item Expertise can be (inefficiently) taught
+        \begin{itemize}
+        \item Best practices can be presented, not sure if you get it
+        \item At least, get (exposed to) the vocabulary
+        \end{itemize}
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{.27\linewidth}
+    \includegraphics[width=\linewidth]{img/Scala_in_depth.png}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+\medskip
+/Experience is what enables you to recognize a mistake when you make it again./
+
+* Design Patterns
+#+BEGIN_LaTeX
+ \renewcommand{\footlineSubTitle}{
+   \THERE{Intro}{sec:intro},~~~%
+   \HERE{Design Patterns}{sec:patterns},~%
+   \THERE{Code Smell}{sec:smell},~%
+   \THERE{FP Principles}{sec:fp-principle},~%
+   \THERE{Programming Style}{sec:style},~~~%
+   \THERE{CC}{sec:cc}
+ }\label{sec:patterns}
+#+END_LaTeX
+*** Design Patterns
+# https://speakerdeck.com/pavelfatin/design-patterns-in-scala
+# https://www.cs.colorado.edu/~kena/classes/5448/f12/lectures/
+**** What
+- Classical patterns that you can find in large programs
+  - Seminal work: common patterns from at least 3 large well organised
+    projects
+- Good programmer: someone that can detect patterns in someone
+  else code
+  - Mean of communication
+#+LaTeX: \vspace{-.4\baselineskip}
+**** Why
+- \structure{Best Practice:} Reuse the expertise of the ones before us
+- \structure{Mean of communication:} Put simple words on common concepts
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.5\linewidth}\scriptsize
+    \setstretch{0.7}
+
+    I have this object \tiny with some important information and these
+    objects over here need to know when its information
+    changes. These other objects come and go. I’m thinking \scriptsize I should
+    separate out the notification \tiny and client registration
+    functionality from the functionality of the object and just let it
+    focus on storing and manipulating its information. 
+    \normalsize Do you agree?
+
+    \setstretch{1}
+  \end{column}
+  \begin{column}{.5\linewidth}
+    I’m thinking of using the Observer pattern. Do you agree?
+  \end{column}
+\end{columns}
+#+END_LaTeX
+**** Why Not
+- Sometimes boilerplates to circumvent language limitations. Bad idea.
+- Lecturing on the 50 Design Patterns is too soporific, let's pick
+  some.
+*** Factory Pattern
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** What
+- Provides an interface for creating an object, encapsulating class instanciation
+- Lets subclasses decide which class to instantiate.
+\bigskip
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.4\textwidth}
+    \includegraphics[width=\textwidth]{img/pattern-factory.jpg}
+    \smallskip
+    
+    %\setstretch{0.4}
+    %
+    %{\tiny «Salty Oat Cookies» by Kimberly Vardeman from http://www.flickr.com/photos/kimberlykv/5061421858/}
+    %
+    %\setstretch{1}
+  \end{column}
+  \begin{column}{.5\textwidth}
+    \begin{scala}
+      trait Animal
+      private class Dog extends Animal
+      private class Cat extends Animal
+      object Animal {
+        def apply(kind: String): kind match {
+          case "dog" => new Dog()
+          case "cat" => new Cat()
+        }
+      }
+      val d = Animal("dog")
+    \end{scala}
+  \end{column}
+\end{columns}
+
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+    \begin{block}{Why? When?}
+      \begin{itemize}
+      \item Extract complex object creation code
+      \item Select which clase to instanciate
+      \item Cache objects
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{.5\textwidth}
+    \begin{block}{Discussion}
+      \begin{itemize}
+      \item[\Smiley] Resembles constructor invocation
+      \item[\Frownie] Static factory
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+*** Singleton Pattern
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** What: 
+- Restrict the instantiation to one object
+- Provide a global access point to this object
+\bigskip
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.35\textwidth}
+    \includegraphics[width=\textwidth]{img/pattern-singleton.jpg}
+    \smallskip
+    
+    \setstretch{0.4}
+    
+    {\tiny \hyperlink{http://www.publicdomainpictures.net/view-image.php?image=22282}{\textit{The Solitary Tree}, Bobbi Jones Jones}}
+    
+    \setstretch{1}
+  \end{column}
+  \begin{column}{.6\textwidth}
+    \begin{scala}
+      object myApp extends App {
+        println("Hello World")
+      }
+    \end{scala}
+  \end{column}
+\end{columns}
+\bigskip
+
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+    \begin{block}{Why? When?}
+      \begin{itemize}
+      \item Have exactly one object of a class
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{.5\textwidth}
+    \begin{block}{Discussion}
+      \begin{itemize}
+      \item[\Smiley] Integrated into the language
+      \item[\Smiley] Java/C++ $\leadsto$ boilerplate code
+%      \item[\Frownie] Implicit behavior easily overseen 
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+*** Adapter Pattern
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** What: \normalsize\color{black}Converts an interface into expected interface
+\bigskip
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.3\textwidth}
+    \includegraphics[width=\textwidth]{img/pattern-adapter.jpg}
+    \smallskip
+    
+    \setstretch{0.4}
+    
+    {\tiny \hyperlink{http://www.sxc.hu/photo/972429}{\textit{Multiple jacks / adaptors}, Mihai Andoni}}
+    
+    \setstretch{1}
+  \end{column}
+  \begin{column}{.7\textwidth}
+    \begin{scala}
+      trait Log {
+        def warning(message: String)
+        def error(message: String)
+      }
+      final class Logger {
+        def log(lvl: Level, msg: String) { /* ... */ }
+      }
+      implicit class Adapter(logger: Logger) extends Log {
+        def warning(msg: String) { logger.log(WARNING, msg) }
+        def error(msg: String)   { logger.log(ERROR, msg) }
+      }
+
+      val log: Log = new Logger()
+    \end{scala}
+  \end{column}
+\end{columns}
+
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+    \begin{block}{Why? When?}
+      \begin{itemize}
+      \item Integrate incompatible classes
+      \item Adapt existing components
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{.5\textwidth}
+    \begin{block}{Discussion}
+      \begin{itemize}
+      \item[\Smiley] Clear intent, Concise syntax
+      \item[\Frownie] Implicit behavior easily overseen 
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+*** Decorator Pattern
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** What: \normalsize\color{black}Extends functionality of an object (alternative to subclassing)
+\bigskip
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.3\textwidth}
+    \includegraphics[width=\textwidth]{img/pattern-decorator.jpg}
+    \smallskip
+    
+    \setstretch{0.4}
+    {\tiny \hyperlink{http://www.publicdomainpictures.net/view-image.php?image=25646}{\textit{Colour Pencils}, George Hodan}}
+    
+    \setstretch{1}
+  \end{column}
+  \begin{column}{.69\textwidth}
+    \begin{scala}
+      trait OutputStream {
+        def write(b: Byte)
+        def write(b: Array[Byte])
+      }
+      class FileOStream(path: String) extends OutputStream { }
+      trait Buffering extends OutputStream {
+        abstract override def write(b: Byte) {
+          // ...
+          super.write(buffer)
+        }
+      }
+      new FileOStream("foo.txt") with Buffering
+    \end{scala}
+  \end{column}
+\end{columns}
+
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+    \begin{block}{Why? When?}
+      \begin{itemize}
+      \item Extend final classes
+      \item Arbitrarily graph of combination
+      \item Multiple inheritance
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{.5\textwidth}
+    \begin{block}{Discussion}
+      \begin{itemize}
+      \item[\Smiley] Clear intent, Concise syntax
+      \item[\Smiley] Separation of concern
+      \item[\Frownie] Static binding
+      \item[\Frownie] No constructor parameter
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+*** Chain of Responsability
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** What: \normalsize\color{black}Decouples the sender of a request from its receiver
+\bigskip
+#+BEGIN_LaTeX
+\bigskip
+\begin{columns}
+  \begin{column}{.3\textwidth}
+    \includegraphics[width=\textwidth]{img/pattern-chain-of-responsability.jpg}
+    \smallskip
+    
+    \setstretch{0.4}
+    {\tiny \hyperlink{http://www.sxc.hu/photo/1077403.jpg}{\textit{Things in motion: Colored Domino},\\ Sigurd Decroos}}
+    
+    \setstretch{1}
+  \end{column}
+  \begin{column}{.69\textwidth}
+    \begin{scala}
+      case class Event(source: String)
+      type EventHandler = PartialFunction[Event, Unit]
+      val defaultHandler: EventHandler = PartialFunction(_ => ())
+      val keyboardHandler: EventHandler = {
+        case Event("keyboard") => /* ... */
+      }
+      val mouseHandler(delay: Int) : EventHandler = {
+        case Event("Mouse") => /* ... */
+      }
+      keyboardHandler orElse mouseHandler(100) orElse defaultHandler
+    \end{scala}
+  \end{column}
+\end{columns}
+\bigskip
+
+\begin{columns}[t]
+  \begin{column}{.58\textwidth}
+    \begin{block}{Why? When?}
+      \begin{itemize}
+      \item Request proposed to the chain until handled
+      \item Gives more than one object a chance 
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{.4\textwidth}
+    \begin{block}{Discussion}
+      \begin{itemize}
+      \item[\Smiley] Concise syntax, Built-in logic
+      \item[\Frownie] General-purpose type
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+*** Observer Pattern
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** What: \normalsize\color{black}Broadcast object's state changes notifications to dependents
+\bigskip
+#+BEGIN_LaTeX
+\bigskip
+\begin{columns}
+  \begin{column}{.3\textwidth}
+    \includegraphics[width=\textwidth]{img/pattern-observer.jpg}
+    \smallskip
+    
+    %    \setstretch{0.4}
+    %{\tiny \hyperlink{http://www.sxc.hu/photo/1077403.jpg}{\textit{Things in motion: Colored Domino},\\ Sigurd Decroos}}
+    
+    %\setstretch{1}
+  \end{column}
+  \begin{column}{.69\textwidth}
+    \begin{scala}
+      trait Observer {
+        def notify(changed: Observable)
+      }
+      trait Observable {
+        private var observers: List[Observer] = Nil
+        def addObserver(o:Observer) = observers ::= o
+        def fireChange = for (o <- observers) o.notify(this)
+      }
+    \end{scala}
+  \end{column}
+\end{columns}
+\bigskip
+
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+    \begin{block}{Why? When?}
+      \begin{itemize}
+      \item Set of loosely coupled objects
+      \item Decouple data Model from View
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{.5\textwidth}
+    \begin{block}{Discussion}
+      \begin{itemize}
+      \item[\Smiley] (rather) concise syntax
+      \item[\Frownie] Control flow complex to follow
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+*** The Pattern Bestiary (1/2)
+**** Creational Patterns
+- \structure{Abstract Factory:} Factory for building related objects
+- \structure{Builder:} Factory for building complex objects
+  incrementally
+- \structure{Factory Method:} Method in a derived class creates associates
+- \structure{Prototype:} Factory for cloning new instances from a
+  prototype
+- \structure{Singleton:} Factory for a singular (sole) instance
+**** Structural Patterns
+- \structure{Adapter:} Translator adapts a server interface for a
+  client
+- \structure{Bridge:} Abstraction for binding one of many
+  implementations
+- \structure{Composite:} Structure for building recursive aggregations
+- \structure{Decorator:} Extends an object transparently
+- \structure{Facade:} Simplifies the interface for a subsystem
+- \structure{Flyweight:} Many fine-grained objects shared efficiently.
+- \structure{Proxy:} One object approximates another
+*** The Pattern Bestiary (2/2)
+#+LaTeX: \vspace{-.8\baselineskip}
+**** Behavioral Patterns
+- \structure{Chain of Responsibility:} Request delegated to the
+  responsible service provider
+- \structure{Command:} Request or Action is first-class object, hence storable
+- \structure{Iterator:} Aggregate and access elements sequentially
+- \structure{Interpreter:} Language interpreter for a small grammar
+- \structure{Mediator:} Coordinates interactions between its associates
+- \structure{Memento:} Snapshot captures and restores object states
+  privately
+- \structure{Observer:} Dependents update automatically when subject changes
+- \structure{State:} Object whose behavior depends on its state
+- \structure{Strategy:} Abstraction for selecting one of many algorithms
+- \structure{Template Method:} Algorithm with some steps supplied by a
+  derived class
+- \structure{Visitor:} Operations applied to elements of a
+  heterogeneous object structure
+#+LaTeX: \vspace{-.5\baselineskip}
+**** Conclusion on Design Patterns
+#+LaTeX: \vspace{-.3\baselineskip}
+- These are only the 23 presented in  seminal work. Maaaany more can
+  be found
+- Learning them is boring, Knowing helps building on elder's
+  experience
+
+  \hfill\small\url{https://speakerdeck.com/pavelfatin/design-patterns-in-scala}\normalsize
+* Anti-Patterns, Code smell
+#+BEGIN_LaTeX
+ \renewcommand{\footlineSubTitle}{
+   \THERE{Intro}{sec:intro},~~~%
+   \THERE{Design Patterns}{sec:patterns},~%
+   \HERE{Code Smell}{sec:smell},~%
+   \THERE{FP Principles}{sec:fp-principle},~%
+   \THERE{Programming Style}{sec:style},~~~%
+   \THERE{CC}{sec:cc}
+ }\label{sec:smell}
+#+END_LaTeX
+*** Anti-Patterns
+- Set of well known bad ideas to common problems
+- \structure{Bicycle shed:} Giving disproportionate weight to trivial issues
+- \structure{Bleeding edge:} Operating with cutting-edge technologies
+  that are still unstable
+- \structure{Overengineering:} Spending time making a project more
+  complex than needed
+- \structure{Big ball of mud:} A system with no recognizable structure
+- \structure{Interface bloat:} Making an interface so powerful that it
+  is difficult to implement
+- \structure{God object:} Concentrating too many functions in a class
+- \structure{Object orgy:} Failed encapsulation permitting
+  unrestricted access to internals
+- \structure{Sequential coupling:} Methods to be called in a particular order
+- \structure{Accidental complexity:} Unneeded complexity due to  approach
+  ($\neq$ inherent)
+- \structure{Hard code:} Spread the constant values everywhere in the
+  code
+- \structure{Repeating yourself:} copy paste considered harmful (DRY SPOT)
+- \structure{Action at a distance}, \structure{Circular dependency},
+  \structure{Premature optimization}, \structure{Programming by permutation},
+  \structure{Reinventing the square wheel}, \structure{Shotgun surgery}
+/Experience is what enables you to recognize a mistake when you make
+it again/
+*** Code Smell
+**** What
+- When you have a bad feeling from reading the code
+- Often surface symptomes of deeper issues
+- Some problems can be automatically detected
+**** Examples
+- \structure{Duplicated code:} identical or very similar code exists in more than one location
+- \structure{Contrived complexity:} forced usage of overly complicated design patterns
+- \structure{God class:} a class that has grown too large; \structure{Lazy class}:  does too little
+- \structure{Cyclomatic complexity:} too many branches or loops
+- \structure{Spread literals:} should be  named constants
+- \structure{Refused bequest:} An overrided method that changes the
+  contract ($\neq$ Liskov)
+- \structure{Excessively short/long identifiers}
+- \structure{Too many parameters:} often denotes an ill-conveived
+  function
+
+#+LaTeX: \scriptsize\url{https://en.wikipedia.org/wiki/Code_smell}\hfill\url{https://en.wikipedia.org/wiki/Anti-pattern}\normalsize
+* Functional patterns
+#+BEGIN_LaTeX
+ \renewcommand{\footlineSubTitle}{
+   \THERE{Intro}{sec:intro},~~~%
+   \THERE{Design Patterns}{sec:patterns},~%
+   \THERE{Code Smell}{sec:smell},~%
+   \HERE{FP Principles}{sec:fp-principle},~%
+   \THERE{Programming Style}{sec:style},~~~%
+   \THERE{CC}{sec:cc}
+ }\label{sec:fp-principle}
+#+END_LaTeX
+*** Functional Patterns
+#+BEGIN_LaTeX
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+    \begin{block}{OO Pattern}
+      \begin{itemize}
+      \item Factory Pattern
+      \item Strategy Pattern
+      \item Decorator Pattern
+      \item Visitor Pattern
+      \item Interface Segregation Principle
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{.5\textwidth}
+    \begin{block}{FP Principle}
+      \begin{itemize}
+      \item Functions
+      \item Functions
+      \item Functions
+      \item Functions
+      \item Yes, functions
+      \end{itemize}
+    \end{block}    
+  \end{column}
+\end{columns}
+
+\bigskip\pause
+#+END_LaTeX
+**** Design Patterns are OO boilerplate, FP is different
+- Now: \alert{quick tour of some FP recuring concepts}
+
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.48\textwidth}
+    \begin{itemize}
+    \item Steal from
+      Mathematics \hfill\includegraphics[height=1.5\baselineskip]{img/FP-maths.png}
+    \item Types are not classes \hfill\includegraphics[height=1.5\baselineskip]{img/FP-types.png}
+    \end{itemize}
+  \end{column}
+  \begin{column}{.44\textwidth}
+    \begin{itemize}
+    \item Functions are things  \hfill\includegraphics[height=1\baselineskip]{img/FP-functions.png}
+    \item Composition everywhere \hfill\includegraphics[height=1.5\baselineskip]{img/FP-composition.jpg}
+    \end{itemize}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+
+#+LaTeX: \bigskip~\hfill\footnotesize\url{http://fr.slideshare.net/ScottWlaschin/fp-patterns-buildstufflt}\normalsize
+*** FP Core Principle #1: Steal from Mathematics
+
+**** In Mathematics we Trust
+- Mathematical assertions: unusually precise, general (large class of instances)
+- Mathematics:  discipline of reasoning $\leadsto$ unusually high
+  confidence level
+**** Some quotes from E. W. Dijkstra
+- /Programming is one of the most difficult branch of applied mathematics./
+- /OOP is an exceptionally bad idea which could only have originated in California./
+- /CS is not more related to Computers than Astronomy to Telescopes./
+**** Why are mathematical functions so cool?
+\pause
+- They only map a value to another 
+- No calculation, just an immutable mapping (no side effect)
+**** You should strive for Pure Functions
+- Easy to understand, to reason about
+- Lazily cachable results, Evaluation order does not matter
+*** FP Core Principle #2: Types are not classes
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.4\textwidth}
+    \includegraphics[width=\textwidth]{img/FP-pas-un-type.jpg}
+  \end{column}
+  \pause
+  \begin{column}{.4\textwidth}
+    \includegraphics[width=\textwidth]{img/FP-data-behavior.pdf}
+  \end{column}
+\end{columns}
+
+\pause\bigskip\bigskip\bigskip
+
+\concept{\alert{Types} are just Data {\normalsize\color{black}(set of values)} $\neq$ \alert{Classes} = Data + Behavior}
+
+\bigskip
+\centerline{Behavior is within the (pure) functions}
+#+END_LaTeX
+*** FP Core Principle #3: Functions as things
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+\concept{A function is a standalone thing, not attached to a class}
+- You can manipulate functions as any other values
+- Advice: do as many pure functions as possible; avoid mutable objects
+- Advice: Parametrize all the things (Don't repeat yourself)
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.45\textwidth}
+    \begin{scala}
+      public static int Product(int n) {
+        int product = 1;
+        for (int i = 1; i <= n; i++) {
+          product *= i;
+        }
+        return product;
+      }
+      public static int Sum(int n) {
+        int sum = 0;
+        for (int i = 1; i <= n; i++) {
+          sum += i;
+        }
+        return sum;
+      }
+    \end{scala}
+  \end{column}
+  \begin{column}{.45\textwidth}
+    \begin{scala}
+      def product(n:Int) = 
+          (1 /: (1 to n)) (_ * _)
+
+
+      def sum(n:Int)     = 
+          (0 /: (1 to n)) (_ + _)
+    \end{scala}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+*** FP Core Principle #4: Composition everywhere
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+\concept{Functions can naturally be composed}
+#+BEGIN_LaTeX
+\vspace{-1.1\baselineskip}
+\begin{columns}[t]
+  \begin{column}{.65\textwidth}
+    \begin{block}{The FP flow is linear}\medskip
+      \includegraphics[width=\textwidth]{img/FP-flow-FP.png}          
+    \end{block}
+  \end{column}
+  \pause
+  \begin{column}{.35\textwidth}
+    \begin{block}{The OO flow soup}\medskip
+      \includegraphics[width=\textwidth]{img/FP-flow-OO.png}          
+    \end{block}
+  \end{column}
+\end{columns}
+#+END_LaTeX
+\pause\vspace{-\baselineskip}
+
+\concept{Types can also be composed}
+#+BEGIN_LaTeX
+\vspace{-1.3\baselineskip}
+\begin{columns}[t]
+  \begin{column}{.49\textwidth}
+    \begin{block}{Product Type}
+      \begin{itemize}
+      \item Tuple and type alias\\
+        \begin{scala} 
+          val p = (1,2) // new Tuple2(1,2)
+          type Point = (Int, Int)
+          val p:Point = (1,2)
+        \end{scala}
+      \item Case class\\
+        \begin{scala}
+          case class Point(x: Int, y:Int)
+          val p = Point(1,2)
+        \end{scala}
+      \end{itemize}
+    \end{block}
+
+  \end{column}
+  \begin{column}{.49\textwidth}
+    \begin{block}{Sum Type}\medskip
+      \begin{scala}
+        sealed trait Suit
+        case object Club    extends Suit
+        case object Diamond extends Suit
+        case object Spade   extends Suit
+        case object Heart   extends Suit        
+      \end{scala}
+      
+      \medskip
+      \structure{sealed:} no inheritance from other files
+    \end{block}    
+  \end{column}
+\end{columns}
+
+#+END_LaTeX
+#+LaTeX: ~\hfill\footnotesize FP style guide:~ \url{http://fr.slideshare.net/ScottWlaschin/fp-patterns-buildstufflt}\normalsize
+* Programming Styles
+#+BEGIN_LaTeX
+ \renewcommand{\footlineSubTitle}{
+   \THERE{Intro}{sec:intro},~~~%
+   \THERE{Design Patterns}{sec:patterns},~%
+   \THERE{Code Smell}{sec:smell},~%
+   \THERE{FP Principles}{sec:fp-principle},~%
+   \HERE{Programming Style}{sec:style},~~~%
+   \THERE{CC}{sec:cc}
+ }\label{sec:style}
+#+END_LaTeX
+*** Painting Style
+#+LaTeX: \medskip\centerline{\includegraphics[width=.8\textwidth]{img/style-painting.pdf}}
+#+LaTeX: ~\hfill{\small From: \scriptsize \url{http://gotocon.com/dl/goto-aar-2013/slides/CristinaVideiraLopes_ExercisesInStyle.pdf}}
+# http://www.ics.uci.edu/~lopes/teaching/inf212W15/
+*** Writing Style
+#+BEGIN_LaTeX
+\begin{columns}
+  \begin{column}{.4\textwidth}
+    \includegraphics[width=\textwidth]{img/style-queneau.jpg}
+  \end{column}
+  \begin{column}{.55\textwidth}
+    \begin{itemize}
+    \item Metaphor
+    \item Surprises
+    \item Dream
+    \item Prognostication
+    \item Hesitation
+    \item Precision
+    \item Negativities
+    \item Asides
+    \item Logical analysis
+    \item Past
+    \item Present
+    \item \ldots
+    \item (99)
+    \end{itemize}
+  \end{column}
+\end{columns}
+
+\bigskip
+\concept{What could be something like a programming style?}
+#+END_LaTeX
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=62]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=10]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=11]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=12]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=13]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=14]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=15]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=16]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=17]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=18]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=19]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=20]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=21]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=22]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=23]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=24]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=25]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=26]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=27]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=28]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=29]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=30]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=31]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=32]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=33]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=34]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=35]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=36]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=37]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=38]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=39]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=40]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=41]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=42]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=43]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=44]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=45]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=46]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=47]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=48]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=49]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=50]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=51]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=52]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=53]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** 
+#+Latex: \thispagestyle{empty}\includepdf[page=54]{CristinaVideiraLopes_ExercisesInStyle.pdf}
+*** Programming Style
+**** There is always more than one way to express an idea
+- Kiss! Getting things straight forward is very difficult\\
+  /Simplicity does not preceeds complexity, but follows it/
+- One programmer's elegant solution is another one displeasant beast
+**** Improve your style now
+- There is a huge literature on good programming style/methodology/buzzwords
+- Reading code should be the way to learn, or at least write a lot of code
+**** But don't search for your own style
+- You are a journalist, not a poet: express ideas clearly with no stylistic trick
+- Programming is a team game $\leadsto$ stick to some programming
+  standards
+- Programming tricks and Golf style should remain a game
+*** Bad Style Coding as a Game
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+**** The International Obfuscated C Code Contest (\url{www.ioccc.org})
+- Yearly contest of intentionally obfuscated codes 
+      \small(in C; exist for other languages)\normalsize
+
+#+BEGIN_LaTeX
+  \begin{block}{Example: \visible<2->{Full (interactive) Maze Escape Game}
+      {\normalsize (arachnid, 2004 entry)}}\vspace{-.8\baselineskip}
+    \begin{columns}
+      \begin{column}{.6\linewidth}
+    \vbox{\begin{Verbatim}[fontsize=\tiny]
+#include <ncurses.h>/*****************************************************/
+            int               m[256                   ] [         256   ],a
+ ,b   ;;;   ;;;   WINDOW*w;   char*l=""   "\176qxl"   "q"   "q"   "k"   "w\
+xm"   "x"   "t"         "j"         "v"         "u"         "n"         ,Q[
+ ]=   "Z"   "pt!ftd`"   "qdc!`eu"   "dq!$c!nnwf"/**   ***   */"t\040\t";c(
+int   u ,         int         v){                     v?m   [u]         [v-
+ 1]   |=2,m[u][v-1] &   48?W][v-1   ] &   15]]):0:0;u?m[u   -1][v]|=1   ,m[
+ u-               1][   v]&         48?               W-1   ][v         ]&
+15]   ]):0:0;v<   255   ?m[   u][v+1]|=8,m[u][v+1]&   48?   W][   v+1]&15]]
+):0         :0;         u <               255   ?m[   u+1         ][v   ]|=
+4,m[u+1][   v]&48?W+1][v]&15]]):0:0;W][   v]&   15]   ]);}cu(char*q){   return
+ *q               ?cu   (q+         1)&         1?q   [0]               ++:
+q[0   ]--   :1;   }d(   int   u ,   int/**/v,   int/**/x,   int   y){   int
+Y=y   -v,   X=x         -u;   int         S,s   ;Y<         0?Y   =-Y   ,s,
+s=-   1:(   s=1);X<0?X=-X,S   =-1  :(S=   1);   Y<<=   1;X<<=1;   if(X>Y){
+int   f=Y               -(X   >>1   );;               while(u!=         x){
+f>=   0?v+=s,f-=X:0;u   +=S   ;f+=   Y;m[u][v]|=32;mvwaddch(w,v   ,u,   m[u
+ ][               v]&   64?   60:         46)         ;if         (m[   u][
+v]&16){c(u,v);;   ;;;   ;;;   return;}}   }else{int   f=X   -(Y>>1);;   while
+ (v   !=y         ){f   >=0         ?u   +=S,               f-=         Y:0
+ ;v   +=s   ;f+=X;m[u][v]|=   32;mvwaddch(w,v   ,u,m[u][v]&64?60:46);if(m[u
+ ][                     v]&         16)   {c(   u,v                     );
+  ;   return;;;}}}}Z(   int/**/a,   int   b){   }e(   int/**/y,int/**/  x){
+int               i ;         for         (i=         a;i               <=a
++S;i++)d(y,x,i,b),d(y,x,i,b+L);for(i=b;i<=b+L;i++)d(y,x,a,i),d(y,x,a+   S,i
+ );                     ;;;         ;;;         ;;;               ;;;   ;
+  mvwaddch(w,x,y,64);   ;;;   ;;;   ;;;   prefresh(   w,b,a,0,0   ,L-   1,S-1
+);}             main(         int               V ,   char              *C[
+  ]   ){FILE*f=   fopen(V==1?"arachnid.c"/**/   :C[   1],"r");int/**/x,y,c,
+                 (source code cut here)
+    \end{Verbatim}
+  }%$
+      \end{column}
+      \begin{column}{.4\linewidth}%~\medskip
+        \visible<3->{
+          \begin{block}{Screenshoot}\medskip
+            \includegraphics[width=\linewidth]{img/maze.png}          
+          \end{block}
+        }
+      \end{column}
+    \end{columns}
+
+  \end{block}
+#+END_LaTeX
+*** Recreational Obfuscation: Phillips entry of IOCCC'88
+:PROPERTIES:
+:BEAMER_opt: fragile
+:END:
+#+BEGIN_LaTeX
+  \begin{Verbatim}[fontsize=\footnotesize,frame=single,label=Program code]
+#include <stdio.h>
+main(t,_,a)char *a;{return!0<t?t<3?main(-79,-13,a+main(-87,1-_,
+main(-86,0,a+1)+a)):1,t<_?main(t+1,_,a):3,main(-94,-27+t,a)&&t==2?_<13?
+main(2,_+1,"%s %d %d\n"):9:16:t<0?t<-72?main(_,t,
+"@n'+,#'/*{}w+/w#cdnr/+,{}r/*de}+,/*{*+,/w{%+,/w#q#n+,/#{l,+,/n{n+,/+#n+,/#\
+;#q#n+,/+k#;*+,/'r :'d*'3,}{w+K w'K:'+}e#';dq#'l \
+q#'+d'K#!/+k#;q#'r}eKK#}w'r}eKK{nl]'/#;#q#n'){)#}w'){){nl]'/+#n';d}rw' i;# \
+){nl]!/n{n#'; r{#w'r nc{nl]'/#{l,+'K {rw' iK{;[{nl]'/w#q#n'wk nw' \
+iwk{KK{nl]!/w{%'l##w#' i; :{nl]'/*{q#'ld;r'}{nlwb!/*de}'c \
+;;{nl'-{}rw]'/+,}##'*}#nc,',#nw]'/+kd'+e}+;#'rdq#w! nr'/ ') }+}{rl#'{n' ')# \
+}'+}##(!!/")
+:t<-50?_==*a?putchar(31[a]):main(-65,_,a+1):main((*a=='/')+t,_,a+1)
+  :0<t?main(2,2,"%s"):*a=='/'||main(0,main(-61,*a,
+"!ek;dc i@bK'(q)-[w]*%n+r3#l,{}:\nuwloca-O;m .vpbks,fxntdCeghiry"),a+1);}
+  \end{Verbatim}    
+  \begin{minipage}{.5\linewidth}
+  \begin{Verbatim}[fontsize=\tiny,frame=single,label=Output]
+On the first day of Christmas my true love gave to me
+a partridge in a pear tree.
+
+On the second day of Christmas my true love gave to me
+two turtle doves
+and a partridge in a pear tree.
+
+On the third day of Christmas my true love gave to me
+three french hens, two turtle doves
+and a partridge in a pear tree.
+
+On the fourth day of Christmas my true love gave to me
+four calling birds, three french hens, two turtle doves
+and a partridge in a pear tree.
+
+On the fifth day of Christmas my true love gave to me
+five gold rings;
+four calling birds, three french hens, two turtle doves
+and a partridge in a pear tree.
+
+On the sixth day of Christmas my true love gave to me
+six geese a-laying, five gold rings;
+four calling birds, three french hens, two turtle doves
+and a partridge in a pear tree.
+
+On the seventh day of Christmas my true love gave to me
+seven swans a-swimming,
+six geese a-laying, five gold rings;
+four calling birds, three french hens, two turtle doves
+and a partridge in a pear tree.
+
+  \end{Verbatim}    
+  \end{minipage}~\begin{minipage}{.5\linewidth}
+  \begin{Verbatim}[fontsize=\tiny,frame=single,label=Output (cont)]
+On the eighth day of Christmas my true love gave to me
+eight maids a-milking, seven swans a-swimming,
+six geese a-laying, five gold rings;
+four calling birds, three french hens, two turtle doves
+and a partridge in a pear tree.
+
+On the ninth day of Christmas my true love gave to me
+nine ladies dancing, eight maids a-milking, seven swans a-swimming,
+six geese a-laying, five gold rings;
+four calling birds, three french hens, two turtle doves
+and a partridge in a pear tree.
+
+On the tenth day of Christmas my true love gave to me
+ten lords a-leaping,
+nine ladies dancing, eight maids a-milking, seven swans a-swimming,
+six geese a-laying, five gold rings;
+four calling birds, three french hens, two turtle doves
+and a partridge in a pear tree.
+
+On the eleventh day of Christmas my true love gave to me
+eleven pipers piping, ten lords a-leaping,
+nine ladies dancing, eight maids a-milking, seven swans a-swimming,
+six geese a-laying, five gold rings;
+four calling birds, three french hens, two turtle doves
+and a partridge in a pear tree.
+
+On the twelfth day of Christmas my true love gave to me
+twelve drummers drumming, eleven pipers piping, ten lords a-leaping,
+nine ladies dancing, eight maids a-milking, seven swans a-swimming,
+six geese a-laying, five gold rings;
+four calling birds, three french hens, two turtle doves
+and a partridge in a pear tree.
+  \end{Verbatim}
+\end{minipage}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Pas possible de faire apparaitre des Verbatim en animation
+%%   => dupplication du source (irk!)
+%%
+\begin{frame}<handout:0>[fragile,t]{Bad Coding Style as an Art}
+  \begin{block}{Another example\visible<2->{: Computing Integer Square Roots}}
+    \medskip
+    \begin{columns}
+      \begin{column}{.3\linewidth}        
+    \begin{Verbatim}[fontsize=\scriptsize]
+#include <stdio.h>
+int l;int main(int o,char **O,
+int I){char c,*D=O[1];if(o>0){
+for(l=0;D[l              ];D[l
+++]-=10){D   [l++]-=120;D[l]-=
+110;while   (!main(0,O,l))D[l]
++=   20;   putchar((D[l]+1032)
+/20   )   ;}putchar(10);}else{
+c=o+     (D[I]+82)%10-(I>l/2)*
+(D[I-l+I]+72)/10-9;D[I]+=I<0?0
+:!(o=main(c/10,O,I-1))*((c+999
+)%10-(D[I]+92)%10);}return o;}     
+    \end{Verbatim}
+      \end{column}
+      \begin{column}{.32\linewidth}        
+        \visible<2->{\structure{It actually works}\\
+        \fbox{\vbox{\scriptsize\texttt{\noindent
+\$ ./cheong 1234\\
+35}}}\\
+{\scriptsize($35\times 35=1225$; $35\times 36=1296$)}\\
+\medskip\fbox{\vbox{\scriptsize\texttt{\noindent
+\$ ./cheong 112233445566\\
+335012}}}\\
+{\scriptsize$335012\times 335012=112233040144$
+$335013\times 335013=112233710169$
+}}
+      \end{column}
+      \begin{column}{.25\linewidth}
+      \end{column}
+    \end{columns}
+  \end{block}
+
+\end{frame}
+\begin{frame}[fragile,t]{Bad Coding Style as an Art}
+  \begin{block}{Another example: Computing Interger Square Roots}
+    \medskip
+    \begin{columns}
+      \begin{column}{.3\linewidth}        
+    \begin{Verbatim}[fontsize=\scriptsize]
+#include <stdio.h>
+int l;int main(int o,char **O,
+int I){char c,*D=O[1];if(o>0){
+for(l=0;D[l              ];D[l
+++]-=10){D   [l++]-=120;D[l]-=
+110;while   (!main(0,O,l))D[l]
++=   20;   putchar((D[l]+1032)
+/20   )   ;}putchar(10);}else{
+c=o+     (D[I]+82)%10-(I>l/2)*
+(D[I-l+I]+72)/10-9;D[I]+=I<0?0
+:!(o=main(c/10,O,I-1))*((c+999
+)%10-(D[I]+92)%10);}return o;}     
+    \end{Verbatim}
+      \end{column}
+      \begin{column}{.32\linewidth}        
+        \structure{It actually works}\\
+        \fbox{\vbox{\scriptsize\texttt{\noindent
+\$ ./cheong 1234\\
+35}}}\\
+{\scriptsize($35\times 35=1225$; $35\times 36=1296$)}\\
+\medskip\fbox{\vbox{\scriptsize\texttt{\noindent
+\$ ./cheong 112233445566\\
+335012}}}\\
+{\scriptsize$335012\times 335012=112233040144$
+$335013\times 335013=112233710169$
+}
+      \end{column}
+      \begin{column}{.25\linewidth}
+        \structure{Author claim: code self-documented$\ldots$}
+
+        \begin{Verbatim}[fontsize=\tiny]
+#include <stdio.h>
+int l;int main(int o,char **O,
+int I){char c,*D=O[1];if(o>0){
+for(l=0;D[l              ];D[l
+++]-=10){D   [l++]-=120;D[l]-=
+110;while   (!main(0,O,l))D[l]
++=   20;   putchar((D[l]+1032)
+/20   )   ;}putchar(10);}else{
+c=o+     (D[I]+82)%10-(I>l/2)*
+(D[I-l+I]+72)/10-9;D[I]+=I<0?0
+:!(o=main(c/10,O,I-1))*((c+999
+)%10-(D[I]+92)%10);}return o;}               
+        \end{Verbatim}
+      \end{column}
+    \end{columns}
+  \end{block}
+
+  \visible<2->{
+  \begin{boitequote}{William Strunk, Jr. (1918)}
+    It is an old observation that the best writers sometimes disregard the
+    rules of rhetoric.  When they do so, however, the reader will usually find
+    in the sentence some compensating merit, attained at the cost of the
+    violation. \textbf{Unless he is certain of doing as well, he will probably
+      do best to follow the rules}.
+  \end{boitequote}}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]{Last one, just for fun: dhyang IOCCC'00}
+
+  \vspace{-.5\baselineskip} Saitou Hajime image \visible<2->{that prints a
+    prog} \visible<3->{that prints a prog} \visible<4->{that prints a prog}
+  \visible<5->{\ldots}
+
+  \visible<5->{Repeating endlessly "aku soku zan", Hajime's motto meaning
+    \textit{slay evil imediatly}.}\medskip
+
+  \begin{columns}
+    \begin{column}{.25\linewidth}\vspace{-\baselineskip}
+      \begin{block}{Source code}\medskip
+        \includegraphics[width=\linewidth]{img/dhyang1.png}        
+      \end{block}
+    \end{column}
+
+    \begin{column}{.3\linewidth}\vspace{-\baselineskip}
+      \begin{block}<2->{Output 1}\medskip
+        \includegraphics[width=\linewidth]{img/dhyang2.png}        
+      \end{block}
+      \begin{block}<4->{Output 3}\medskip
+        \includegraphics[width=\linewidth]{img/dhyang4.png}        
+      \end{block}
+    \end{column}
+
+    \begin{column}{.3\linewidth}\vspace{-\baselineskip}
+      \begin{block}<3->{Output 2}\medskip
+        \includegraphics[width=\linewidth]{img/dhyang3.png}        
+      \end{block}
+      \begin{block}<5->{Output 4 (=1)}\medskip
+        \includegraphics[width=\linewidth]{img/dhyang2.png}        
+      \end{block}
+    \end{column}      
+  \end{columns}
+#+END_LaTeX
+
+* Conclusion
+#+BEGIN_LaTeX
+ \renewcommand{\footlineSubTitle}{
+   \THERE{Intro}{sec:intro},~~~%
+   \THERE{Design Patterns}{sec:patterns},~%
+   \THERE{Code Smell}{sec:smell},~%
+   \THERE{FP Principles}{sec:fp-principle},~%
+   \THERE{Programming Style}{sec:style},~~~%
+   \HERE{CC}{sec:cc}
+ }\label{sec:cc}
+#+END_LaTeX
+*** Conclusion
+**** Computer Science is the \alert{Science of Abstraction}
+- Computer Scientists are engineers terraforming ideas and concepts
+- Write code to communicate with humans, and accidentally to execute
+  it
+- Programming is not about technology for its own sake.  It's about
+  being able to express your ideas precisely and efficiently.
+  http://prog21.dadgum.com/
+\vspace{-.3\baselineskip}
+**** FP vs. OOP: how you prefer to state your ideas?
+- OOP is all about nouns, FP is all about verbs
+- Please keep the troll level low: It's the mutable state that is evil, not the object
+\vspace{-.3\baselineskip}
+**** Don't hope to get it right on the first time
+- To a great extent the act of coding is one of organization.
+  Refactoring. Simplifying. Figuring out how to remove extraneous
+  manipulations here and there.
+- Write it. Rewrite it correct. Rewrite it efficient. Rewrite it
+  modifiable / elegant.
+\vspace{-.3\baselineskip}
+**** This course is now over
+- I really hope that you will like your long journey on the programmer path
+* Footer
+** 
+# Local Variables:
+# eval:    (setq org-latex-listings 'minted)
+# eval:    (setq org-latex-minted-options '(("bgcolor" "Moccasin") ("style" "tango") ("numbers" "left") ("numbersep" "5pt")))
+# eval:    (org-babel-do-load-languages 'org-babel-load-languages '((sh . t) (scala . t) ))
+# eval:    (setq org-confirm-babel-evaluate nil)
+# End:
