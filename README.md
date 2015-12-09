@@ -61,7 +61,7 @@ your help is welcome to improve the material. Pull requests welcome ;)
   the behaviors. We speak of higher order functions and closures, but
   also of variance, covariance, invariance and friends.
 
-## *Practical 2: [Inheritance, Overriding and Dynamic Binding](https://github.com/mquinson/prog_scala/raw/master/Practical2/scala_exo2.pdf)*
+### *Practical 2: [Inheritance, Overriding and Dynamic Binding](https://github.com/mquinson/prog_scala/raw/master/Practical2/scala_exo2.pdf)*
 
   This exercise sheet will let you work on OOP code organization. You
   will have to design two class hierarchies. A 
@@ -73,6 +73,13 @@ your help is welcome to improve the material. Pull requests welcome ;)
   This week we speak of code clarity and understandable design. This
   will lead us through the notions of Design Patterns, code smell,
   Functionnal Programming Principles and Programming Style.
+
+### *Practical 3: [Functional Programming and Combinatorial Search](https://github.com/mquinson/prog_scala/raw/master/Practical3/scala_exo3.pdf)*
+
+  This exercise sheet will let you work on FP code organization, using
+  two classical combinatorial search problems as an excuse. A
+  [source template](https://github.com/mquinson/prog_scala/raw/master/Practical3/scala_exo3.tar.gz)
+  is provided to save your time.
 
 ## Compiling the material
 
