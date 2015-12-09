@@ -1209,13 +1209,13 @@ c=o+     (D[I]+82)%10-(I>l/2)*
     \textit{slay evil imediatly}.}\medskip
 
   \begin{columns}
-    \begin{column}{.25\linewidth}\vspace{-\baselineskip}
+    \begin{column}{.23\linewidth}\vspace{-\baselineskip}
       \begin{block}{Source code}\medskip
         \includegraphics[width=\linewidth]{img/dhyang1.png}        
       \end{block}
     \end{column}
 
-    \begin{column}{.3\linewidth}\vspace{-\baselineskip}
+    \begin{column}{.29\linewidth}\vspace{-\baselineskip}
       \begin{block}<2->{Output 1}\medskip
         \includegraphics[width=\linewidth]{img/dhyang2.png}        
       \end{block}
@@ -1224,7 +1224,7 @@ c=o+     (D[I]+82)%10-(I>l/2)*
       \end{block}
     \end{column}
 
-    \begin{column}{.3\linewidth}\vspace{-\baselineskip}
+    \begin{column}{.29\linewidth}\vspace{-\baselineskip}
       \begin{block}<3->{Output 2}\medskip
         \includegraphics[width=\linewidth]{img/dhyang3.png}        
       \end{block}
@@ -1233,6 +1233,8 @@ c=o+     (D[I]+82)%10-(I>l/2)*
       \end{block}
     \end{column}      
   \end{columns}
+
+  \visible<5->{This is a Quine: \url{https://en.wikipedia.org/wiki/Quine_(computing)}}
 #+END_LaTeX
 
 * Conclusion
