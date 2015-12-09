@@ -1,4 +1,4 @@
-#+Title: Functional Programming
+#+Title: Functional Programming and Combinatorial Search
 #+LANGUAGE: nil
 #+OPTIONS:  H:3 skip:nil num:t toc:nil 
 #+LaTeX_CLASS: article
@@ -15,7 +15,7 @@
 #+LATEX_HEADER: \renewcommand{\maketitle}{
 #+LATEX_HEADER:   \noindent\null\hfill\begin{minipage}{.85\linewidth} 
 #+LATEX_HEADER:   \centering
-#+LATEX_HEADER:   \textbf{\Large Functionnal Programming}\par\medskip%
+#+LATEX_HEADER:   \textbf{\Large Functional Programming and Combinatorial Search}\par\medskip%
 #+LATEX_HEADER:     Prog1, Scala, L3\par
 #+LATEX_HEADER:    {\footnotesize 2015}
 #+LATEX_HEADER:   \end{minipage}\hfill\null
@@ -115,7 +115,7 @@ listed in the lecture).
 none of them can capture any other. Thus, no two queens can be placed
 on the same line, on the same row, or on the same diagonal.
 
-Modeling is the most cruxial question when abording such a
+Modeling is the most crucial question for such a
 problem. You should first come up with a nice representation (a nice
 type) of the problem instances and of the partial solutions. This
 time, no code is provided. You are on your own.
@@ -133,7 +133,7 @@ want to implement the other ones as an exercise.
 
 ** Extension: Exercice de Style
 
-As previously, I am interested in inovative solutions using other
+As previously, I am interested in innovative solutions using other
 approaches and styles.
 
 * Higher Order Selective Search
