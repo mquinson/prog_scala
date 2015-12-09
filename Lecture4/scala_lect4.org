@@ -626,6 +626,7 @@ it again/
 \bigskip\pause
 #+END_LaTeX
 **** Design Patterns are OO boilerplate, FP is different
+- (more on that troll: \scriptsize  http://c2.com/cgi/wiki?AreDesignPatternsMissingLanguageFeatures \normalsize)
 - Now: \alert{quick tour of some FP recuring concepts}
 
 #+BEGIN_LaTeX
