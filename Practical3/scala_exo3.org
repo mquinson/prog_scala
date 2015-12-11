@@ -53,12 +53,12 @@ Please complete the file ~BranchBoundSolver.scala~, with the following
 approach: 
 - Simply sweeps over all solutions with a recursive function (that you
   should write).
-- For each possible solution, it it is better than the previously best
+- For each possible solution, if it is better than the previously best
   solution known, it becomes the new best solution known.
 - Partial solutions that are not possible (the knapsack is already
   full) are not even considered.
 
-Once down test your code with some instances from ~TestInstances.scala~.
+Once done, test your code with some instances from ~TestInstances.scala~.
 
 
 ** Going Functionnal
@@ -66,7 +66,7 @@ Once down test your code with some instances from ~TestInstances.scala~.
 The problem with the previous version is that it uses a variable to
 store the currently known best solution. Please complete the file
 ~ExhaustiveSearch.scala~, that first generates all existing knapsacks
-in a ~val~, filter that list to remove the invalid solutions (where
+in a ~val~, filters that list to remove the invalid solutions (where
 the capacity is exceeded), and picks the maximal solution from the
 valid ones.
 
