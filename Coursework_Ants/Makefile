@@ -1,4 +1,4 @@
-all: Ants.pdf
+all: Ants.pdf Coursework_Ants.tar.gz
 PDFLATEX_OPTIONS=-shell-escape
 
 include LaTeX.mk
