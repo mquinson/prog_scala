@@ -26,9 +26,9 @@
 #+LATEX_HEADER: \captionsetup{labelformat=empty,textfont=bf}
   
 
-* Electrical Dipoles
+* Electric Dipoles
 
-Every electrical circuit is composed of differing components such as
+Every electric circuit is composed of differing components such as
 resistors, capacitors, diodes and electromagnetic coils. They can be
 assembled in either series or parallel circuits. Depending on their
 component, each circuit present a specific resistance to the current
@@ -78,7 +78,7 @@ $i=1\angle \frac{\pi}{2} = e^{j\frac{\pi}{2}}$).
   % 
   \put(27.5, 2.5){\line(1, 0){2.5}}
 \end{picture}
-&A \textbf{serie circuit} with 2 dipoles of impedance $z_1$ and $z_2$
+&A \textbf{series circuit} with 2 dipoles of impedance $z_1$ and $z_2$
 & $z = z_1 + z_2$ \\ 
 
 
@@ -117,7 +117,7 @@ $i=1\angle \frac{\pi}{2} = e^{j\frac{\pi}{2}}$).
 
 #+END_LaTeX
 ** Modeling ~Dipole~
-We will use the following class hierarchy to model the electrical
+We will use the following class hierarchy to model the electric
 dipoles.
 
 #+BEGIN_LaTeX
@@ -140,13 +140,13 @@ dipoles.
     \draw [implements] (binaire.north) -- (dipole);
     \draw [implements] (naire.north) -- (dipole);
 
-    \node [class] (serie)      at (4.4,3) {Serie};
+    \node [class] (series)      at (4.4,3) {Series};
     \node [class] (parallele)  at (5.8,3) {Parallel};
-    \node [class] (nserie)     at (7.4,3) {NSerie};
+    \node [class] (nseries)     at (7.4,3) {NSeries};
     \node [class] (nparallele) at (9.1,3) {NParallel};
-    \draw [extends] (serie.north) -- (binaire);
+    \draw [extends] (series.north) -- (binaire);
     \draw [extends] (parallele.north) -- (binaire);
-    \draw [extends] (nserie.north) -- (naire);
+    \draw [extends] (nseries.north) -- (naire);
     \draw [extends] (nparallele.north) -- (naire);
   \end{tikzpicture}
 \end{center}
@@ -204,7 +204,7 @@ to implement both ~impedance()~ and ~toString()~.
 #+END_LaTeX
 
 \Question We will now implement the binary circuits, either built in
-parallel or in serie. Check your implementation with the provided
+parallel or in series. Check your implementation with the provided
 tests, that use the following circuits.
 
 #+BEGIN_LaTeX
@@ -217,7 +217,7 @@ tests, that use the following circuits.
     \vspace{3.4\baselineskip}
                       
     \centerline{($z\approx 100.0 + 15.70j~ \Omega$)}
-    \caption{Tested Serie Circuit.}\label{fig:serie}                     
+    \caption{Tested Series Circuit.}\label{fig:series}                     
   \end{minipage}~
   \begin{minipage}[b]{.4\linewidth}
     \begin{center}
@@ -246,7 +246,7 @@ tests, that use the following circuits.
 #+END_LaTeX
 
 
-\Question We will now implement N-ary circuits. The impedance of a serie
+\Question We will now implement N-ary circuits. The impedance of a series
 circuit is simply given by $\displaystyle \sum_{i=1}^{n}\omega_i$ while the
 impedance of a parallel circuit is given by
 $\displaystyle\frac{1}{\displaystyle\sum_{i=1}^{n}\frac{1}{\omega_i}}$. 

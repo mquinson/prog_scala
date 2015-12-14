@@ -51,7 +51,7 @@ instances and solutions of this problem.
 ** First approach: Recursive Branch and Bound
 Please complete the file ~BranchBoundSolver.scala~, with the following
 approach: 
-- Simply sweeps over all solutions with a recursive function (that you
+- Just sweep over all the solutions with a recursive function (that you
   should write).
 - For each possible solution, if it is better than the previously best
   solution known, it becomes the new best solution known.
@@ -71,7 +71,7 @@ the capacity is exceeded), and picks the maximal solution from the
 valid ones.
 
 This version is preferable because it does not use any mutable data,
-but unfortunately, it is very inefficient as generating every
+but unfortunately, it is very inefficient as generating all
 knapsacks (even invalid ones) takes a lot of time. For large
 instances, the memory to store all instances will also become an
 issue.
@@ -145,8 +145,8 @@ be the following:
   valid solution or not. 
 - A function that given two partial solutions, can select the best one
 - A function that given a state, can produce a set of partial solutions
-  to explore next. It may be easier to conduct a Bread-first
+  to explore next. It may be easier to conduct a Breadth-first
   exploration instead of a Depth-first one. The set can be empty if we
-  reached a leaf.
+  have reached a leaf.
 - A function that takes three functions as described above, and
   returns the best valid solution to the problem.
