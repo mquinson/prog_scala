@@ -5,8 +5,8 @@
 #+TAGS: noexport(n)
 #+LaTeX_CLASS: beamer
 #+startup: indent
-# non #+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,presentation]
-#+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,handout]
+#+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,presentation]
+# non #+LaTeX_CLASS_OPTIONS: [10pt,xcolor=dvipsnames,handout]
 #+OPTIONS:   H:3 skip:nil num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+startup: beamer
 #+LATEX_HEADER: \usedescriptionitemofwidthas{bl}
@@ -961,7 +961,7 @@ Hello, friends
   \begin{block}{Compile once, use many times}    
     \begin{columns}
       \begin{column}{.45\linewidth}
-      \begin{Verbatim}[gobble=8,fontsize=\scriptsize,frame=single,label={Hello.scala},commandchars=+[\]]
+      \begin{Verbatim}[gobble=8,fontsize=\scriptsize,frame=single,label={Hello.scala}]
         object Hello {
           def main(args: Array[String]) = 
               println("Hello, friends")
