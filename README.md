@@ -74,6 +74,9 @@ your help is welcome to improve the material. Pull requests welcome ;)
   will lead us through the notions of Design Patterns, code smell,
   Functionnal Programming Principles and Programming Style.
 
+  If you want more of Software Engineering, have a look on this
+  colorful, not-too-technic [introduction to the topic](http://mixmastamyk.bitbucket.org/pro_soft_dev/).
+
 ### *Practical 3: [Functional Programming and Combinatorial Search](https://github.com/mquinson/prog_scala/raw/master/Practical3/scala_exo3.pdf)*
 
   This exercise sheet will let you work on FP code organization, using
