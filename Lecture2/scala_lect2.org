@@ -655,7 +655,7 @@ necessary to resolve it./
     \begin{column}{.41\linewidth}
     \vspace{-1.5\baselineskip}
       \begin{scala}
-        scala> val x = new Rational(2/3)
+        scala> val x = new Rational(2,3)
         x: Rational = 2/3
         
         scala> x * 2
@@ -1008,8 +1008,8 @@ necessary to resolve it./
         \begin{class}[scale=.75,text width=3cm]{Lecture}{-2,4}
         \end{class}
 
-        \association{Student}{}{}{Room}{}{}
-        \association{Prof}{}{}{Room}{}{}
+        \association{Student}{}{}{Lecture}{}{}
+        \association{Prof}{}{}{Lecture}{}{}
         \association{Room}{}{}{Lecture}{}{}
       \end{tikzpicture}    
     }

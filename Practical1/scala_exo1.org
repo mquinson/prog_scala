@@ -1,0 +1,285 @@
+#+Title: Inheritance, overriding and dynamic binding
+#+LANGUAGE: nil
+#+OPTIONS:  H:3 skip:nil num:t toc:nil 
+#+LaTeX_CLASS: article
+#+LaTeX_CLASS_OPTIONS: [11pt]
+#+LaTeX_HEADER: \usepackage{../tex/ensrennes}
+#+LATEX_HEADER: \usepackage{xcolor,float,array}
+#+LATEX_HEADER: \usepackage{tikz}\usetikzlibrary{arrows}
+#+LATEX_HEADER: \usepackage[american inductor]{circuitikz}
+#+LATEX_HEADER: \usepackage{../tex/pgf-umlcd}
+#+LATEX_HEADER: \usepackage{../tex/pgf-crccards}
+# non #+LATEX_HEADER: \usepackage{../tex/starsection}
+
+#+LATEX_HEADER: \hypersetup{urlcolor={blue},colorlinks}
+#+LATEX_HEADER: \usepackage{fullpage}
+#+LATEX_HEADER: \renewcommand{\maketitle}{
+#+LATEX_HEADER:   \noindent\null\hfill\begin{minipage}{.85\linewidth} 
+#+LATEX_HEADER:   \centering
+#+LATEX_HEADER:   \textbf{\Large Object-Oriented Design}\par\medskip%
+#+LATEX_HEADER:     OOP in Scala\par
+#+LATEX_HEADER:    {\footnotesize 2016}
+#+LATEX_HEADER:   \end{minipage}\hfill\null
+#+LATEX_HEADER: }
+#+LATEX_HEADER: \thispagestyle{empty}
+
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \captionsetup{labelformat=empty,textfont=bf}
+
+\bigskip  
+This practical introduces a systematic method that can be used to design
+systems with objects: CRC cards (Class, Responsibilities, 
+Collaborators)[fn:: K. Beck and W. Cunningham. A Laboratory for
+Teaching Object-Oriented Thinking, in Proceedings of
+OOPSLA'89. pp.~1--6, 1989. ACM Press. 
+\url{http://doi.acm.org/10.1145/74877.74879}]. Each card
+describes a class of objects, abstracting away its implementation.
+Each such description has three components:
+
+- *Name of class:* This name creates a vocabulary between the conceptors 
+  of an application. It must thus be wisely chosen, to correctly
+  describe the class purpose. It must be as indicative as possible,
+  since it will be used in a much wider scope.
+- *Responsibilities:* They identify the problems solved by this
+  class. To define them, ask yourself the following questions: /what
+  should my object *know*?/ and /what should my object *do* in my
+  application?/ \par The first category of responsibilities (know
+  things) encompasses mainly the values it should save while the
+  second category of responsibility (do things) encompass the
+  following:
+  - do a given computation ;
+  - modify its internal state in some way;
+  - create and initialize other objects ;
+  - control and coordinate the activity of other objects.
+- *Collaborators:* The names of classes with which this class must
+  cooperate to achieve its responsibilities. So they are the classes
+  to which this one will send messages (call methods) or from which it
+  will receive messages.
+
+Here is an example CRC card, form a simple dice.
+#+BEGIN_LaTeX
+\begin{CRC}{}{Dice}
+  \responsability{Save the value (a char) of each of the 6 sides}
+  \responsability{Save the currently visible side}
+  \responsability{Allow to retrieve the visible side}
+  \responsability{Allow to cast another dice (the visible side is updated)}
+
+	   \collaborator{java.util.Random}
+	\end{CRC}
+#+END_LaTeX
+
+\begin{Exercice} In this exercise, we design the classes of a simple
+  LOGO interpreter.
+
+The LOGO language was invented in the 60ies at the Massachusetts
+Institute of Technology (MIT) by Wally Feurzeig and Seymour
+Papert. This is a renowned tool to teach programming, thanks to the
+playfun aspects of the graphical turtle. This turtle can do the
+following actions: move forward by $N$ pixels, turn right by $N$
+degrees, turn left by $N$ degrees, move backward by $N$ pixels, hide
+itself, show itself, move a pen down to leave a trail on the ground,
+move the pen up, and change the color of the pen.
+
+The class \texttt{turtle.Screen} represents the graphical screen of
+our application. Its public interface is the following:
+
+
+\begin{Verbatim}[fontsize=\small]
+class Screen {
+  def Screen(width:Int, height:Int) 
+  def setForegroundColor(c:Color) :Unit
+  def drawLine(xA:Int, yA:Int, xB:Int, yB:Int) :Unit
+  def fillRectangle(xA:Int, yA:Int, xB:Int, yB:Int) :Unit
+  def setBackgroundColor(c:Color) :Unit
+  def clear() :Unit
+}
+\end{Verbatim}
+
+\begin{Question}
+Propose a CRC card for the class \texttt{turtle.Screen}.
+\end{Question}
+
+\begin{Reponse}
+	\begin{CRC}{}{tortue.Screen}
+	    \responsability{Permet de définir la couleur avec laquelle on dessine}
+	    \responsability{Permet de dessiner une ligne à l'écran}
+	    \responsability{Permet de définir la couleur de fond d'écran}
+	    \responsability{Offre la possibilité d'effacer l'écran}
+    \end{CRC}
+\end{Reponse}
+
+
+\begin{Question}
+  Model the turtle itself with a CRC card for the class \texttt{turtle.Tortoise}.
+\end{Question}
+
+\begin{Reponse}
+	\begin{CRC}{}{turtle.Tortoise}
+	    \responsability{Permet de définir la couleur du crayon}
+	    \responsability{Permet de poser/lever le crayon}
+	    \responsability{Permet de déplacer la tortue (avancer, reculer)}
+	    \responsability{Permet de faire tourner la tortue (droite, gauche)}
+	    \responsability{Permet de cacher/montrer la tortue}
+	    \responsability{Permet de savoir si la tortue est visible}
+	    \responsability{Conserve la position actuelle de la tortue (x,y)}
+
+        \collaborator{turtle.Screen}
+    \end{CRC}	
+\end{Reponse}
+
+\begin{Question}
+  Propose an implementation interface of the \texttt{turtle.Tortoise} 
+  from its CRC card. Only specify the prototypes of the methods, not their 
+  content.
+\end{Question}
+
+\begin{Reponse}
+\small
+\begin{Verbatim}
+public Tortoise() ;
+public Tortoise(int initialX, int initialY) ;
+public void forward(int pixelCount) ;
+public void backward(int pixelCount) ;
+public void turnLeft(int angleInDegree) ;
+public void turnRight(int angleInDegree) ;
+public int getX() ;
+public int getY() ;
+public void setBrushColor(Color c) ;
+public Color getBrushColor() ;
+public void setBrushDown() ;
+public void setBrushUp() ;
+public void hide() ; // void setVisible(boolean isVisible)
+public void show() ;
+public void boolean isVisible() ;
+\end{Verbatim}   
+\end{Reponse}
+
+
+\begin{Question}
+  Propose a CRC card for the main class \texttt{turtle.Main}. 
+  This application works as follows: on startup, a graphical screen appears, 
+  and the user can input its command in a specific text area. When a command 
+  is entered, if it is valid, it is executed and the application asks for 
+  another command. The accepted commands are the following:
+  
+  \begin{Verbatim}[gobble=2]
+  FD x    # move the turtle ForwarD by x pixels
+  BD x    # move the turtle BackwarD by x pixels
+  LT d    # Left Turn by d degrees
+  RT d    # Right Turn by d degrees
+  PENUP   # move the pen up. No trail is left on the screen afterward
+  PENDOWN # move the pen down. Moving then leaves a trail on the screen
+  CLEAR   # remove any trail from the screen
+  BC c    # pick a new color for the pen (0: white, 1:black, 2:blue, etc)
+  EXIT    # to quit the application 
+  \end{Verbatim}
+\end{Question}
+
+\begin{Reponse}
+	\begin{CRC}{}{tortue.Main}
+	    \responsability{Doit instancier un nouvel écran et le conserver}
+	    \responsability{Doit instancier une nouvelle tortue et la conserver}
+	    \responsability{Capable de lire les commandes données par l'utilisateur}
+	    \responsability{Valide les commandes saisie par l'utilisateur}
+	    \responsability{Exécute les commandes valides}
+	
+	    \collaborator{tortue.Screen}
+	    \collaborator{tortue.Tortoise}
+	\end{CRC}
+\end{Reponse}
+
+
+\begin{Question}
+Propose a public interface for the class \texttt{turtle.Main}.
+\end{Question}
+
+\begin{Reponse}
+\small
+\begin{Verbatim}
+public static void main(String args[]) ; 
+\end{Verbatim}
+\normalsize
+\end{Reponse}
+
+
+\begin{Question} \emph{(bonus)} Actually implement this little
+  interpreter using the Java2D or ScalaFX interface below your 
+  \texttt{Turtle.Screen}.
+\end{Question}
+\begin{Reponse}
+  That's mainly to feed the faster and most curious students.
+\end{Reponse}
+
+\end{Exercice}
+
+\bigskip
+\begin{Exercice} Specifying the buggles of the PLM
+
+\medskip\noindent\begin{minipage}{4cm}
+\begin{center}
+\includegraphics[width=4cm]{buggles.png}
+\end{center}
+\end{minipage}\hfill
+\begin{minipage}{11cm}
+
+The buggles are little animals that live in a grid world. Just like turtles, they 
+can move on this world (forward or backward by a cell, turn left or right by 90° 
+at a time, move a brush up or down to leave a trail or not, change the color of 
+the brush). Their world can contain baggles, these little biscuits that buggles 
+love, but also walls that prevent the buggles from moving. The buggles must thus
+know whether they are facing the wall or not. They should also know when they 
+are over a baggle, take it and leave it.
+\end{minipage}
+\smallskip
+
+   
+\begin{Question}
+  Propose the CRC cards of all classes needed for this application. 
+  The card for \texttt{turtle.Screen} created previously should be reused and 
+  eventually extended.
+\end{Question}
+
+\begin{Question}
+  Propose the public interfaces of the CRC cards you proposed.
+\end{Question}
+\end{Exercice}
+
+
+
+* :noexport:
+\begin{Exercice} Schéma mémoire.
+
+Considérons le code source java donné ci-dessous.
+\small
+\VerbatimInput{src/A.java}
+\VerbatimInput{src/B.java}
+\VerbatimInput{src/Test.java}
+\normalsize
+
+\begin{Question}
+  Après avoir extrait l'interface publique de chaque classe, essayez de déduire
+  ce que décrivent les classes fournies.
+\end{Question}
+\begin{Reponse}
+  L'objectif recherché est de faire le travail inverse du travail
+  habituellement demandé.  On fera remarquer aux étudiants la difficulté de
+  maintenir du code qui n'est pas proprement nommé (la classe \texttt{A} et
+  \texttt{B}). Un petit rappel rapide sur les concepts de pile et de tas serait
+  le bien venu également.
+\end{Reponse}
+
+\begin{Question}
+  Calculez et donnez le résultat de l'exécution de la classe
+  \texttt{Test}. Pour cela, vous réaliserez les schémas de la mémoire aux trois
+  étapes identifiées dans le code source de la méthode \texttt{main} de la
+  classe \texttt{Test}.
+\end{Question}   
+   
+\begin{Reponse}
+Je n'ai pas eu le temps d'aborder en détails ce type de schémas en cours.
+Il faut donc leur expliquer rapidement ce que représente "la pile" et le "tas" sur un petit exemple. Ensuite, ils faut dérouler le code fourni.
+
+Il doit être également possible de dérouler une correction en utilisant un vidéo-projecteur et le logiciel Arteoz (\url{http://arteoz.loria.fr/}), mais je n'ai pas eu encore le temps de tester (je vais regarder cela durant le week-end sûrement). Sinon, une solution est donnée en annexe ;-)   
+\end{Reponse}   
+      
+\end{Exercice}
