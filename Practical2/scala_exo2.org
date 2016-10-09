@@ -26,230 +26,6 @@
 #+LATEX_HEADER: \usepackage{caption}
 #+LATEX_HEADER: \captionsetup{labelformat=empty,textfont=bf}
   
-* OOP Design
-This exercise introduce a systematic method that can be used to design
-object systems: CRC cards (\emph{Class, Responsibilities,
-Collaborators})[fn:: K. Beck and W. Cunningham. A Laboratory for
-Teaching Object-Oriented Thinking, in Proceedings of
-OOPSLA'89. pp.~1--6, 1989. ACM Press. 
-\url{http://doi.acm.org/10.1145/74877.74879}]. Each card
-describes a class of objects, abstracting away its implementation.
-Each such description has three components:
-
-- *Name of class:* This name creates a vocabulary between the conceptors 
-  of an application. It must thus be wisely chosen, to correctly
-  describe the class purpose. It must be as indicative as possible,
-  since it will be used in a much wider scope.
-- *Responsibilities:* They identify the problems solved by this
-  class. To define them, ask yourself the following questions: /what
-  should my object *know*?/ and /what should my object *do* in my
-  application?/ \par The first category of responsibilities (know
-  things) encompasses mainly the values it should save while the
-  second category of responsibility (do things) encompass the
-  following:
-  - do a given computation ;
-  - modify its internal state in some way;
-  - create and initialize other objects ;
-  - control and coordinate the activity of other objects.
-- *Collaborators:* The names of classes with which this class must
-  cooperate to achieve its responsibilities. So they are the classes
-  to which this one will send messages (call methods) or from which it
-  will receive messages.
-
-Here is an example CRC card, form a simple dice.
-#+BEGIN_LaTeX
-\begin{CRC}{}{Dice}
-  \responsability{Save the value (a char) of each of the 6 sides}
-  \responsability{Save the currently visible side}
-  \responsability{Allow to retrieve the visible side}
-  \responsability{Allow to cast another dice (the visible side is updated)}
-
-	   \collaborator{java.util.Random}
-	\end{CRC}
-#+END_LaTeX
-
-\begin{Exercice}
-  L'objectif de cet exercice est de déterminer les classes nécessaires à la
-  réalisation d'un interpréteur rudimentaire LOGO.
-
-  Le langage LOGO a été crée au dans les années 1960 au Massachusetts Institute
-  of Technology (MIT) par Wally Feurzeig et Seymour Papert. C'est un bon
-  langage d'initiation à la programmation en particulier pour les enfants grâce
-  au côté ludique de la tortue graphique. La tortue graphique peut effectuer
-  les actions suivantes : avancer de $N$ pixels, tourner à droite de $N$
-  degrés, tourner à gauche de $N$ degrés, reculer de $N$ pixels, se cacher, se
-  montrer, lever le crayon, poser le crayon, changer la couleur du crayon.
-
-  La classe \texttt{tortue.Screen} représente l'écran graphique de notre
-  application. L'interface publique offerte par cette classe est la suivante : 
-\small
-\begin{Verbatim}
-class Screen {
-  def Screen(width:Int, height:Int) 
-  def setForegroundColor(c:Color) :Unit
-  def drawLine(xA:Int, yA:Int, xB:Int, yB:Int) ;
-  def fillRectangle(xA:Int, yA:Int, xB:Int, yB:Int) ;
-  def setBackgroundColor(c:Color) ;
-  def clear() :Unit
-}
-\end{Verbatim}
-\normalsize
-
-\begin{Question}
-Réaliser la carte CRC correspondant à la classe \texttt{tortue.Screen}.
-\end{Question}
-
-\begin{Reponse}
-	\begin{CRC}{}{tortue.Screen}
-	    \responsability{Permet de définir la couleur avec laquelle on dessine}
-	    \responsability{Permet de dessiner une ligne à l'écran}
-	    \responsability{Permet de définir la couleur de fond d'écran}
-	    \responsability{Offre la possibilité d'effacer l'écran}
-    \end{CRC}
-\end{Reponse}
-
-
-\begin{Question}
-  Réaliser la carte CRC de la classe \texttt{tortue.Tortoise}, modélisant la tortue.
-\end{Question}
-
-\begin{Reponse}
-	\begin{CRC}{}{tortue.Tortoise}
-	    \responsability{Permet de définir la couleur du crayon}
-	    \responsability{Permet de poser/lever le crayon}
-	    \responsability{Permet de déplacer la tortue (avancer, reculer)}
-	    \responsability{Permet de faire tourner la tortue (droite, gauche)}
-	    \responsability{Permet de cacher/montrer la tortue}
-	    \responsability{Permet de savoir si la tortue est visible}
-	    \responsability{Conserve la position actuelle de la tortue (x,y)}
-
-        \collaborator{tortue.Screen}
-    \end{CRC}	
-\end{Reponse}
-
-\begin{Question}
-  \`A partir de la carte CRC déterminer une interface publique possible pour la
-  classe \texttt{tortue.Tortoise}.
-\end{Question}
-
-\begin{Reponse}
-\small
-\begin{Verbatim}
-public Tortoise() ;
-public Tortoise(int initialX, int initialY) ;
-public void forward(int pixelCount) ;
-public void backward(int pixelCount) ;
-public void turnLeft(int angleInDegree) ;
-public void turnRight(int angleInDegree) ;
-public int getX() ;
-public int getY() ;
-public void setBrushColor(Color c) ;
-public Color getBrushColor() ;
-public void setBrushDown() ;
-public void setBrushUp() ;
-public void hide() ; // void setVisible(boolean isVisible)
-public void show() ;
-public void boolean isVisible() ;
-\end{Verbatim}   
-\end{Reponse}
-
-
-\begin{Question}
-  Déterminer la carte CRC pour la classe principale dénommée
-  \texttt{tortue.Main}. Sachant que l'application fonctionne de la manière
-  suivante.  Une fois exécutée, l'écran graphique apparaît et il est demandé à
-  l'utilisateur de saisir une commande. Une fois la commande saisie, si
-  celle-ci est valide, elle est exécutée et l'application demande à nouveau à
-  l'utilisateur de saisir une commande.
-
-  Les commande possibles sont les suivantes :
-  
-  \begin{Verbatim}[gobble=2]
-  FD x    # pour faire avancer la tortue de x pixels
-  BD x    # pour faire reculer la tortue de x pixels
-  LT d    # pour faire tourner à gauche la tortue de d degrés
-  RT d    # pour faire tourner à droite la tortue de d degrés
-  PENUP   # pour lever le crayon
-  PENDOWN # pour poser le crayon
-  CLEAR   # pour effacer l'écran
-  BC c    # pour choisir la couleur numéro c du crayon (0: blanc, 1:noir, etc)
-  EXIT    # pour quitter l'application
-  \end{Verbatim}
-\end{Question}
-
-\begin{Reponse}
-	\begin{CRC}{}{tortue.Main}
-	    \responsability{Doit instancier un nouvel écran et le conserver}
-	    \responsability{Doit instancier une nouvelle tortue et la conserver}
-	    \responsability{Capable de lire les commandes données par l'utilisateur}
-	    \responsability{Valide les commandes saisie par l'utilisateur}
-	    \responsability{Exécute les commandes valides}
-	
-	    \collaborator{tortue.Screen}
-	    \collaborator{tortue.Tortoise}
-	\end{CRC}
-\end{Reponse}
-
-
-\begin{Question}
-Déterminer une interface publique de la classe principale de l'application.   
-\end{Question}
-
-\begin{Reponse}
-\small
-\begin{Verbatim}
-public static void main(String args[]) ; 
-\end{Verbatim}
-\normalsize
-
-Le reste n'est pas visible \texttt{;b} (mais je vous le donnerai l'an prochain
-\ldots)
-\end{Reponse}
-
-
-\begin{Question} \emph{(facultative)} Écrivez une petite application implémentant ces classes
-  \texttt{Tortue.Main} et \texttt{Tortue.Tortoise} en supposant que la classe
-  \texttt{Tortue.Screen} vous est fournie.
-\end{Question}
-\begin{Reponse}
-  C'est surtout pour occuper ceux qui s'ennuient.
-\end{Reponse}
-
-\end{Exercice}
-
-\begin{Exercice} Spécifier les buggles de la PLM
-
-\medskip\noindent\begin{minipage}{5cm}
-\begin{center}
-\includegraphics[width=5cm]{buggles.png}
-\end{center}
-\end{minipage}
-\begin{minipage}{11cm}
-
-Les buggles  habitent sur un monde en forme de grille. Tout comme les tortues,
-elles peuvent se déplacer sur ce monde (avancer, reculer, tourner d'un quart de
-tour à droite, tourner d'un quart de tour à gauche, lever une brosse, baisser une
-brosse, définir la couleur d'une brosse). Le monde des buggles peut quand à lui
-contenir des Baggles (les fameux biscuits tant appréciés par les buggles), mais
-également des murs qui empêchent les buggles d'avancer. Les buggles doivent
-donc être capables de savoir si elles sont faces à un mur ou non. De même elles
-peuvent savoir si elles sont au dessus d'un baggle, le prendre et le déposer.
-
-\end{minipage}
-
-   
-\begin{Question}
-  Réaliser les différentes cartes CRC nécessaires à la conception de cette
-  application. On réutilisera la carte CRC de la classe \texttt{tortue.Screen}
-  vue dans l'exercice précédent.
-\end{Question}
-
-\begin{Question}
-  Déterminer les interfaces publiques des classes correspondantes aux cartes
-  CRC que vous avez réalisées.
-\end{Question}
-\end{Exercice}
-
 * Electric Dipoles
 
 Every electric circuit is composed of differing components such as
@@ -383,14 +159,15 @@ frequency of the current. The impedance is a complex number (only
 resistors have a real impedance).
 
 ** Implementing Dipole
-Download, unpack the [[https://github.com/mquinson/prog_scala/raw/master/Practical2/scala_exo2.tar.gz][provided code]] to your local disk and open it with
-your favorite editor (or ~geany~ if you have no favorite editor
-yet). The provided code contains a ~build.sbt~ file for easy
-compilation, as well as a set of unit tests checking the features that
-you should implement.  You should run the tests often during your
-work\footnote{Run the tests with the following command: ~sbt test~} to
-track your progress. Of course, the tests for a given feature will
-fail until you implement that feature.
+Download the provided code from
+ \url{https://github.com/mquinson/prog_scala/raw/master/Practical2/scala_exo2.tar.gz}
+ and unpack it to your local disk and open it with your favorite
+ editor (or ~geany~ if you have no favorite editor yet). The provided
+ code contains a ~build.sbt~ file for easy compilation, as well as a
+ set of unit tests checking the features that you should implement.
+ You should run the tests (with the command ~sbt test~) very often
+ during your work, to track your progress. Of course, the tests for a
+ given feature will fail until you implement that feature.
 
 \Question We will first implement the simple dipoles. Fill the classes
 ~Resistor~, ~Capacitor~ and ~Inductor~ in file ~src/main/scala/~
@@ -538,7 +315,7 @@ dipoles depicted below.
   \end{minipage}
 \end{figure}
 #+END_LaTeX
-
+\newpage
 * Blogging 
 #+LaTeX: \setcounter{Question}{0}
 #+LaTeX: \newcommand{\meth}[1]{\fbox{\texttt{#1}}}
