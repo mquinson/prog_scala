@@ -39,6 +39,7 @@
 #+LATEX_HEADER:   \newcommand{\THERE}[2]{\hyperlink{#2}{#1}}
 
 #+latex: \thispagestyle{empty}
+#+LATEX_HEADER: \def\maketitle{} 
 #+BEGIN_LaTeX
 \begin{frame}{}
   \thispagestyle{empty}
@@ -50,11 +51,11 @@
   \\[2\baselineskip]
   Martin Quinson\\
   
-  {\footnotesize November 2015}\\[3.5\baselineskip]
+  {\footnotesize October 2016}\\[3.5\baselineskip]
   \centerline{\includegraphics[scale=.7]{../img/logo-ens.pdf}}
 \end{frame}
 #+END_LaTeX
-#+LaTeX: \newcommand{\Smiley}{{\color{darkgreen}\smiley}}
+# non #+LaTeX: \newcommand{\Smiley}{{\color{darkgreen}\smiley}}
 
 * Higher Order Functions
 #+BEGIN_LaTeX
@@ -141,15 +142,16 @@
 **** Higher Order Functions \color{black} = Functions taking function as parameter
 - Powerful abstraction mechanism
 #+BEGIN_LaTeX
+\vspace{-.8\baselineskip}
 \begin{scala}
   def my_map (lst: List[Int] , fun: Int => Int) :List[Int] =
      for (l <- lst) yield fun (l)
 
-  val numbers = List (2 ,3 ,4 ,5)
+  val numbers = List (2, 3, 4, 5)
   def addone ( n : Int ) = n + 1
 
   scala> my_map ( numbers , addone )
-  res0: List[Int] = List (3 , 4 , 5 , 6)  
+  res0: List[Int] = List (3, 4, 5, 6)  
 \end{scala}
 #+END_LaTeX
 *** Higher Order Functions on class ~List~
@@ -158,49 +160,51 @@
 :END:
 **** Filtering and Partitioning
 #+BEGIN_LaTeX
-\medskip
-\begin{columns}
-  \begin{column}{.4\linewidth}
-    \begin{itemize}
-    \item Functions as (named) values
-    \end{itemize}
-    \begin{scala}
-      val li = List(1, 2, 3, 4, 5)
-      def isEven (n: Int) = n%2 == 0
-      scala> li filter isEven
-      res0: List[Int] = List(2, 4)
-    \end{scala}    
-  \end{column}
-  \begin{column}{.45\linewidth}
-    \begin{itemize}
-    \item With an anonymous functions
-    \end{itemize}
-    \begin{scala}
-      scala> li filter (i => i%2 == 0)
-      res1: List[Int] = List(2, 4)
-      scala> li filter (_%2 == 0)
-      res2: List[Int] = List(2, 4)
-    \end{scala}
-  \end{column}
-\end{columns}
+  \medskip
+  \begin{columns}
+    \begin{column}{.4\linewidth}
+      \begin{itemize}
+      \item Functions as (named) values
+      \end{itemize}
+      \vspace{-.7\baselineskip}
+      \begin{scala}
+        val li = List(1, 2, 3, 4, 5)
+        def isEven (n: Int) = n%2 == 0
+        scala> li filter isEven
+        res0: List[Int] = List(2, 4)
+      \end{scala}    
+    \end{column}
+    \begin{column}{.45\linewidth}
+      \begin{itemize}
+      \item With an anonymous functions
+      \end{itemize}
+      \vspace{-.7\baselineskip}
+      \begin{scala}
+        scala> li filter (i => i%2 == 0)
+        res1: List[Int] = List(2, 4)
+        scala> li filter (_%2 == 0)
+        res2: List[Int] = List(2, 4)
+      \end{scala}
+    \end{column}
+  \end{columns}
 
-\medskip
+  %\medskip
 
-\begin{columns}
-  \begin{column}{.92\linewidth}
-    \begin{scala}
-      scala> li partition (_%2 == 0)
-      res3: (List[Int], List[Int]) = (List(2, 4),List(1, 3, 5))
-    \end{scala}
-  \end{column}
-\end{columns}
+  \begin{columns}
+    \begin{column}{.92\linewidth}
+      \begin{scala}
+        scala> li partition (_%2 == 0)
+        res3: (List[Int], List[Int]) = (List(2, 4),List(1, 3, 5))
+      \end{scala}
+    \end{column}
+  \end{columns}
 #+END_LaTeX
 
 - Also defined: ~find~, ~takeWhile~, ~dropWhile~  and ~span~. Check
   the doc
 **** Mapping over elements
 #+BEGIN_LaTeX
-\medskip
+%\medskip
 \begin{scala}
   scala> li map (_ + 1)
   res4: List[Int] = List (2, 3 , 4 , 5 , 6)  
@@ -218,6 +222,7 @@
 \begin{columns}
   \begin{column}{.8\linewidth}
     \hspace{-2.1mm}
+    \vspace{-.7\baselineskip}
     \begin{scala}
       scala> def sum(xs: List[Int]): Int = (0 /: xs) (_ + _)
       scala> sum( List(1,2,3,4) ) 
@@ -225,6 +230,7 @@
     \end{scala}
     \pause
 
+    \vspace{-1.4\baselineskip}
     \begin{scala}
       scala> def sumRight(xs: List[Int]): Int = (0 \: xs) (_ + _)
       scala> sum( List(1,2,3,4) ) 
@@ -350,7 +356,6 @@
 \vspace{-.4\baselineskip}
 **** \alert{Closure = when a function refers to an external free variable}
 #+BEGIN_LaTeX
-\medskip
 \begin{scala}
   scala> var more = 1
   scala> val addMore = (x: Int) => x + more
@@ -358,12 +363,14 @@
   scala> addMore(10)
   res0: Int = 11
 \end{scala}
+\vspace{-1.2\baselineskip}
 #+END_LaTeX
 - This function object is a \structure{closure}, because it
   en\structure{closes} (packs) the free variables
 - In scala, \alert{captures the variables}, not the values\hfill\small (Java
   captures constants)\normalsize
 #+BEGIN_LaTeX
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> more = 3 ; addMore(10)
   res1: Int = 13
@@ -371,7 +378,7 @@
 #+END_LaTeX
 **** Building Closures
 #+BEGIN_LaTeX
-\vspace{.4\baselineskip}
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> def makeIncreaser(more: Int) = (x: Int) => x + more
   makeIncreaser: (more: Int)Int => Int
@@ -387,7 +394,7 @@
 :END:
 **** Code Factorization with Higher Order Functions
 #+BEGIN_LaTeX
-\medskip
+\vspace{-.6\baselineskip}
 \begin{columns}
   \begin{column}{.5\linewidth}
     \begin{scala}
@@ -405,6 +412,7 @@
       def withOdd(nums: List[Int]): Boolean=
            nums.exists(_%2 == 1)
     \end{scala}
+    \vspace{-1.4\baselineskip}
     \begin{itemize}
     \item Q1: Implement List.length with :/
     \item Q2: List.reverse() with :/
@@ -431,6 +439,7 @@
   applied)
 #+LaTeX: \vspace{-.5\baselineskip}
 **** Lazy variables \color{black}\framebox{\tt\small lazy val ui = ...}
+#+LaTeX: \vspace{-.3\baselineskip}
 - Only evaluated on need (usually, scala values are evaluated when
   defined)
 * Currying
@@ -451,6 +460,7 @@
 :END:
 - Defining functions with multiple parameter lists
 #+BEGIN_LaTeX
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> def curriedSum(x: Int)(y: Int) = x + y
   curriedSum: (x: Int)(y: Int)Int
@@ -458,9 +468,11 @@
   scala> curriedSum(1)(2)
   res5: Int = 3
 \end{scala}
+\vspace{-.7\baselineskip}
 #+END_LaTeX
 - You are actually defining two functions back to back
 #+BEGIN_LaTeX
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> def first(x: Int) = (y: Int) => x + y
   first: (x: Int)(Int) => Int
@@ -468,9 +480,11 @@
   scala> val second = first(1)
   second: (Int) => Int = <function1>
 \end{scala}
+\vspace{-.7\baselineskip}
 #+END_LaTeX
 - Currying and Partially applied function
 #+BEGIN_LaTeX
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> curriedSum(1)
   <console>:14: error: missing arguments for method curriedSum; follow this method with ‘_ ’ if you want to treat it as a partially applied function
@@ -478,6 +492,7 @@
   scala> curriedSum(1)_
   res6: Int => Int = <function1>
 \end{scala}
+\vspace{-.7\baselineskip}
 #+END_LaTeX
 - This explains the :/ syntax
 *** Function Composition
@@ -520,7 +535,7 @@
 - It's a function that is not defined for every parameter value
 - It is not a Partially Applied Function
 #+BEGIN_LaTeX
-\smallskip
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> val one: PartialFunction[Int, String] = { case 1 => "one" }
   one: PartialFunction[Int,String] = <function1>
@@ -531,7 +546,7 @@
 #+END_LaTeX
 - You can chain PartialFunctions with orElse
 #+BEGIN_LaTeX
-\smallskip
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> val two: PartialFunction[Int, String] = { case 2 => "two" }
   two: PartialFunction[Int,String] = <function1>
@@ -553,7 +568,7 @@
 :END:
 **** Defining a case class
 #+BEGIN_LaTeX
-\smallskip
+\vspace{-.7\baselineskip}
 \begin{scala}
   trait Tree
   case class Branch(left: Tree, right: Tree) extends Tree
@@ -562,14 +577,14 @@
 #+END_LaTeX
 **** Declaring  a value
 #+BEGIN_LaTeX
-\smallskip
+\vspace{-.7\baselineskip}
 \begin{scala}
   val t = Branch(Branch(Leaf(1), Leaf(2)), Branch(Leaf(3), Leaf(4)))
 \end{scala}
 #+END_LaTeX
 **** Pattern Matching
 #+BEGIN_LaTeX
-\smallskip
+\vspace{-.7\baselineskip}
 \begin{scala}
   def sumLeaves(t: Tree): Int = t match {
     case Branch(l, r) => sumLeaves(l) + sumLeaves(r)
@@ -579,7 +594,7 @@
 #+END_LaTeX
 **** Matching on Variable Declaration
 #+BEGIN_LaTeX
-\medskip
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> val b = Branch(Leaf(1), Leaf(2))
   b: Branch
@@ -607,7 +622,7 @@
 :END:
 **** Defining a Tree[String] \normalsize(without duplication)
 #+BEGIN_LaTeX
-\medskip
+\vspace{-.7\baselineskip}
 \begin{scala}
   trait Tree[A]
   case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
@@ -616,6 +631,7 @@
   scala> val t = Branch(Branch(Leaf("a"), Leaf("b")), Branch(Leaf("c"), Leaf("d")))
   t: Branch[String] = Branch(Branch(Leaf(a),Leaf(b)),Branch(Leaf(c),Leaf(d)))
 \end{scala}
+\vspace{-.7\baselineskip}
 #+END_LaTeX
 - ~Tree~ is a trait while ~Tree[Int]~ is a type  
 \vspace{-.5\baselineskip}
@@ -625,6 +641,7 @@
   find it
 - An ~Option[A]~ can either be a ~Some~ (containing a value) or a ~None~
 #+BEGIN_LaTeX
+\vspace{-.7\baselineskip}
 \begin{scala}
   val capitals = Map("France" -> "Paris", "Japan" -> "Tokyo")
   
@@ -649,6 +666,7 @@
   \alert{nonvariant}
 - If your type ~Tree~ is \alert{covariant} (flexible), just say so:
 #+BEGIN_LaTeX
+\vspace{-.7\baselineskip}
 \begin{columns}
   \begin{column}{.9\linewidth}
     \begin{scala}
@@ -659,6 +677,7 @@
 #+END_LaTeX
 - In some cases, you can tell that your type is \alert{contravariant}
 #+BEGIN_LaTeX
+\vspace{-.7\baselineskip}
 \begin{columns}
   \begin{column}{.9\linewidth}
     \begin{scala}
@@ -671,7 +690,7 @@
 \pause
 **** Mutable Data is often not Covariant
 #+BEGIN_LaTeX
-\medskip
+\vspace{-.7\baselineskip}
 \begin{columns}
   \begin{column}{.5\linewidth}
     \begin{scala}
@@ -707,19 +726,23 @@
 :END:
 
 #+BEGIN_LaTeX
+\vspace{-.7\baselineskip}
 \begin{scala}
   class Animal { val sound = "rustle" }
   class Bird extends Animal { override val sound = "call" }
   class Chicken extends Bird { override val sound = "cluck" }
 \end{scala}
+\vspace{-1.5\baselineskip}
 #+END_LaTeX
 **** Specialization:\color{black}\normalsize{} You need a ~Bird~ and have a ~Chicken~. That's OK.
 - This is the \alert{Liskov Substitution Principle}
 #+BEGIN_LaTeX
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> val a:Bird = new Chicken                scala> a.sound
   a: Bird = Chicken@1fcaea93                     res8: String = cluck
 \end{scala}
+\vspace{-1.5\baselineskip}
 #+END_LaTeX
 - But you cannot use an ~Animal~ in place of a ~Bird~
 \pause\vspace{-.5\baselineskip}
@@ -728,16 +751,19 @@
   takes a ~Bird~
   - It would choke on a ~Duck~; But a function that takes an ~Animal~ is OK
 #+BEGIN_LaTeX
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> val getTweet: (Bird => String) = ((a: Animal) => a.sound )
   getTweet: Bird => String = <function1>
 \end{scala}
+\vspace{-2\baselineskip}
 \pause
 #+END_LaTeX
 **** Function return value are covariant
 - Need a function that returns a ~Bird~? A function returning a ~Chicken~
   is OK
 #+BEGIN_LaTeX
+\vspace{-1.3\baselineskip}
 \begin{scala}
   scala> val hatch: (() => Bird) = ((_) => new Chicken )
   hatch: () => Bird = <function0>
@@ -748,7 +774,7 @@
 :BEAMER_opt: fragile
 :END:
 #+BEGIN_LaTeX
-\smallskip
+\vspace{-1\baselineskip}
 \begin{columns}
   \begin{column}{.35\linewidth}
     \begin{scala}
@@ -789,12 +815,13 @@ val ud:Up  = new Down
     \visible<7->{d.ctv(Bot) ambiguous: Up.ctv(Bot) $\approx$ Down.ctv(Mid)}
     \end{column}
 \end{columns}
+\vspace{-.3\baselineskip}
 #+END_LaTeX
 **** Scala 2.x algorithm to select the Right Call
 - /Get signature from static types; Linearize receiver dynamic type to find it/
 - Other languages (and Scala 1.x) use other algorithms
 - \alert{Don't do it in Real Projects}
-\vspace{-\baselineskip}
+\vspace{-1\baselineskip}
 #+LaTeX: \vfill\hfill\small \textit{Courtesy of Antoine Beugnard (Telecom Bretagne)}\\
 #+LaTeX: \footnotesize\centerline{\url{http://public.enst-bretagne.fr/~beugnard/papiers/lb-sem.shtml}}\normalsize
 * Type Bounds
@@ -815,7 +842,7 @@ val ud:Up  = new Down
 :END:
 **** Refine your polymorphism
 #+BEGIN_LaTeX
-\medskip
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> def cacophony[T](things: Seq[T]) = things map (_.sound)
   <console>:7: error: value sound is not a member of type parameter T
@@ -828,12 +855,13 @@ val ud:Up  = new Down
   scala> biophony(Seq(new Chicken, new Bird))
   res5: Seq[java.lang.String] = List(cluck, call)
 \end{scala}
+\vspace{-1.5\baselineskip}
 #+END_LaTeX
 - ~biophony~ takes any T that /is-a/ Animal
 \pause
 **** Lower bound: \color{black}\normalsize{} List[T] defines ::(elem T) but also ::(U >: T)
 #+BEGIN_LaTeX
-\medskip
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> val flock = List(new Bird, new Bird)
   flock: List[Bird] = List(Bird@7e1ec70e, Bird@169ea8d2)
@@ -852,7 +880,7 @@ val ud:Up  = new Down
 
 **** View bounds: \color{black}\normalsize{} Filter things that can be /viewed as/
 #+BEGIN_LaTeX
-\medskip
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> math.max("123", 111)
   res1: Int = 123    # Works thanks to the (String -> Int) implicit conversion
@@ -860,11 +888,12 @@ val ud:Up  = new Down
   scala> class Container[A <% Int] { def addIt(x: A) = 123 + x }
   defined class Container   # Accepts everything that can be converted to an Int
 \end{scala}
+\vspace{-.7\baselineskip}
 #+END_LaTeX
 \pause
 **** Quantification: \color{black}\normalsize{} When one you don't care about one type
 #+BEGIN_LaTeX
-\medskip
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> def count[A](l: List[A]) = l.size
   count: [A](List[A])Int                    # A is useless
@@ -872,11 +901,12 @@ val ud:Up  = new Down
   scala> def count(l: List[_]) = l.size
   count: (List[_])Int                       # It's thus omitted
 \end{scala}
+\vspace{-.7\baselineskip}
 #+END_LaTeX
 \pause
 **** Structural Types: \color{black}\normalsize{} specify type requirements by interface structure
 #+BEGIN_LaTeX
-\medskip
+\vspace{-.7\baselineskip}
 \begin{scala}
   scala> def foo(x: { def get: Int }) = 123 + x.get
   foo: (x: AnyRef{def get: Int})Int   # Abstract until a get() function is defined
