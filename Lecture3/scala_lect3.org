@@ -414,8 +414,8 @@
     \end{scala}
     \vspace{-1.4\baselineskip}
     \begin{itemize}
-    \item Q1: Implement List.length with :/
-    \item Q2: List.reverse() with :/
+    \item Q1: Implement List.length with /:
+    \item Q2: List.reverse() with /:
     \item Q3: Type of  \framebox{\small((x:Double) => x+1)}
     \end{itemize}
   \end{column}
@@ -427,6 +427,8 @@
 - Q6: Explain \framebox{((\_:Double)+2)} and
   \framebox{(\_:String).size}
 # Q1: def len[T](xs: List[T]) = (0 /: xs) { (sum, _) => sum + 1}
+# Le type de la fonction passée est (Int, Int)=>Int
+# Sa sémantique est (accumualteur, ieme valeur lue) => accumulateur suivant
 # Q2: def reverseLeft[T](xs: List[T]) = (List[T]() /: xs) {(ys, y) => y :: ys}
 # Q3: Double => Double = <function1>
 # Q4: def plusOne(xs:List[Int]) = xs map (_ +1)
