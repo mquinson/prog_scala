@@ -37,7 +37,8 @@
 #+LATEX_HEADER: \def\shorttitle{Computer Programming with Scala}
 #+LATEX_HEADER:   \newcommand{\HERE}[2]{\underline{\bf\hyperlink{#2}{#1}}}
 #+LATEX_HEADER:   \newcommand{\THERE}[2]{\hyperlink{#2}{#1}}
-
+#+LATEX_HEADER: \def\maketitle{} 
+ 
 #+latex: \thispagestyle{empty}
 #+BEGIN_LaTeX
 \begin{frame}{}
@@ -54,7 +55,6 @@
   \centerline{\includegraphics[scale=.7]{../img/logo-ens.pdf}}
 \end{frame}
 #+END_LaTeX
-#+LaTeX: \newcommand{\Smiley}{{\color{darkgreen}\smiley}}
 
 * Introduction
 #+BEGIN_LaTeX
@@ -202,7 +202,7 @@
     \begin{block}{Why? When?}
       \begin{itemize}
       \item Extract complex object creation code
-      \item Select which clase to instanciate
+      \item Select which class to instanciate
       \item Cache objects
       \end{itemize}
     \end{block}
@@ -721,7 +721,7 @@ it again/
           (1 /: (1 to n)) (_ * _)
 
 
-      def product(n:Int) = 
+      def sum(n:Int) = 
           (1 to n).foldLeft(0)(_ + _)
 
       def sum(n:Int)     = 
