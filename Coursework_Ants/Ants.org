@@ -10,8 +10,7 @@
 #+LATEX_HEADER:   \noindent\null\hfill\begin{minipage}{.65\linewidth} 
 #+LATEX_HEADER:   \centering
 #+LATEX_HEADER:   \textbf{\Large Ant vs. SomeBees}\par%
-#+LATEX_HEADER:     Projet de programmation, L3\par
-#+LATEX_HEADER:    {\footnotesize 2015}
+#+LATEX_HEADER:     Projet de programmation
 #+LATEX_HEADER:   \end{minipage}\hfill\null
 #+LATEX_HEADER: }
 #+LATEX_HEADER: \thispagestyle{empty}
@@ -113,7 +112,7 @@ program by clicking on the little button above the code green arrow.
 
 [[./img/eclipse-run.png]]
 
-** Compiling with ~sbt~
+** Compiling with sbt
 
 [[http://www.scala-sbt.org/][Simple Build Tool]] (sbt for short) is a very pleasant tool to compile
 your Scala code. If you (or your computer) are alergic to Eclipse,
@@ -180,7 +179,7 @@ with your teammates without the appropriate tools. You are perfectly
 free to use anything you see fit, such as USB key, email attachments
 or pigeons, but you probably want to use a SVN or Git.
 
-#+LaTeX: \newpage
+#+LaTeX: %\newpage
 * Warm up
 
 You are provided with an initial application called [[https://github.com/mquinson/prog_scala/tree/master/Coursework_Ants/src/main/scala/DemoApp.scala][DemoApp]] It
@@ -386,8 +385,7 @@ pre-determined turns (to leave some time to the player to rebuild the base).
 ** Wall Ant
 We are going to add some protection to our glorious /AntColony/ by
 implementing the /WallAnt/, which is an ant that does nothing each turn
-(already the default action of the /Ant/ class). A /WallAnt/ is useful
-because it has a large armor value.
+(already the default action of the /Ant/ class),  but presents a large armor value.
 
 #+BEGIN_HTML
 <div align="center">
@@ -466,8 +464,8 @@ simultaneously occupy the same Place:
 
 - Add an attribute to /Ant/ indicating whether it is a container. Only
   /BodyguardAnt/ are containers.
-- Add a a method to /ant/ indicating whether the receiver can contain
-  the parameter. It is so if and only if the receiver is an empty
+- Add a method to /ant/ indicating whether the receiver can contain
+  the parameter: If and only if the receiver is an empty
   container and the paramter is not a container.
 - Change the /addInsect/ method accordingly.
 ** QueenAnt
@@ -537,7 +535,7 @@ before even thinking of the FP approach.
 ** Complex Simulation
 
 Another over-simplification lays in the handling of the time. Our game
-is currently turn-based while time is rarely discrete out there. But
+is currently turn-based while time is rarely discrete. But
 making a full-featured simulation engine has a lot of
 implications. You should read [[http://cs.wellesley.edu/~games349/][this paper]] on the game aspects. From a
 Computer Science perspective, you will end up writing a
