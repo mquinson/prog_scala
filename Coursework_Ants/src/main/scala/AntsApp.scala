@@ -1,10 +1,10 @@
 // This is the template of code that you should fill.
 
 // You are free to reorganize your code as you want. 
-// In particular, splitting this file in several subfiles sounds like a good idea
+// In particular, splitting this file into several files is a good idea
 
-// Compile this file with: scalac -cp ../../../scala-swing.jar:. AntsApp.scala
-// Then execute with: scala -cp ../../../scala-swing.jar:. AntsApp
+// Compile: scalac -cp ../../../scala-swing.jar:. AntsApp.scala
+// Execute: scala -cp ../../../scala-swing.jar:. AntsApp
 // (from the src/main/scala directory)
 
 import scala.swing._
@@ -15,51 +15,25 @@ import java.awt.{ Color, Graphics2D, Point, geom, MouseInfo }
 import javax.swing.{ ImageIcon, Timer }
 import javax.swing.UIManager
 
-
+/** This class should be the ancestor of every images on screen (bees, ants, etc) */
 abstract class Sprite(val image_file : String, var x : Int, var y : Int) {
+	/* Load the image that move on screen */
 	
-
-	/* Load the images that move on screen. Search in two locations so that it works with sbt and eclipse */
-    val path = Option(getClass.getResource("/resources/"+image_file))
-    val path2 = if (path != None) path else Option(getClass.getResource(image_file)) 
-    val icon = path2 match {
-      case Some(url) => new ImageIcon(url)
-      case None      => {
+    //private val path = Option(getClass.getResource("/resources/"+image_file)) // Use this line if you prefer eclipse
+	private val path = Option(getClass.getResource(image_file))  // This line is intended for sbt users
+    val icon = path match {
+      case None => 
     	  println("Cannot find the file "+image_file+". Make sure it's in the classpath.")
-    	  UIManager.getLookAndFeelDefaults().get("html.missingImage").asInstanceOf[ImageIcon]        
-      }
+    	  UIManager.getLookAndFeelDefaults().get("html.missingImage").asInstanceOf[ImageIcon]
+      case Some(url) => new ImageIcon(url)
     }
-    val im = icon.getImage( )
+    val im = icon.getImage()
 
-	// Method to override to have updates on every frame
-	def update() = {}
+	def update() = {} // Override this to get your sprite doing something
 }
 
-abstract class Box(var x : Int, var y : Int){
-	val size : Int = 100
-
-	val boxPath = new geom.GeneralPath
-	boxPath.moveTo(x,y)
-	boxPath.lineTo(x+size,y)
-	boxPath.lineTo(x+size,y+size)
-	boxPath.lineTo(x,y+size)
-	boxPath.lineTo(x,y)
-
-
-	// To override for action on click
-	def onClick() = {}
-
-	def isInside(pt : Point): Boolean = {
-		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
-	}
-
-}
-
-
-
+/** Demo of Sprite implementation */
 class Bee extends Sprite("bee.png",200,200) {
-	//Example of bee
-
 	var counter : Int = 0
 	var x_speed : Int = 2
 	
@@ -73,52 +47,63 @@ class Bee extends Sprite("bee.png",200,200) {
 		}
 	}	
 }
-	
-class SimpleBox extends Box(200,200) {
-	// Simple implementation of Box at the coordinates 200 200
+
+/** Box objects can be clicked. Somehow similar to buttons */
+abstract class Box(var x : Int, var y : Int){
+	val size : Int = 100
+
+	val boxPath = new geom.GeneralPath
+	boxPath.moveTo(x,y)
+	boxPath.lineTo(x+size,y)
+	boxPath.lineTo(x+size,y+size)
+	boxPath.lineTo(x,y+size)
+	boxPath.lineTo(x,y)
+
+	def onClick() // Override this method to do something when this box gets clicked 
+
+	def isInside(pt : Point): Boolean = 
+		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
+
 }
 
+/** Demo of Box implementation */	
+class SimpleBox extends Box(200,200) {
+  def onClick() = println("SimpleBox was clicked")
+}
 
-
-object AntsApp extends SimpleSwingApplication {
-
-	/** 
-	Called when there is a click on a box b
-		parameter b : box that has been clicked on
-	**/	
-	def clickOnBox(b : Box) {
-		
-		println("Inside box")
-	}
-
-
+/** This is the main application */
+object AntsApp extends Engine {
+	val WIDTH = 1200
+	val HEIGHT = 800
+	
+	init_screen(WIDTH, HEIGHT)
+	add_object(new Bee)
+	
+	sprites = new Bee :: sprites
+    	
+	boxes = new SimpleBox :: boxes
+}
+class Engine extends SimpleSwingApplication {
 
 	// lists that contain the sprites and the boxes for the display
 	var sprites : List[Sprite] = Nil
 	var boxes : List[Box] = Nil
 
-
-	// Temporary examples
-	sprites = new Bee :: sprites
-	boxes = new SimpleBox :: boxes
-
+	def add_object(sp:Sprite) = { sprites = sp::sprites }
 	// Method that calls sprite.update for all sprites displayed
-	def update_sprites() {
-		for (sprite <- sprites){
-			sprite.update()
-		}
-	}
+	def update_sprites() = sprites.map(_.update())
 	
 	// Core of the game turns	
 	def gameTurn() {
-		println("Game turn")
+		println("New game turn")
 	}
 
+	def init_screen(width: Int, height: Int) = 
+		ui.preferredSize = new Dimension(width, height)
 	// Display
 	lazy val ui = new Panel {
-		preferredSize = new Dimension(600, 400)
+		preferredSize = new Dimension(640, 480)
 		background = Color.white
-
 		
     	focusable = true
     	listenTo(mouse.clicks, mouse.moves, keys) // Capture mouse and keyboard
@@ -129,7 +114,6 @@ object AntsApp extends SimpleSwingApplication {
 				for (box<-boxes){
 					if (box.isInside(e.point)){
 						box.onClick()
-						clickOnBox(box)
 					}
 				}
 			case e: MouseDragged =>
@@ -143,21 +127,14 @@ object AntsApp extends SimpleSwingApplication {
 			super.paintComponent(g)
 			
 			// draw all boxes
-			for (box <- boxes){
+			for (box <- boxes)
 				g.draw(box.boxPath)	
-			}
 
 			// Draw all sprites
-			for (sprite <- sprites){
-				g.drawImage(sprite.im,sprite.x,sprite.y,peer)
-			}
-			
-
+			for (sprite <- sprites)
+				g.drawImage(sprite.im, sprite.x, sprite.y, peer)
 		}
-
-
 	}
-
 	
 	// Animation timer: calls state.update() and ui.repaint() 50 times per second
 	class MyTimer extends ActionListener {
@@ -183,13 +160,13 @@ object AntsApp extends SimpleSwingApplication {
 				gameTurn()
 			}
 			update_sprites()
-			ui.repaint() // Tell Scala that the image should be redrawn
+			ui.repaint() // Ask for an eventual repaint
 		}
 	}
 	val t = new MyTimer()
 
 	def top = new MainFrame {
-		title = "Game"
+		title = "Ants vs. Bees"
 		contents = ui
 	}
 }
