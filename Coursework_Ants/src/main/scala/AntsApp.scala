@@ -31,7 +31,7 @@ abstract class Sprite {
 	}
 	def onClick() = {} // Called when you're clicked
 	// Returns true if the object gets out of bound. The engine removes such objects
-	def isoob(maxX:Int, maxY:Int) = { (x <0 && x >= maxX) || (y < 0 && y >= maxY)}
+	def isoob(maxX:Int, maxY:Int) = { (x < 0 || x >= maxX) || (y < 0 || y >= maxY)}
 	
 	def paint(g: Graphics2D, panel: javax.swing.JPanel) // Draw yourself
 	def isInside(pt : Point): Boolean = false // Detect whether the (clicked) point is touching you
@@ -91,13 +91,12 @@ abstract class Shape extends Sprite {
 class Box extends Shape {
 	x = 200
 	y = 200
-	delta_x = 0
 	delta_y = -1
 	val size = 100
 
 	override def paint(g: Graphics2D, panel: javax.swing.JPanel) = {
 		g.setPaint(Color.red)
-		g.fillRectangle(new geom.Rectangle2D.Double(x, y, size, size))
+		g.fill(new geom.Rectangle2D.Double(x, y, size, size))
 	}
 
 	override def isInside(pt : Point) = 
@@ -116,7 +115,7 @@ object AntsApp extends Engine {
 	
 	init_screen(WIDTH, HEIGHT)
 	add_object(new Bee)
-	add_object(new SimpleBox)
+	add_object(new Box)
 }
 class Engine extends SimpleSwingApplication {
 	val fpsTarget = 50 // Desired amount of frames per second
@@ -135,6 +134,14 @@ class Engine extends SimpleSwingApplication {
 	}
 	def init_screen(width: Int, height: Int) = ui.preferredSize = new Dimension(width, height)
 	
+	def update() = { // Game update function
+		sprites.map(_.update())
+		
+		// Delete oob objects
+		val (maxX, maxY) = (ui.size.width, ui.size.height)
+		if (maxX>0) // Don't get mad if called before the UI creation
+			sprites.filter(_.isoob(maxX, maxY) ).map( del_object(_) )
+	}
 	// Core of the game turns	
 	def gameTurn() {
 		println("New game turn")
@@ -171,14 +178,10 @@ class Engine extends SimpleSwingApplication {
 		}).start
 	}
 
-	
+	// Timer in charge of the game update
 	private[this] val timer = new java.util.Timer
     timer.scheduleAtFixedRate(new java.util.TimerTask {
-		def run { 
-			sprites.map(_.update())
-			sprites.filter(_.isoob(ui.size.width, ui.size.height) )
-			       .map( del_object(_) )
-		}
+		def run() = update()
     }, 0, 1000/fpsTarget) 
   
 	def top = new MainFrame {
