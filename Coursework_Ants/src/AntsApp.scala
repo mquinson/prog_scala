@@ -10,6 +10,7 @@
 import scala.swing._
 import scala.swing.{ SimpleSwingApplication, MainFrame, Panel }
 import scala.swing.event._
+import event.Key._
 import java.awt.event.{ ActionEvent, ActionListener }
 import java.awt.{ Color, Graphics2D, Point, geom, MouseInfo }
 import javax.swing.{ ImageIcon, Timer, AbstractAction }
@@ -53,7 +54,7 @@ abstract class BitmapSprite(imageFile:String) extends Sprite {
 	
     private[this] val icon = path match {
       case None => 
-    	  println("Cannot find the file "+imageFile+". Make sure it's in the classpath.")
+    	  println("Cannot find the file "+imageFile+". Make sure that gfx/ is in the classpath.")
     	  UIManager.getLookAndFeelDefaults().get("html.missingImage").asInstanceOf[ImageIcon]
       case Some(url) => new ImageIcon(url)
     }
@@ -111,7 +112,7 @@ class Bee extends BitmapSprite("bee.png") {
 	// How to react to mouse clicks
 	override def onClick() = {
 		println("You got the Bee!")
-		AntsApp.delObject(this)
+		AntsApp.delObject(this) // remove this object from the game
 	}
 }
 
@@ -131,9 +132,19 @@ object AntsApp extends Engine {
 		if (ticks % 60 == 0) 
 			addObject(new Bee)
 	}
+    
+    // How to react to keystrokes
+    override def onKeyPress(keyCode: Value) = keyCode match {
+        // Keys names are here https://github.com/scala/scala-swing/blob/2.0.x/src/main/scala/scala/swing/event/Key.scala
+        case Left  => println("Left pressed")
+        case Right => println("Right pressed")
+        case Up    => println("Up pressed")
+        case Down  => println("Down pressed")
+        case _ =>
+  }
 }
 abstract class Engine extends SimpleSwingApplication {
-	var ticks = 0
+	var ticks = 0 // Current age of the application
 	
 	/** List of all known sprites. Iterate over them, but don't change them directly. */
 	var sprites : List[Sprite] = Nil
@@ -160,12 +171,15 @@ abstract class Engine extends SimpleSwingApplication {
  	def setSize(width: Int, height: Int) = ui.preferredSize = new Dimension(width, height)
 	
     /** Put your global game logic in this function */
-	def onTick() 
+	def onTick() = {}
+
+    /** Keyboad handler (the Values: https://github.com/scala/scala-swing/blob/2.0.x/src/main/scala/scala/swing/event/Key.scala ) */
+    def onKeyPress(keyCode: Value) = {}
 
 	/*
-	 * Implementation part. You should not have to change the following
+	 * Implementation part. You should not have to change the following (but you are free to)
 	 */
-	def internalTickHandler() = { // Separated to ensure that not calling super.onTick in onTick does not break everything
+	def internalTickHandler() = { // Separated so that forgetting super.onTick in Engine.onTick does not create a vortex
 		ticks += 1
 		onTick()
 		sprites.map(_.onTick())
@@ -187,10 +201,12 @@ abstract class Engine extends SimpleSwingApplication {
 		background = Color.white
 		preferredSize = new Dimension(800,640)
     	focusable = true
+        
     	listenTo(mouse.clicks, mouse.moves, keys) // Capture mouse and keyboard
 
-		// In case of action from the user ...
 		reactions += {
+            // We ignore the key modifiers and locations (not relevant to a game) 
+            case KeyPressed(_, key, _, _) => onKeyPress(key)
 			case e: MousePressed => 
 				sprites.filter(_.isInside(e.point)).map(_.onClick() )
 			case e: MouseDragged =>
@@ -214,6 +230,7 @@ abstract class Engine extends SimpleSwingApplication {
 		}).start
 	}
 
+    // main window
   	val appTitle:String = "Some name" // Windows title, to be overriden
 	def top = new MainFrame {
 		title = appTitle
