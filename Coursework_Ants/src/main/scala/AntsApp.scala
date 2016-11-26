@@ -23,8 +23,8 @@ abstract class Sprite {
 	var dy = 0
 	var age = 0
 	
-	/** Called 50 times per second. Override this to put your game logic. */
-	def update() = {
+	/** Called 50 times per second (on each tick). Override this to put your game logic. */
+	def onTick() = {
 		x += dx
 		y += dy
 		age += 1
@@ -76,7 +76,7 @@ class Box extends Sprite {
 	// How should this sprite react to mouse clicks?
 	override def onClick() = {
 		println("Box was clicked. Good bye.")
-		AntsApp.del_object(this)
+		AntsApp.delObject(this)
 	}
 }
 
@@ -88,19 +88,20 @@ class Bee extends BitmapSprite("bee.png") {
 	x = AntsApp.rand.nextInt(AntsApp.size.width-size)
 	y = AntsApp.rand.nextInt(AntsApp.size.height-size)
 	
-	override def update() = {
+	// Called on each tick (50 times/second). Contains the game logic
+	override def onTick() = {
 		if (age % 50 == 0) {
 			println("Changing direction because age="+age)
 			dx = AntsApp.rand.nextInt(3)-1 // Take a number in [O, 3), ie 0, 1 or 2, and then substract 1
 			dy = AntsApp.rand.nextInt(3)-1 // So it will be one of -1, 0, 1.
 		}
-		super.update() // The bee won't move if you remove this
+		super.onTick() // The bee won't move if you remove this
 	}	
 	override def isInside(pt : Point) = 
 		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
 	override def onClick() = {
 		println("You got the Bee!")
-		AntsApp.del_object(this)
+		AntsApp.delObject(this)
 	}
 }
 
@@ -113,14 +114,13 @@ object AntsApp extends Engine {
 	
 	// Setup and populate the game at the beginning
 	setSize(1200, 800)
-	add_object(new Bee)
-	add_object(new Box)
+	addObject(new Bee)
+	addObject(new Box)
 	
-	// Game logic (called for each tick, ie 50 times per second)
-	override def update() {
+	// Called 50 times per second (on each tick). Contains the game logic
+	override def onTick() {
 		if (ticks % 60 == 0) 
-			add_object(new Bee)
-		super.update()
+			addObject(new Bee)
 	}
 }
 abstract class Engine extends SimpleSwingApplication {
@@ -133,8 +133,8 @@ abstract class Engine extends SimpleSwingApplication {
 	 * Public functions that you may want to use
 	 */
 
-	def add_object(sp:Sprite) = { sprites = sp::sprites }
-	def del_object(sp:Sprite) = { 
+	def addObject(sp:Sprite) = { sprites = sp::sprites }
+	def delObject(sp:Sprite) = { 
 		sprites = sprites.filter( _ != sp ) 
 		if (sprites isEmpty) {
 			println("No sprite left. Exit the game.")
@@ -144,22 +144,29 @@ abstract class Engine extends SimpleSwingApplication {
 	def size() = if (ui.size.width > 0) ui.size else new Dimension(640,800)
  	def setSize(width: Int, height: Int) = ui.preferredSize = new Dimension(width, height)
 	
-	def update() = { // Game update function. Called on each tick.
-		ticks += 1
-		sprites.map(_.update())
-		
-		// Delete oob objects
-		val (maxX, maxY) = (ui.size.width, ui.size.height)
-		if (maxX>0) // Don't get mad if called before the UI creation
-			sprites.filter(_.isoob(maxX, maxY) ).map( del_object(_) )
-	}
+	def onTick() // Put your game logic in this function
 
 	/*
 	 * Implementation part. You should not have to change the following
 	 */
+	def internalTickHandler() = {
+		ticks += 1
+		sprites.map(_.onTick())
+		
+		// Delete oob objects
+		val (maxX, maxY) = (ui.size.width, ui.size.height)
+		if (maxX>0) // Don't get mad if called before the UI creation
+			sprites.filter(_.isoob(maxX, maxY) ).map( delObject(_) )
+	}
 
 	val fpsTarget:Int = 50 // Desired amount of frames per second. Overridable.
 
+	// Timer in charge of the game update
+	private[this] val timer = new java.util.Timer
+    timer.scheduleAtFixedRate(new java.util.TimerTask {
+		def run() = internalTickHandler()
+    }, 0, 1000/fpsTarget) 
+  
 	// Display Panel
 	lazy val ui = new Panel {
 		background = Color.white
@@ -186,18 +193,12 @@ abstract class Engine extends SimpleSwingApplication {
 			sprites.map( sprite => sprite.paint(g, peer) ) 
 		}
 		
-		// Redraw things at 80 fps, executed in the GUI thread for fluid animations
+		// Redraw things at 50 fps, executed in the GUI thread for fluid animations
 		val timer = new javax.swing.Timer(1000/fpsTarget, new AbstractAction() {
 			def actionPerformed(e: java.awt.event.ActionEvent) { repaint }
 		}).start
 	}
 
-	// Timer in charge of the game update
-	private[this] val timer = new java.util.Timer
-    timer.scheduleAtFixedRate(new java.util.TimerTask {
-		def run() = update()
-    }, 0, 1000/fpsTarget) 
-  
   	val appTitle:String = "Some name" // Windows title, to be overriden
 	def top = new MainFrame {
 		title = appTitle
