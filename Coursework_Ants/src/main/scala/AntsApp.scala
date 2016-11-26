@@ -12,7 +12,7 @@ import scala.swing.{ SimpleSwingApplication, MainFrame, Panel }
 import scala.swing.event._
 import java.awt.event.{ ActionEvent, ActionListener }
 import java.awt.{ Color, Graphics2D, Point, geom, MouseInfo }
-import javax.swing.{ ImageIcon, Timer }
+import javax.swing.{ ImageIcon, Timer, AbstractAction }
 import javax.swing.UIManager
 
 abstract class Sprite {
@@ -145,7 +145,6 @@ class Engine extends SimpleSwingApplication {
 		}
 		
 		
-		
 		// Display method
 		override def paintComponent(g: Graphics2D) = {
 			super.paintComponent(g)
@@ -156,31 +155,19 @@ class Engine extends SimpleSwingApplication {
 			// Draw all sprites
 			sprites.map( sprite => sprite.paint(g, peer) ) 
 		}
+		
+		/* Redraw things at 80 fps, executed in the GUI thread */
+		val timer = new javax.swing.Timer(1000/80, new AbstractAction() {
+			def actionPerformed(e: java.awt.event.ActionEvent) { repaint }
+		}).start
+
 	}
+
+	val fpsTarget = 50 // Desired amount of frames per second
 	
-	// Animation timer: calls state.update() and ui.repaint() 50 times per second
-	val t = new ActionListener {
-		/* Configuration */
-		val fpsTarget = 50 // Desired amount of frames per second
-		var delay = 1000 / fpsTarget
-		val delayBetweenTurns = 3
-		var framesBetweenTurns = delayBetweenTurns * fpsTarget
-
-		// Counter to run the turns every delayBetweenTurns seconds
-		var framesSinceLastTurn = 0
-
-		/* The swing timer */
-		val timer = new Timer(delay, this)
-		timer.setCoalesce(true) // Please restart by yourself
-		timer.start()           // Let's go
-
-		/* react to the timer events */
-		def actionPerformed(e: ActionEvent) = {
-			framesSinceLastTurn+=1
-			if (framesSinceLastTurn == framesBetweenTurns) {
-				framesSinceLastTurn = 0
-				gameTurn()
-			}
+	private[this] val timer = new java.util.Timer
+    timer.scheduleAtFixedRate(new java.util.TimerTask {
+		def run { 
 			sprites.map(_.update())
 			val maxX = ui.size.width
 			val maxY = ui.size.height
@@ -190,14 +177,9 @@ class Engine extends SimpleSwingApplication {
 				println("Delete "+s)
 				s.finalize
 			}
-/*			if (sprites isEmpty) {
-				println("No more object")
-				sys.exit()
-		    }*/
-			ui.repaint() // Ask for an eventual repaint
 		}
-	}
-
+    }, 0, 1000/fpsTarget) 
+  
 	def top = new MainFrame {
 		title = "Ants vs. Bees"
 		contents = ui	
