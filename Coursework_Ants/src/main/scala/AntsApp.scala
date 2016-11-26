@@ -19,19 +19,18 @@ import javax.swing.UIManager
 abstract class Sprite {
 	var x = 0
 	var y = 0
-	var delta_x = 1
-	var delta_y = 0
+	var dx = 0
+	var dy = 0
 	var age = 0
 	
-	/** Called 50 times per second. 
-	 * Override this to get your object doing something useful */
+	/** Called 50 times per second. Override this to put your game logic. */
 	def update() = {
-		x += delta_x
-		y += delta_y
+		x += dx
+		y += dy
 		age += 1
 	}
 	def onClick() = {} // Called when you're clicked
-	// Returns true if the object gets out of bound. The engine removes such objects
+	// Returns true if the object gets out of bound. The engine removes objects that do
 	def isoob(maxX:Int, maxY:Int) = { (x < 0 || x >= maxX) || (y < 0 || y >= maxY)}
 	
 	def paint(g: Graphics2D, panel: javax.swing.JPanel) // Draw yourself
@@ -52,24 +51,50 @@ abstract class BitmapSprite(val image_file : String) extends Sprite {
     }
     val image = icon.getImage()
 
-    override def paint(g: Graphics2D, panel: javax.swing.JPanel) = { g.drawImage(image, x, y, panel) }
+    override def paint(g: Graphics2D, panel: javax.swing.JPanel) = 
+		g.drawImage(image, x, y, panel) 
 }
 
-/** Demo of BitmapSprite implementation */
+/** Box paints itself directly on the Graphics2D */	
+class Box extends Sprite {
+	// position (x,y) and speed (dx, dy) are defined in Sprite: don't redefine them here but give them a value
+	x = 200 
+	y = 200
+	dx = -1
+	dy = 1
+	val size = 100
+
+	// See https://docs.oracle.com/javase/tutorial/2d/TOC.html to learn about Java 2D graphics
+	override def paint(g: Graphics2D, panel: javax.swing.JPanel) = {
+		g.setPaint(Color.red)
+		g.fill(new geom.Rectangle2D.Double(x, y, size, size))
+	}
+
+	override def isInside(pt : Point) = 
+		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
+
+	// How should this sprite react to mouse clicks?
+	override def onClick() = {
+		println("Box was clicked. Good bye.")
+		AntsApp.del_object(this)
+	}
+}
+
+/** Bee use a bitmap file to draw itself */
 class Bee extends BitmapSprite("bee.png") {
 	val size = 50
 	
-	if (AntsApp.size.width >0) {
-		x = AntsApp.rand.nextInt(AntsApp.size.width-size)
-		y = AntsApp.rand.nextInt(AntsApp.size.height-size)
-	}
+	// Bees spawn to random locations
+	x = AntsApp.rand.nextInt(AntsApp.size.width-size)
+	y = AntsApp.rand.nextInt(AntsApp.size.height-size)
+	
 	override def update() = {
 		if (age % 50 == 0) {
-			println("Changing direction. Age: "+age)
-			delta_x = AntsApp.rand.nextInt(3)-1
-			delta_y = AntsApp.rand.nextInt(3)-1
+			println("Changing direction because age="+age)
+			dx = AntsApp.rand.nextInt(3)-1 // Take a number in [O, 3), ie 0, 1 or 2, and then substract 1
+			dy = AntsApp.rand.nextInt(3)-1 // So it will be one of -1, 0, 1.
 		}
-		super.update()
+		super.update() // The bee won't move if you remove this
 	}	
 	override def isInside(pt : Point) = 
 		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
@@ -79,42 +104,24 @@ class Bee extends BitmapSprite("bee.png") {
 	}
 }
 
-/** Box paints itself directly on the Graphics2D */	
-class Box extends Sprite {
-	x = 200
-	y = 200
-	delta_y = -1
-	val size = 100
-
-	override def paint(g: Graphics2D, panel: javax.swing.JPanel) = {
-		g.setPaint(Color.red)
-		g.fill(new geom.Rectangle2D.Double(x, y, size, size))
-	}
-
-	override def isInside(pt : Point) = 
-		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
-
-	override def onClick() = {
-		println("Box was clicked. Good bye.")
-		AntsApp.del_object(this)
-	}
-}
-
 /** This is the main application */
 object AntsApp extends Engine {
 	override val appTitle = "Ants vs. Bees" // Windows title
 
+	// The bees need such a random number generator
 	val rand = new scala.util.Random()
 	
+	// Setup and populate the game at the beginning
+	setSize(1200, 800)
+	add_object(new Bee)
+	add_object(new Box)
+	
+	// Game logic (called for each tick, ie 50 times per second)
 	override def update() {
 		if (ticks % 60 == 0) 
 			add_object(new Bee)
 		super.update()
 	}
-	
-	setSize(1200, 800)
-	add_object(new Bee)
-	add_object(new Box)
 }
 abstract class Engine extends SimpleSwingApplication {
 	var ticks = 0
@@ -134,8 +141,8 @@ abstract class Engine extends SimpleSwingApplication {
 			sys.exit()
 		}
 	}
-	def size() = ui.size
-	def setSize(width: Int, height: Int) = ui.preferredSize = new Dimension(width, height)
+	def size() = if (ui.size.width > 0) ui.size else new Dimension(640,800)
+ 	def setSize(width: Int, height: Int) = ui.preferredSize = new Dimension(width, height)
 	
 	def update() = { // Game update function. Called on each tick.
 		ticks += 1
@@ -156,6 +163,7 @@ abstract class Engine extends SimpleSwingApplication {
 	// Display Panel
 	lazy val ui = new Panel {
 		background = Color.white
+		preferredSize = new Dimension(800,640)
     	focusable = true
     	listenTo(mouse.clicks, mouse.moves, keys) // Capture mouse and keyboard
 
