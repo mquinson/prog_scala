@@ -1,4 +1,4 @@
-all: Ants.pdf Coursework_Ants.tar.gz 
+all: class_files Ants.pdf Coursework_Ants.tar.gz 
 PDFLATEX_OPTIONS=-shell-escape
 
 include LaTeX.mk
@@ -6,11 +6,22 @@ include LaTeX.mk
 clean::
 	rm -rf cpy.pdf *~ *vrb _region_.tex src/*.class *.class bin
 
-bin/AntsApp.class: src/AntsApp.scala
-	mkdir -p bin
-	cd bin; scalac -cp ../scala-swing.jar:.. ../src/AntsApp.scala
+# Just list the dependencies here
+bin/engine/Engine.class: src/Engine.scala
+bin/AntsApp.class: src/AntsApp.scala bin/engine/Engine.class
 
-run: bin/AntsApp.class
+# List one class file built out of each of your scala files
+class_files: bin/engine/Engine.class bin/AntsApp.class 
+
+# Default rule to build your scala files
+bin/engine/%.class: src/%.scala
+	mkdir -p $(dir $@)
+	cd bin; scalac -cp ../scala-swing.jar:. ../$<
+bin/%.class: src/%.scala
+	mkdir -p $(dir $@)
+	cd bin; scalac -cp ../scala-swing.jar:. ../$<
+
+run: class_files
 	scala -cp scala-swing.jar:bin:gfx AntsApp
 
 Ants.tex: Ants.org
@@ -21,7 +32,7 @@ Ants.tex: Ants.org
 	cat $@.bak >> $@
 	rm $@.bak
 
-Coursework_Ants.tar.gz: $(wildcard src/*) $(wildcard gfx/*) build.sbt 
-	cd ..; tar cvfz Coursework_Ants/Coursework_Ants.tar.gz --exclude-backups Coursework_Ants/src Coursework_Ants/gfx Coursework_Ants/build.sbt 
+Coursework_Ants.tar.gz: $(wildcard src/*) $(wildcard gfx/*) build.sbt Makefile
+	cd ..; tar cvfz Coursework_Ants/Coursework_Ants.tar.gz --exclude-backups Coursework_Ants/Makefile Coursework_Ants/src Coursework_Ants/gfx Coursework_Ants/build.sbt 
 
-.PHONY: run
+.PHONY: run class_files
