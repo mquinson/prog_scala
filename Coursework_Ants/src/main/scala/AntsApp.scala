@@ -59,7 +59,7 @@ abstract class BitmapSprite(val image_file : String) extends Sprite {
 class Bee extends BitmapSprite("bee.png") {
 	x = 200
 	y = 200
-	val size = 5
+	val size = 50
 	override def update() = {
 		if (age % 50 == 0) {
 			println("Changing direction. Age: "+age)
@@ -69,7 +69,10 @@ class Bee extends BitmapSprite("bee.png") {
 	}	
 	override def isInside(pt : Point) = 
 		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
-	override def onClick() = println("Bee clicked")
+	override def onClick() = {
+		println("You got the Bee!")
+		AntsApp.del_object(this)
+	}
 }
 
 /** Shape objects can are defined by a graphics path, not a png */
@@ -115,12 +118,20 @@ object AntsApp extends Engine {
 	add_object(new SimpleBox)
 }
 class Engine extends SimpleSwingApplication {
-
+	val fpsTarget = 50 // Desired amount of frames per second
+	val appTitle = "Ants vs. Bees" // Windows title
+	
 	// lists that contain the game sprites. Don't change it directly.
 	var sprites : List[Sprite] = Nil
 
 	def add_object(sp:Sprite) = { sprites = sp::sprites }
-	def del_object(sp:Sprite) = { sprites = sprites.filter( _ != sp ) }
+	def del_object(sp:Sprite) = { 
+		sprites = sprites.filter( _ != sp ) 
+		if (sprites isEmpty) {
+			println("No sprite left. Exit the game.")
+			sys.exit()
+		}
+	}
 	def init_screen(width: Int, height: Int) = ui.preferredSize = new Dimension(width, height)
 	
 	// Core of the game turns	
@@ -128,10 +139,9 @@ class Engine extends SimpleSwingApplication {
 		println("New game turn")
 	}
 
-	// Display
+	// Display Panel
 	lazy val ui = new Panel {
 		background = Color.white
-		
     	focusable = true
     	listenTo(mouse.clicks, mouse.moves, keys) // Capture mouse and keyboard
 
@@ -144,10 +154,8 @@ class Engine extends SimpleSwingApplication {
 			case _: FocusLost => repaint()
 		}
 		
-		
-		// Display method
+		// Repaint the component when asked
 		override def paintComponent(g: Graphics2D) = {
-			super.paintComponent(g)
 			// clear board
 			g.setPaint(Color.white);
 			g.fill(new geom.Rectangle2D.Double(0, 0, size.width, size.height));
@@ -156,32 +164,24 @@ class Engine extends SimpleSwingApplication {
 			sprites.map( sprite => sprite.paint(g, peer) ) 
 		}
 		
-		/* Redraw things at 80 fps, executed in the GUI thread */
+		// Redraw things at 80 fps, executed in the GUI thread for fluid animations
 		val timer = new javax.swing.Timer(1000/80, new AbstractAction() {
 			def actionPerformed(e: java.awt.event.ActionEvent) { repaint }
 		}).start
-
 	}
 
-	val fpsTarget = 50 // Desired amount of frames per second
 	
 	private[this] val timer = new java.util.Timer
     timer.scheduleAtFixedRate(new java.util.TimerTask {
 		def run { 
 			sprites.map(_.update())
-			val maxX = ui.size.width
-			val maxY = ui.size.height
-			val deleted = sprites.filter(_.isoob(maxX, maxY) )
-			sprites = sprites.filter(! _.isoob(maxX, maxY) )
-			for (s <- deleted) {
-				println("Delete "+s)
-				s.finalize
-			}
+			sprites.filter(_.isoob(ui.size.width, ui.size.height) )
+			       .map( del_object(_) )
 		}
     }, 0, 1000/fpsTarget) 
   
 	def top = new MainFrame {
-		title = "Ants vs. Bees"
+		title = appTitle
 		contents = ui	
 	}
 }
