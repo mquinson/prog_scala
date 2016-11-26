@@ -22,6 +22,7 @@ abstract class Sprite {
 	var dx = 0
 	var dy = 0
 	var age = 0
+    var size = new Dimension(1,1) // By default, sprites are only one point
 	
 	/** Called 50 times per second (on each tick). Override this to put your game logic. */
 	def onTick() = {
@@ -29,18 +30,25 @@ abstract class Sprite {
 		y += dy
 		age += 1
 	}
-	def onClick() = {} // Called when you're clicked
-	// Returns true if the object gets out of bound. The engine removes objects that do
-	def isoob(maxX:Int, maxY:Int) = { x < 0 || x >= maxX || y < 0 || y >= maxY }
+    /** Called when the object is clicked */
+	def onClick() = {} 
+    
+	/** Returns true if the object gets out of bound. The engine removes objects that do */
+	def isOob(maxX:Int, maxY:Int) = 
+        x < 0 || x+size.width >= maxX || y < 0 || y+size.height >= maxY
 	
-	def paint(g: Graphics2D, panel: javax.swing.JPanel) // Draw yourself
-	def isInside(pt : Point): Boolean = false // Detect whether the (clicked) point is touching you
+    /** Ask the object to draw itself on the panel */
+	def paint(g: Graphics2D, panel: javax.swing.JPanel)
+    
+    /** Detect whether the (clicked) point is touching the object */
+	def isInside(pt : Point): Boolean = 
+        (pt.x <= x+size.width && pt.x >= x && pt.y <= y + size.height && pt.y >= y)
 }
 
 /** This class should be the ancestor of every images on screen (bees, ants, etc) */
 abstract class BitmapSprite(imageFile:String) extends Sprite {
 
-    //private[this] val path = Option(getClass.getResource("/resources/"+imageFile)) // Use this line if you prefer eclipse
+    //private[this] val path = Option(getClass.getResource("/gfx/"+imageFile)) // Use this line if you prefer eclipse
 	private[this] val path = Option(getClass.getResource(imageFile))  // This line is intended for sbt users
 	
     private[this] val icon = path match {
@@ -50,10 +58,8 @@ abstract class BitmapSprite(imageFile:String) extends Sprite {
       case Some(url) => new ImageIcon(url)
     }
     val image = icon.getImage()
-    val size = new Dimension(icon.getIconWidth,icon.getIconHeight)
-
-	override def isInside(pt : Point) = 
-		(pt.x <= x+size.width && pt.x >= x && pt.y <= y + size.height && pt.y >= y)
+    // My size is the one of the image
+    size = new Dimension(icon.getIconWidth,icon.getIconHeight)
 
     override def paint(g: Graphics2D, panel: javax.swing.JPanel) = 
 		g.drawImage(image, x, y, panel) 
@@ -66,20 +72,17 @@ class Box extends Sprite {
 	y = 200
 	dx = -1
 	dy = 1
-	val size = 100
+    size = new Dimension(100,100)
 
 	// See https://docs.oracle.com/javase/tutorial/2d/TOC.html to learn about Java 2D graphics
 	override def paint(g: Graphics2D, panel: javax.swing.JPanel) = {
 		g.setPaint(Color.red)
-		g.fill(new geom.Rectangle2D.Double(x, y, size, size))
+		g.fill(new geom.Rectangle2D.Double(x, y, size.width, size.height))
 	}
 
-	override def isInside(pt : Point) = 
-		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
-		
 	// Returns true if the object gets out of bound. The engine removes objects that do
-	override def isoob(sizeX:Int, sizeY:Int) = 
-		x<0 || x+size>sizeX || y<0 || y+size>sizeY
+	override def isOob(sizeX:Int, sizeY:Int) = 
+		x<0 || x+size.width>sizeX || y<0 || y+size.height>sizeY
 
 	// How should this sprite react to mouse clicks?
 	override def onClick() = {
@@ -105,14 +108,14 @@ class Bee extends BitmapSprite("bee.png") {
 		super.onTick() // The bee won't move if you remove this
 	}	
 		
-	// Called 50 times per second (on each tick). Contains the game logic
+	// How to react to mouse clicks
 	override def onClick() = {
 		println("You got the Bee!")
 		AntsApp.delObject(this)
 	}
 }
 
-/** This is the main application */
+/** This is the main application of our little example */
 object AntsApp extends Engine {
 	override val appTitle = "Ants vs. Bees" // Windows title
 
@@ -132,16 +135,18 @@ object AntsApp extends Engine {
 abstract class Engine extends SimpleSwingApplication {
 	var ticks = 0
 	
-	// All known sprites. Iterate over them, but don't change them directly.
+	/** List of all known sprites. Iterate over them, but don't change them directly. */
 	var sprites : List[Sprite] = Nil
 
 	/*
 	 * Public functions that you may want to use
 	 */
 
+    /** Registers a new Sprite to the engine */
 	def addObject(sp:Sprite) = {
 		sprites = sp::sprites 
 	}
+    /** Unregisters a Sprite from the engine. The game stops when all sprites are gone */
 	def delObject(sp:Sprite) = { 
 		sprites = sprites.filter( _ != sp ) 
 		if (sprites isEmpty) {
@@ -149,24 +154,27 @@ abstract class Engine extends SimpleSwingApplication {
 			sys.exit()
 		}
 	}
+    /** Returns the current size of the window */
 	def size() = if (ui.size.width > 0) ui.size else new Dimension(640,800)
+    /** Sets the preferred size of the window */
  	def setSize(width: Int, height: Int) = ui.preferredSize = new Dimension(width, height)
 	
-	def onTick() // Put your game logic in this function
+    /** Put your global game logic in this function */
+	def onTick() 
 
 	/*
 	 * Implementation part. You should not have to change the following
 	 */
-	def internalTickHandler() = {
+	def internalTickHandler() = { // Separated to ensure that not calling super.onTick in onTick does not break everything
 		ticks += 1
 		onTick()
 		sprites.map(_.onTick())
 		
 		// Delete oob objects
-		sprites.filter(_.isoob(size.width, size.height) ).map( delObject(_) )
+		sprites.filter(_.isOob(size.width, size.height) ).map( delObject(_) )
 	}
 
-	val fpsTarget:Int = 50 // Desired amount of frames per second. Overridable.
+	val fpsTarget:Int = 50 // Desired amount of ticks and frames per second. Don't change it
 
 	// Timer in charge of the game update
 	private[this] val timer = new java.util.Timer
