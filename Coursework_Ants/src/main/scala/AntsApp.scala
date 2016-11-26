@@ -35,7 +35,6 @@ abstract class Sprite {
 	
 	def paint(g: Graphics2D, panel: javax.swing.JPanel) // Draw yourself
 	def isInside(pt : Point): Boolean = false // Detect whether the (clicked) point is touching you
-	override def finalize() = println("Bye")
 }
 
 /** This class should be the ancestor of every images on screen (bees, ants, etc) */
@@ -57,13 +56,17 @@ abstract class BitmapSprite(val image_file : String) extends Sprite {
 
 /** Demo of BitmapSprite implementation */
 class Bee extends BitmapSprite("bee.png") {
-	x = 200
-	y = 200
 	val size = 50
+	
+	if (AntsApp.size.width >0) {
+		x = AntsApp.rand.nextInt(AntsApp.size.width-size)
+		y = AntsApp.rand.nextInt(AntsApp.size.height-size)
+	}
 	override def update() = {
 		if (age % 50 == 0) {
 			println("Changing direction. Age: "+age)
-			delta_x = -delta_x
+			delta_x = AntsApp.rand.nextInt(3)-1
+			delta_y = AntsApp.rand.nextInt(3)-1
 		}
 		super.update()
 	}	
@@ -75,20 +78,8 @@ class Bee extends BitmapSprite("bee.png") {
 	}
 }
 
-/** Shape objects can are defined by a graphics path, not a png */
-abstract class Shape extends Sprite {
-	val shape = new geom.GeneralPath
-	shape.moveTo(0,0)
-		
-	override def paint(g: Graphics2D, panel: javax.swing.JPanel) = {
-		g.translate(x,y)
-		g.draw(shape)
-		g.translate(-x,-y)
-	}
-}
-
-/** Demo of Shape implementation */	
-class Box extends Shape {
+/** Box paints itself directly on the Graphics2D */	
+class Box extends Sprite {
 	x = 200
 	y = 200
 	delta_y = -1
@@ -110,18 +101,24 @@ class Box extends Shape {
 
 /** This is the main application */
 object AntsApp extends Engine {
-	val WIDTH = 1200
-	val HEIGHT = 800
+	override val appTitle = "Ants vs. Bees" // Windows title
+
+	val rand = new scala.util.Random()
 	
-	init_screen(WIDTH, HEIGHT)
+	override def update() {
+		if (ticks % 60 == 0) 
+			add_object(new Bee)
+		super.update()
+	}
+	
+	setSize(1200, 800)
 	add_object(new Bee)
 	add_object(new Box)
 }
-class Engine extends SimpleSwingApplication {
-	val fpsTarget = 50 // Desired amount of frames per second
-	val appTitle = "Ants vs. Bees" // Windows title
+abstract class Engine extends SimpleSwingApplication {
+	var ticks = 0
 	
-	// lists that contain the game sprites. Don't change it directly.
+	// All known sprites. Iterate over them, but don't change them directly.
 	var sprites : List[Sprite] = Nil
 
 	def add_object(sp:Sprite) = { sprites = sp::sprites }
@@ -132,9 +129,11 @@ class Engine extends SimpleSwingApplication {
 			sys.exit()
 		}
 	}
-	def init_screen(width: Int, height: Int) = ui.preferredSize = new Dimension(width, height)
+	def size() = ui.size
+	def setSize(width: Int, height: Int) = ui.preferredSize = new Dimension(width, height)
 	
 	def update() = { // Game update function
+		ticks += 1
 		sprites.map(_.update())
 		
 		// Delete oob objects
@@ -146,6 +145,7 @@ class Engine extends SimpleSwingApplication {
 	def gameTurn() {
 		println("New game turn")
 	}
+	val fpsTarget:Int = 50 // Desired amount of frames per second. Overridable.
 
 	// Display Panel
 	lazy val ui = new Panel {
@@ -173,7 +173,7 @@ class Engine extends SimpleSwingApplication {
 		}
 		
 		// Redraw things at 80 fps, executed in the GUI thread for fluid animations
-		val timer = new javax.swing.Timer(1000/80, new AbstractAction() {
+		val timer = new javax.swing.Timer(1000/fpsTarget, new AbstractAction() {
 			def actionPerformed(e: java.awt.event.ActionEvent) { repaint }
 		}).start
 	}
@@ -184,6 +184,7 @@ class Engine extends SimpleSwingApplication {
 		def run() = update()
     }, 0, 1000/fpsTarget) 
   
+  	val appTitle:String = "Some name" // Windows title, to be overriden
 	def top = new MainFrame {
 		title = appTitle
 		contents = ui	
