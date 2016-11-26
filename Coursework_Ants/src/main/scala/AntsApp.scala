@@ -15,60 +15,94 @@ import java.awt.{ Color, Graphics2D, Point, geom, MouseInfo }
 import javax.swing.{ ImageIcon, Timer }
 import javax.swing.UIManager
 
-/** This class should be the ancestor of every images on screen (bees, ants, etc) */
-abstract class Sprite(val image_file : String, var x : Int, var y : Int) {
-	/* Load the image that move on screen */
+abstract class Sprite {
+	var x = 0
+	var y = 0
+	var delta_x = 1
+	var delta_y = 0
+	var age = 0
 	
+	/** Called 50 times per second. 
+	 * Override this to get your object doing something useful */
+	def update() = {
+		x += delta_x
+		y += delta_y
+		age += 1
+	}
+	def onClick() = {} // Called when you're clicked
+	// Returns true if the object gets out of bound. The engine removes such objects
+	def isoob(maxX:Int, maxY:Int) = { (x <0 && x >= maxX) || (y < 0 && y >= maxY)}
+	
+	def paint(g: Graphics2D, panel: javax.swing.JPanel) // Draw yourself
+	def isInside(pt : Point): Boolean = false // Detect whether the (clicked) point is touching you
+	override def finalize() = println("Bye")
+}
+
+/** This class should be the ancestor of every images on screen (bees, ants, etc) */
+abstract class BitmapSprite(val image_file : String) extends Sprite {
+
     //private val path = Option(getClass.getResource("/resources/"+image_file)) // Use this line if you prefer eclipse
 	private val path = Option(getClass.getResource(image_file))  // This line is intended for sbt users
+	
     val icon = path match {
       case None => 
     	  println("Cannot find the file "+image_file+". Make sure it's in the classpath.")
     	  UIManager.getLookAndFeelDefaults().get("html.missingImage").asInstanceOf[ImageIcon]
       case Some(url) => new ImageIcon(url)
     }
-    val im = icon.getImage()
+    val image = icon.getImage()
 
-	def update() = {} // Override this to get your sprite doing something
+    override def paint(g: Graphics2D, panel: javax.swing.JPanel) = { g.drawImage(image, x, y, panel) }
 }
 
-/** Demo of Sprite implementation */
-class Bee extends Sprite("bee.png",200,200) {
-	var counter : Int = 0
-	var x_speed : Int = 2
-	
-	// Move on every frame and switch direction every second
+/** Demo of BitmapSprite implementation */
+class Bee extends BitmapSprite("bee.png") {
+	x = 200
+	y = 200
+	val size = 5
 	override def update() = {
-		x += x_speed;
-		counter+=1;
-		if (counter % 50 == 0) {
-			println("One second")
-			x_speed *= -1
+		if (age % 50 == 0) {
+			println("Changing direction. Age: "+age)
+			delta_x = -delta_x
 		}
+		super.update()
 	}	
+	override def isInside(pt : Point) = 
+		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
+	override def onClick() = println("Bee clicked")
 }
 
-/** Box objects can be clicked. Somehow similar to buttons */
-abstract class Box(var x : Int, var y : Int){
-	val size : Int = 100
+/** Shape objects can are defined by a graphics path, not a png */
+abstract class Shape extends Sprite {
+	val shape = new geom.GeneralPath
+	shape.moveTo(0,0)
+		
+	override def paint(g: Graphics2D, panel: javax.swing.JPanel) = {
+		g.translate(x,y)
+		g.draw(shape)
+		g.translate(-x,-y)
+	}
+}
 
-	val boxPath = new geom.GeneralPath
-	boxPath.moveTo(x,y)
-	boxPath.lineTo(x+size,y)
-	boxPath.lineTo(x+size,y+size)
-	boxPath.lineTo(x,y+size)
-	boxPath.lineTo(x,y)
+/** Demo of Shape implementation */	
+class SimpleBox extends Shape {
+	x = 200
+	y = 200
+	delta_x = 0
+	val size = 100
 
-	def onClick() // Override this method to do something when this box gets clicked 
+	shape.lineTo(size,0)
+	shape.lineTo(size,size)
+	shape.lineTo(0,   size)
+	shape.lineTo(0,   0)
 
-	def isInside(pt : Point): Boolean = 
+	override def isInside(pt : Point) = 
 		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
 
-}
-
-/** Demo of Box implementation */	
-class SimpleBox extends Box(200,200) {
-  def onClick() = println("SimpleBox was clicked")
+	override def onClick() = {
+		println("Box was clicked. Good bye.")
+		AntsApp.del_object(this)
+	}
 }
 
 /** This is the main application */
@@ -78,31 +112,24 @@ object AntsApp extends Engine {
 	
 	init_screen(WIDTH, HEIGHT)
 	add_object(new Bee)
-	
-	sprites = new Bee :: sprites
-    	
-	boxes = new SimpleBox :: boxes
+	add_object(new SimpleBox)
 }
 class Engine extends SimpleSwingApplication {
 
-	// lists that contain the sprites and the boxes for the display
+	// lists that contain the game sprites. Don't change it directly.
 	var sprites : List[Sprite] = Nil
-	var boxes : List[Box] = Nil
 
 	def add_object(sp:Sprite) = { sprites = sp::sprites }
-	// Method that calls sprite.update for all sprites displayed
-	def update_sprites() = sprites.map(_.update())
+	def del_object(sp:Sprite) = { sprites = sprites.filter( _ != sp ) }
+	def init_screen(width: Int, height: Int) = ui.preferredSize = new Dimension(width, height)
 	
 	// Core of the game turns	
 	def gameTurn() {
 		println("New game turn")
 	}
 
-	def init_screen(width: Int, height: Int) = 
-		ui.preferredSize = new Dimension(width, height)
 	// Display
 	lazy val ui = new Panel {
-		preferredSize = new Dimension(640, 480)
 		background = Color.white
 		
     	focusable = true
@@ -111,33 +138,28 @@ class Engine extends SimpleSwingApplication {
 		// In case of action from the user ...
 		reactions += {
 			case e: MousePressed => 
-				for (box<-boxes){
-					if (box.isInside(e.point)){
-						box.onClick()
-					}
-				}
+				sprites.filter(_.isInside(e.point)).map(_.onClick() )
 			case e: MouseDragged =>
 			case e: MouseReleased =>
 			case _: FocusLost => repaint()
 		}
-
+		
+		
 		
 		// Display method
 		override def paintComponent(g: Graphics2D) = {
 			super.paintComponent(g)
-			
-			// draw all boxes
-			for (box <- boxes)
-				g.draw(box.boxPath)	
-
+			// clear board
+			g.setPaint(Color.white);
+			g.fill(new geom.Rectangle2D.Double(0, 0, size.width, size.height));
+		    g.setPaint(Color.black);
 			// Draw all sprites
-			for (sprite <- sprites)
-				g.drawImage(sprite.im, sprite.x, sprite.y, peer)
+			sprites.map( sprite => sprite.paint(g, peer) ) 
 		}
 	}
 	
 	// Animation timer: calls state.update() and ui.repaint() 50 times per second
-	class MyTimer extends ActionListener {
+	val t = new ActionListener {
 		/* Configuration */
 		val fpsTarget = 50 // Desired amount of frames per second
 		var delay = 1000 / fpsTarget
@@ -153,20 +175,31 @@ class Engine extends SimpleSwingApplication {
 		timer.start()           // Let's go
 
 		/* react to the timer events */
-		def actionPerformed(e: ActionEvent): Unit = {
+		def actionPerformed(e: ActionEvent) = {
 			framesSinceLastTurn+=1
-			if (framesSinceLastTurn == framesBetweenTurns){
+			if (framesSinceLastTurn == framesBetweenTurns) {
 				framesSinceLastTurn = 0
 				gameTurn()
 			}
-			update_sprites()
+			sprites.map(_.update())
+			val maxX = ui.size.width
+			val maxY = ui.size.height
+			val deleted = sprites.filter(_.isoob(maxX, maxY) )
+			sprites = sprites.filter(! _.isoob(maxX, maxY) )
+			for (s <- deleted) {
+				println("Delete "+s)
+				s.finalize
+			}
+/*			if (sprites isEmpty) {
+				println("No more object")
+				sys.exit()
+		    }*/
 			ui.repaint() // Ask for an eventual repaint
 		}
 	}
-	val t = new MyTimer()
 
 	def top = new MainFrame {
 		title = "Ants vs. Bees"
-		contents = ui
+		contents = ui	
 	}
 }
