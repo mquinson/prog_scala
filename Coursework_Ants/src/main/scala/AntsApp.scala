@@ -15,6 +15,7 @@ import java.awt.{ Color, Graphics2D, Point, geom, MouseInfo }
 import javax.swing.{ ImageIcon, Timer, AbstractAction }
 import javax.swing.UIManager
 
+/** Class of objects moving (or not) on the game panel */
 abstract class Sprite {
 	var x = 0
 	var y = 0
@@ -121,6 +122,10 @@ abstract class Engine extends SimpleSwingApplication {
 	// All known sprites. Iterate over them, but don't change them directly.
 	var sprites : List[Sprite] = Nil
 
+	/*
+	 * Public functions that you may want to use
+	 */
+
 	def add_object(sp:Sprite) = { sprites = sp::sprites }
 	def del_object(sp:Sprite) = { 
 		sprites = sprites.filter( _ != sp ) 
@@ -132,7 +137,7 @@ abstract class Engine extends SimpleSwingApplication {
 	def size() = ui.size
 	def setSize(width: Int, height: Int) = ui.preferredSize = new Dimension(width, height)
 	
-	def update() = { // Game update function
+	def update() = { // Game update function. Called on each tick.
 		ticks += 1
 		sprites.map(_.update())
 		
@@ -141,10 +146,11 @@ abstract class Engine extends SimpleSwingApplication {
 		if (maxX>0) // Don't get mad if called before the UI creation
 			sprites.filter(_.isoob(maxX, maxY) ).map( del_object(_) )
 	}
-	// Core of the game turns	
-	def gameTurn() {
-		println("New game turn")
-	}
+
+	/*
+	 * Implementation part. You should not have to change the following
+	 */
+
 	val fpsTarget:Int = 50 // Desired amount of frames per second. Overridable.
 
 	// Display Panel
