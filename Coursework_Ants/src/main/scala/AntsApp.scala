@@ -31,25 +31,29 @@ abstract class Sprite {
 	}
 	def onClick() = {} // Called when you're clicked
 	// Returns true if the object gets out of bound. The engine removes objects that do
-	def isoob(maxX:Int, maxY:Int) = { (x < 0 || x >= maxX) || (y < 0 || y >= maxY)}
+	def isoob(maxX:Int, maxY:Int) = { x < 0 || x >= maxX || y < 0 || y >= maxY }
 	
 	def paint(g: Graphics2D, panel: javax.swing.JPanel) // Draw yourself
 	def isInside(pt : Point): Boolean = false // Detect whether the (clicked) point is touching you
 }
 
 /** This class should be the ancestor of every images on screen (bees, ants, etc) */
-abstract class BitmapSprite(val image_file : String) extends Sprite {
+abstract class BitmapSprite(imageFile:String) extends Sprite {
 
-    //private val path = Option(getClass.getResource("/resources/"+image_file)) // Use this line if you prefer eclipse
-	private val path = Option(getClass.getResource(image_file))  // This line is intended for sbt users
+    //private[this] val path = Option(getClass.getResource("/resources/"+imageFile)) // Use this line if you prefer eclipse
+	private[this] val path = Option(getClass.getResource(imageFile))  // This line is intended for sbt users
 	
-    val icon = path match {
+    private[this] val icon = path match {
       case None => 
-    	  println("Cannot find the file "+image_file+". Make sure it's in the classpath.")
+    	  println("Cannot find the file "+imageFile+". Make sure it's in the classpath.")
     	  UIManager.getLookAndFeelDefaults().get("html.missingImage").asInstanceOf[ImageIcon]
       case Some(url) => new ImageIcon(url)
     }
     val image = icon.getImage()
+    val size = new Dimension(icon.getIconWidth,icon.getIconHeight)
+
+	override def isInside(pt : Point) = 
+		(pt.x <= x+size.width && pt.x >= x && pt.y <= y + size.height && pt.y >= y)
 
     override def paint(g: Graphics2D, panel: javax.swing.JPanel) = 
 		g.drawImage(image, x, y, panel) 
@@ -72,6 +76,10 @@ class Box extends Sprite {
 
 	override def isInside(pt : Point) = 
 		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
+		
+	// Returns true if the object gets out of bound. The engine removes objects that do
+	override def isoob(sizeX:Int, sizeY:Int) = 
+		x<0 || x+size>sizeX || y<0 || y+size>sizeY
 
 	// How should this sprite react to mouse clicks?
 	override def onClick() = {
@@ -80,25 +88,24 @@ class Box extends Sprite {
 	}
 }
 
-/** Bee use a bitmap file to draw itself */
+/** Bee is a simple Sprite defined from a bitmap file */
 class Bee extends BitmapSprite("bee.png") {
-	val size = 50
-	
 	// Bees spawn to random locations
-	x = AntsApp.rand.nextInt(AntsApp.size.width-size)
-	y = AntsApp.rand.nextInt(AntsApp.size.height-size)
+	x = AntsApp.rand.nextInt(AntsApp.size.width-size.width)
+	y = AntsApp.rand.nextInt(AntsApp.size.height-size.height)
 	
 	// Called on each tick (50 times/second). Contains the game logic
 	override def onTick() = {
+		// age is automatically updated by the engine (counted in ticks)
 		if (age % 50 == 0) {
 			println("Changing direction because age="+age)
-			dx = AntsApp.rand.nextInt(3)-1 // Take a number in [O, 3), ie 0, 1 or 2, and then substract 1
+			dx = AntsApp.rand.nextInt(3)-1 // Take a number in [O, 3) (which is 0, 1 or 2) and then substract 1
 			dy = AntsApp.rand.nextInt(3)-1 // So it will be one of -1, 0, 1.
 		}
 		super.onTick() // The bee won't move if you remove this
 	}	
-	override def isInside(pt : Point) = 
-		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
+		
+	// Called 50 times per second (on each tick). Contains the game logic
 	override def onClick() = {
 		println("You got the Bee!")
 		AntsApp.delObject(this)
@@ -114,7 +121,6 @@ object AntsApp extends Engine {
 	
 	// Setup and populate the game at the beginning
 	setSize(1200, 800)
-	addObject(new Bee)
 	addObject(new Box)
 	
 	// Called 50 times per second (on each tick). Contains the game logic
@@ -133,7 +139,9 @@ abstract class Engine extends SimpleSwingApplication {
 	 * Public functions that you may want to use
 	 */
 
-	def addObject(sp:Sprite) = { sprites = sp::sprites }
+	def addObject(sp:Sprite) = {
+		sprites = sp::sprites 
+	}
 	def delObject(sp:Sprite) = { 
 		sprites = sprites.filter( _ != sp ) 
 		if (sprites isEmpty) {
@@ -151,12 +159,11 @@ abstract class Engine extends SimpleSwingApplication {
 	 */
 	def internalTickHandler() = {
 		ticks += 1
+		onTick()
 		sprites.map(_.onTick())
 		
 		// Delete oob objects
-		val (maxX, maxY) = (ui.size.width, ui.size.height)
-		if (maxX>0) // Don't get mad if called before the UI creation
-			sprites.filter(_.isoob(maxX, maxY) ).map( delObject(_) )
+		sprites.filter(_.isoob(size.width, size.height) ).map( delObject(_) )
 	}
 
 	val fpsTarget:Int = 50 // Desired amount of frames per second. Overridable.
