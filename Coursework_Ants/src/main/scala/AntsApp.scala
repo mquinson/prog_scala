@@ -88,16 +88,17 @@ abstract class Shape extends Sprite {
 }
 
 /** Demo of Shape implementation */	
-class SimpleBox extends Shape {
+class Box extends Shape {
 	x = 200
 	y = 200
 	delta_x = 0
+	delta_y = -1
 	val size = 100
 
-	shape.lineTo(size,0)
-	shape.lineTo(size,size)
-	shape.lineTo(0,   size)
-	shape.lineTo(0,   0)
+	override def paint(g: Graphics2D, panel: javax.swing.JPanel) = {
+		g.setPaint(Color.red)
+		g.fillRectangle(new geom.Rectangle2D.Double(x, y, size, size))
+	}
 
 	override def isInside(pt : Point) = 
 		(pt.x <= x+size && pt.x >= x && pt.y <= y + size && pt.y >= y)
