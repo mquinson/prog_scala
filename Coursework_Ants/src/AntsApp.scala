@@ -1,11 +1,11 @@
 // This is the template of code that you should fill.
 
 // You are free to reorganize your code as you want. 
-// In particular, splitting this file into several files is a good idea
+// In particular, splitting this file into several files is a good idea.
 
-// Compile: scalac -cp ../../../scala-swing.jar:. AntsApp.scala
-// Execute: scala -cp ../../../scala-swing.jar:. AntsApp
-// (from the src/main/scala directory)
+// From the root directory:
+// Compile: scalac -cp scala-swing.jar:. src/AntsApp.scala
+// Execute: scala -cp scala-swing.jar:.:gfx AntsApp
 
 import scala.swing._
 import scala.swing.{ SimpleSwingApplication, MainFrame, Panel }
