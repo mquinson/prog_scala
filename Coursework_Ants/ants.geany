@@ -20,7 +20,7 @@ indent_mode=2
 [project]
 name=ants
 base_path=.
-description=Ants vs. Somebees
+description=Ants vs. SomeBees
 file_patterns=*.scala;
 
 [long line marker]

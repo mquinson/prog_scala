@@ -16,7 +16,7 @@
 
 #+LATEX_HEADER: \usepackage{caption}
 #+LATEX_HEADER: \captionsetup{labelformat=empty,textfont=bf}
-#+LATEX_HEADER: \title{Ants vs. SomeBee}
+#+LATEX_HEADER: \title{Ants vs. SomeBees}
 
 #+LATEX_HEADER: \usepackage{enumitem} \setlist[itemize]{noitemsep,nolistsep}
 

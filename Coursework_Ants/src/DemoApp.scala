@@ -76,7 +76,7 @@ class MouseTracker extends Sprite {
 
 /** This is the main application of our little example */
 object DemoApp extends Engine {
-	override val appTitle = "Ants vs. Bees" // Windows title
+	override val appTitle = "Ants vs. SomeBees" // Windows title
 
 	// The bees need such a random number generator
 	val rand = new scala.util.Random()
