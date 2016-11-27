@@ -2,7 +2,6 @@
 #+OPTIONS:  H:3 skip:nil num:t toc:nil
 #+LaTeX_CLASS: article
 #+LaTeX_CLASS_OPTIONS: [11pt]
-#+LaTeX_HEADER: \usepackage{exercices}
 #+LATEX_HEADER: \usepackage{xcolor,float}
 #+LATEX_HEADER: \hypersetup{urlcolor={blue},colorlinks}
 #+LATEX_HEADER: \usepackage{fullpage}
