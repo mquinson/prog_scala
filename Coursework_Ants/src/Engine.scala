@@ -37,8 +37,8 @@ abstract class Sprite {
 	def paint(g: Graphics2D, panel: javax.swing.JPanel)
     
     /** Detect whether the (clicked) point is touching the object */
-	def isInside(pt : Point): Boolean = 
-        (pt.x <= x+size.width && pt.x >= x && pt.y <= y + size.height && pt.y >= y)
+	def isInside(px: Int, py:Int): Boolean = 
+        (px <= x+size.width && px >= x && py <= y + size.height && py >= y)
 }
 
 /** This class should be the ancestor of every images on screen (bees, ants, etc) */
@@ -130,7 +130,7 @@ abstract class Engine extends SimpleSwingApplication {
             // We ignore the key modifiers and locations (not relevant to a game) 
             case KeyPressed(src, key, mods, _) => onKeyPress(key)
 			case e: MousePressed => 
-				sprites.filter(_.isInside(e.point)).map(_.onClick() )
+				sprites.filter(_.isInside(e.point.x, e.point.y)).map(_.onClick() )
 			case MouseMoved(src, point, mods) =>  onMouseMove(point.x, point.y)
 		}
 		

@@ -32,7 +32,7 @@ Ants.tex: Ants.org
 	cat $@.bak >> $@
 	rm $@.bak
 
-Coursework_Ants.tar.gz: $(wildcard src/*) $(wildcard gfx/*) build.sbt Makefile
-	cd ..; tar cvfz Coursework_Ants/Coursework_Ants.tar.gz --exclude-backups Coursework_Ants/Makefile Coursework_Ants/src Coursework_Ants/gfx Coursework_Ants/build.sbt 
+Coursework_Ants.tar.gz: $(wildcard src/*) $(wildcard gfx/*) build.sbt Makefile Ants.pdf scala-swing.jar
+	cd ..; tar cvfz Coursework_Ants/Coursework_Ants.tar.gz --exclude-backups $(foreach f, $^, Coursework_Ants/$(f))
 
 .PHONY: run class_files
