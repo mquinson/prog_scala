@@ -8,10 +8,10 @@ clean::
 
 # Just list the dependencies here
 bin/engine/Engine.class: src/Engine.scala
-bin/AntsApp.class: src/AntsApp.scala bin/engine/Engine.class
+bin/DemoApp.class: src/DemoApp.scala bin/engine/Engine.class
 
 # List one class file built out of each of your scala files
-class_files: bin/engine/Engine.class bin/AntsApp.class 
+class_files: bin/engine/Engine.class bin/DemoApp.class 
 
 # Default rule to build your scala files
 bin/engine/%.class: src/%.scala
@@ -22,7 +22,7 @@ bin/%.class: src/%.scala
 	cd bin; scalac -cp ../scala-swing.jar:. ../$<
 
 run: class_files
-	scala -cp scala-swing.jar:bin:gfx AntsApp
+	scala -cp scala-swing.jar:bin:gfx DemoApp
 
 Ants.tex: Ants.org
 	emacs -batch --eval "(setq enable-local-eval t)" --eval "(setq enable-local-variables t)" $^  --funcall org-latex-export-to-latex

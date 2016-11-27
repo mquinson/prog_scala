@@ -1,11 +1,11 @@
 // This is the template of code that you should fill.
 
 // You are free to reorganize your code as you want. 
-// In particular, splitting this file into several files is a good idea.
+// In particular, splitting and renaming this file is a good idea.
 
 // From the root directory:
-// Compile: scalac -cp scala-swing.jar:. src/AntsApp.scala src/Engine.scala
-// Execute: scala -cp scala-swing.jar:.:gfx AntsApp
+// Compile: scalac -cp scala-swing.jar:. src/DemoApp.scala src/Engine.scala
+// Execute: scala -cp scala-swing.jar:.:gfx DemoApp
 
 import engine._ // Import all of the engine package
 import scala.swing.event.Key._ // Names of keystrokes (for the keyboard handler)
@@ -33,23 +33,23 @@ class Box extends Sprite {
 	// How should this sprite react to mouse clicks?
 	override def onClick() = {
 		println("Box was clicked. Good bye.")
-		AntsApp.delObject(this)
+		DemoApp.delObject(this)
 	}
 }
 
 /** Bee is a simple Sprite defined from a bitmap file */
 class Bee extends BitmapSprite("bee.png") {
 	// Bees spawn to random locations
-	x = AntsApp.rand.nextInt(AntsApp.size.width-size.width)
-	y = AntsApp.rand.nextInt(AntsApp.size.height-size.height)
+	x = DemoApp.rand.nextInt(DemoApp.size.width-size.width)
+	y = DemoApp.rand.nextInt(DemoApp.size.height-size.height)
 	
 	// Called on each tick (50 times/second). Contains the game logic
 	override def onTick() = {
 		// age is automatically updated by the engine (counted in ticks)
 		if (age % 50 == 0) {
 			println("Changing direction because age="+age)
-			dx = AntsApp.rand.nextInt(3)-1 // Take a number in [O, 3) (which is 0, 1 or 2) and then substract 1
-			dy = AntsApp.rand.nextInt(3)-1 // So it will be one of -1, 0, 1.
+			dx = DemoApp.rand.nextInt(3)-1 // Take a number in [O, 3) (which is 0, 1 or 2) and then substract 1
+			dy = DemoApp.rand.nextInt(3)-1 // So it will be one of -1, 0, 1.
 		}
 		super.onTick() // The bee won't move if you remove this
 	}	
@@ -57,7 +57,7 @@ class Bee extends BitmapSprite("bee.png") {
 	// How to react to mouse clicks
 	override def onClick() = {
 		println("You got the Bee!")
-		AntsApp.delObject(this) // remove this object from the game
+		DemoApp.delObject(this) // remove this object from the game
 	}
 }
 
@@ -75,7 +75,7 @@ class MouseTracker extends Sprite {
 
 
 /** This is the main application of our little example */
-object AntsApp extends Engine {
+object DemoApp extends Engine {
 	override val appTitle = "Ants vs. Bees" // Windows title
 
 	// The bees need such a random number generator
