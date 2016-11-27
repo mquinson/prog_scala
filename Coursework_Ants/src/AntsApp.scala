@@ -61,6 +61,19 @@ class Bee extends BitmapSprite("bee.png") {
 	}
 }
 
+/** This sprite is used in the onMouseMove method of our application */
+class MouseTracker extends Sprite {
+    size = new Dimension(25,25)
+
+	override def paint(g: Graphics2D, panel: javax.swing.JPanel) = {
+		g.setPaint(Color.magenta)
+		g.fill(new geom.Rectangle2D.Double(x, y, size.width, size.height))
+	}
+    // Don't let the engine destroy this object
+    override def isOob(sizeX:Int, sizeY:Int) = false
+}
+
+
 /** This is the main application of our little example */
 object AntsApp extends Engine {
 	override val appTitle = "Ants vs. Bees" // Windows title
@@ -70,7 +83,11 @@ object AntsApp extends Engine {
 	
 	// Setup and populate the game at the beginning
 	setSize(1200, 800)
-	addObject(new Box)
+    addObject(new Box)
+    val mouseTracker = new MouseTracker
+    addObject(mouseTracker)
+    for (i <- 1 to 10)
+        addObject(new Bee)
 	
 	// Called 50 times per second (on each tick). Contains the game logic
 	override def onTick() {
@@ -86,5 +103,12 @@ object AntsApp extends Engine {
         case Up    => println("Up pressed")
         case Down  => println("Down pressed")
         case _ =>
-  }
+    }
+    
+    // How to react to mouse moves
+    override def onMouseMove(x:Int, y:Int) = {
+        mouseTracker.x = x
+        mouseTracker.y = y
+        println("The mouse is at "+x+","+y)
+    }
 }

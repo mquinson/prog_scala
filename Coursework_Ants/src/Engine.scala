@@ -95,6 +95,9 @@ abstract class Engine extends SimpleSwingApplication {
     /** Keyboad handler (the Values: https://github.com/scala/scala-swing/blob/2.0.x/src/main/scala/scala/swing/event/Key.scala ) */
     def onKeyPress(keyCode: Value) = {}
 
+    /** What to do when the mouse moves */
+    def onMouseMove(x:Int, y:Int) = {}
+
 	/*
 	 * Implementation part. You should not have to change the following (but you are free to)
 	 */
@@ -125,12 +128,10 @@ abstract class Engine extends SimpleSwingApplication {
 
 		reactions += {
             // We ignore the key modifiers and locations (not relevant to a game) 
-            case KeyPressed(_, key, _, _) => onKeyPress(key)
+            case KeyPressed(src, key, mods, _) => onKeyPress(key)
 			case e: MousePressed => 
 				sprites.filter(_.isInside(e.point)).map(_.onClick() )
-			case e: MouseDragged =>
-			case e: MouseReleased =>
-			case _: FocusLost => repaint()
+			case MouseMoved(src, point, mods) =>  onMouseMove(point.x, point.y)
 		}
 		
 		// Repaint the component when asked
@@ -138,7 +139,6 @@ abstract class Engine extends SimpleSwingApplication {
 			// clear board
 			g.setPaint(Color.white);
 			g.fill(new geom.Rectangle2D.Double(0, 0, size.width, size.height));
-		    g.setPaint(Color.black);
 			// Draw all sprites
 			sprites.map( sprite => sprite.paint(g, peer) ) 
 		}
