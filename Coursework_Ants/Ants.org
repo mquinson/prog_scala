@@ -1,8 +1,8 @@
 #+Title: Ants Vs. SomeBees
 #+OPTIONS:  H:3 skip:nil num:t toc:nil
 #+LaTeX_CLASS: article
-#+LaTeX_CLASS_OPTIONS: [11pt,twocolumn]
-#+LaTeX_HEADER: \usepackage{../tex/ensrennes}
+#+LaTeX_CLASS_OPTIONS: [11pt]
+#+LaTeX_HEADER: \usepackage{exercices}
 #+LATEX_HEADER: \usepackage{xcolor,float}
 #+LATEX_HEADER: \hypersetup{urlcolor={blue},colorlinks}
 #+LATEX_HEADER: \usepackage{fullpage}
@@ -10,80 +10,121 @@
 #+LATEX_HEADER:   \noindent\null\hfill\begin{minipage}{.65\linewidth} 
 #+LATEX_HEADER:   \centering
 #+LATEX_HEADER:   \textbf{\Large Ant vs. SomeBees}\par%
-#+LATEX_HEADER:     Projet de programmation
+#+LATEX_HEADER:     Programming Project
 #+LATEX_HEADER:   \end{minipage}\hfill\null
 #+LATEX_HEADER: }
 #+LATEX_HEADER: \thispagestyle{empty}
 
 #+LATEX_HEADER: \usepackage{caption}
 #+LATEX_HEADER: \captionsetup{labelformat=empty,textfont=bf}
-  
+#+LATEX_HEADER: \title{Ants vs.  Bee}
 
 * Introduction
-In this project, you will implement a [[https://secure.wikimedia.org/wikipedia/en/wiki/Tower_defense][Tower Defense]] called Ants
-Vs. SomeBees.  As the ant queen, you populate your colony with the
+In this project, you will implement a [[https://secure.wikimedia.org/wikipedia/en/wiki/Tower_defense][Tower Defense]] called /Ants
+Vs. SomeBees/.  As the ant queen, you populate your colony with the
 bravest ants you can muster. Your ants must protect their queen from
 the evil bees that invade your territory. Irritate the bees enough by
 throwing leaves at them, and they will be vanquished. Fail to pester
 the airborne intruders adequately, and your queen will succumb to the
 bees' wrath. 
 
-This project is highly inspired by an [[http://nifty.stanford.edu/2014/denero-ants-vs-somebees/ants.html][existing assignment]] from John
-DeNero, Tom Magrino and Eric Tzeng (UC Berkeley), which was inspirated
-by the PopCap Games' [[http://www.popcap.com/games/pvz/web][Plants Vs. Zombie]] ®. The current version was
-adapted from the Python programming language to Scala by myself. It it
-provides you with less pre-written code, but gives you much more
-freedom about how to organize your code. Freedom may be disturbing, at
-first, but you'll get used to it ;)
-
-** Core Concepts
-A game of Ants Vs. SomeBees consists of a series of turns. In each
-turn, new bees may enter the ant colony. Then, new ants are
-placed. Finally, all insects (ants, then bees) take individual
-actions: bees sting ants, and ants throw leaves at bees. The game ends
-either when a bee reaches the ant queen (you lose), or the entire bee
-flotilla has been vanquished (you win).
-
-*The Colony*. The colony consists of several places that are chained
-together. The /exit/ of each /Place/ leads to another /Place/.
-
-*Placing Ants*. There are two constraints that limit ant
-production. Placing an ant uses up some amount of the colony's food, a
-different amount for each type of ant. Also, only one ant can occupy
-each /Place/.
-
-*Bees*. When it is time to act, a bee either moves to the exit of its
-current Place if no ant blocks its path, or stings an ant that blocks
-its path.
-
-*Ants*. Each type of ant takes a different action and requires a
-different amount of food to place. The two most basic ant types are
-the /HarvesterAnt/, which adds one food to the colony during each
-turn, and the /ThrowerAnt/, which throws a leaf at a bee each turn.
+This project is inspired by an [[http://nifty.stanford.edu/2014/denero-ants-vs-somebees/ants.html][existing assignment]] from John DeNero,
+Tom Magrino and Eric Tzeng (UC Berkeley), which was inspirated by the
+PopCap Games' [[http://www.popcap.com/games/pvz/web][Plants Vs. Zombie]]®. The current version was adapted
+from the Python programming language to Scala. It it provides you with
+less pre-written code, but gives you much more freedom about how to
+organize your code.
 
 ** Due date and grading
 
-You are requested form teams for two people for this project, with
-(only) one group of three people. Nobody is allowed to work alone. You
-have turn your code before Sunday December 6. at noon. The defenses
-will be organized on Tuesday December 8. instead of the usual
-practical. You will have to turn in your slides on that day. Finally,
-you will have to send your report *and a 60-seconds long screencast* of
-your application before Sunday December 13. No late submission will be
-accepted. Kazam is a nice application to take screencasts.
+You are requested form teams for two people for this project, with (at
+most) one group of three people. Nobody is allowed to work alone. You
+have turn your code on Friday December 2. at noon. There will not be
+any public defense for this project, but you will have to send your
+report *and a 30-seconds long screencast* demoing your application
+(kazam is a nice application ot take screencasts) before Sunday
+December 4. night. No late submission will be accepted.
 
-* Technical setup
+** Game Concepts
+Here is a screenshot of the /Ants vs. SomeBees/ that we will build in
+this project. This game is turn-based, which means that time is split
+in periods of 3 seconds, during which each entity does one thing. The
+player controls the ants and must prevent the bees from invading the
+nest by placing ants in each cells of the corridor. The game ends
+either when a bee reaches the ant queen on the left (you lose), or the
+entire bee flotilla has been vanquished (you win).
 
-** scala-swing
+[[./img/gui_explanation.png]]
 
-This project must be written in Scala, using the Swing library. You
-really should use the scala-swing library, which provides Scala
-wrappers to the main Java Swing classes. You can download the
-mandatory library from [[https://github.com/mquinson/prog_scala/tree/master/jars][this site]]. If you feel brave, you can try to
-use ScalaFX, which will be a much better solution to build GUI in
-Scala. But unfortunately, ScalaFX is still under construction.
+During a turn, new bees may enter the ant colony and the player can
+place new ants (provided that the food stock permits). Finally, all
+insects (ants and bees) take individual actions: ants throw leaves at
+bees, and bees sting ants.
 
-** Editing with Eclipse
+
+* Provided Template
+First download the [[https://github.com/mquinson/prog_scala/blob/master/Coursework_Ants/Coursework_Ants.tar.gz][archive file]] and unpack it. It contains this
+document (~Ants.pdf~), a code template that you should reuse (in
+directory ~src/~), some images to use in your game (in ~gfx/~) and
+various files to compile and edit your project (~build.sbt~,
+~Makefile~, ~ants.geany~).  The template code uses Scala Swing
+for the graphics, which jar file is also provided. Any possible
+improvement to this template is warmly welcome.
+
+You are free to edit and compile your code in the way that you see
+fit. I personally used ~geany~ to edit the code, and ~make~ to compile
+and execute it, but YMMV. In other projects, I'm a happy user of
+Eclipse (the Programming Caterpillar), but wanted to experiment with
+geany.
+
+As you will eventually realize, it is very difficult to share code
+with your teammate without the appropriate tools. You are perfectly
+free to use anything you see fit, such as USB key, email attachments
+or pigeons, but you probably want to use a SVN or Git.
+
+#+LaTeX: \bigskip
+
+Take some time to explore the provided template. As you can see, its
+organization is somehow similar to the simple game engine used during
+the [[https://github.com/mquinson/retrogames][RetroGames]] python project, a while ago.
+
+The game is composed of a main ~DemoApp~ object containing the
+keyboard and mouse handlers and a method ~onTick~ that is called 50
+times per second. This method is intended to contain the main game
+logic. In this small example, it spawns new bee sprites from time to
+time.  The game contains a set of ~Sprites~, which are game elements
+depicted on screen. They are also updated independently 50 times per
+second, and disappear when they go out of the board.
+
+** Public fields and methods of the Game object
+- *ticks* ~:Int~ Age of the application (incremented 50 times a second)
+- *sprites* ~:List[Sprite]~ List containing all the in-game sprites,
+  in case you want to iterate over them all.
+- *addObject*  ~(sp:Sprite)~ Method adding the provided sprite to the set.
+- *delObject*  ~(sp:Sprite)~ Method removing that sprite from the set.
+- *size* ~()~ Returns the current size of the window.
+- *setSize* ~(width: Int, height: Int)~ Changes the window size.
+- *onTick* ~()~ Should contain the  global game logic; Called 50 times
+  a second.
+- *onKeyPress* ~(keyCode: Value)~ Keyboard handler ([[https://github.com/scala/scala-swing/blob/2.0.x/src/main/scala/scala/swing/event/Key.scala][possible values online]]).
+- *onMouseMove* ~(x:Int, y:Int)~ What to do when the mouse moves. 
+
+** Public fields and methods of the Sprite class
+- *(x,y)* ~:(Int, Int)~ Current position
+- *(dx,dy)* ~:(Int, Int)~ Current speed, applied to the position on
+  each tick.
+- *age* ~:Int~ Current age of the sprite
+- *size* ~:Dimension~  Defines the ~size.width~ and ~size.height~.
+- *onTick* ~()~ The game logic of this sprite; Called 50 times a
+  second.
+- *onClick* ~()~ What to do when the sprite is clicked.
+- *isOob* ~(maxX:Int, maxY:Int):Boolean~ Returns true if the object
+  gets out of bound. The engine removes objects that do.
+- *isInside* ~(px: Int, py:Int):Boolean~ =  Returns true if the
+  provided coordinates are within the sprite boundaries. The engine
+  use it to determine which sprites are clicked.
+
+** Editing with Eclipse 					   :noexport:
 It is advised (although not mandatory) that you use the Eclipse source
 editor for this assignment. That's a huge machinery, but it's really
 worth learning. When you know it, this tool can greatly increase your
@@ -112,7 +153,7 @@ program by clicking on the little button above the code green arrow.
 
 [[./img/eclipse-run.png]]
 
-** Compiling with sbt
+** Compiling with sbt 						   :noexport:
 
 [[http://www.scala-sbt.org/][Simple Build Tool]] (sbt for short) is a very pleasant tool to compile
 your Scala code. If you (or your computer) are alergic to Eclipse,
@@ -152,7 +193,7 @@ sbt run
 
 Please see the [[http://www.scala-sbt.org/documentation.html][sbt documentation]] for more information.
 
-** Compiling manually
+** Compiling manually 						   :noexport:
 If everything else fails, you can always compile your code from the
 command line as follows. You should however really try to get at least
 ~sbt~ working, because such manual compilations are really bothersome
@@ -172,66 +213,52 @@ When your code evolves, you need to replace ~FirstTest.scala~ on
 the first line by the name of your source files. On the second line,
 give the name of your main class instead of ~FirstTest~. 
 
-** Code Versioning
 
-As you will eventually realize, it is very difficult to share code
-with your teammates without the appropriate tools. You are perfectly
-free to use anything you see fit, such as USB key, email attachments
-or pigeons, but you probably want to use a SVN or Git.
-
-#+LaTeX: %\newpage
-* Warm up
-
-You are provided with an initial application called [[https://github.com/mquinson/prog_scala/tree/master/Coursework_Ants/src/main/scala/DemoApp.scala][DemoApp]] It
-exemplifies everything you need to know about the Scala Swing library.
-Download it, and read its code. You see that the code falls in three
-big parts: (1) a /state/ object that contains the whole game state,
-(2) an /ui/ object: a graphical panel on which the game is drawn and
-which listens to the keyboard and mouse events, (3) a /timer/ object
-for the game animation, which calls /state.update/ and /ui.repaint/ 50
-times per second. When the application starts, a window is created at
-the very bottom of this file and populated with the /ui/.
-
-** Introducing a class Insect
-
-Modify the provided code to introduce a proper class named /Insect/
-encapsulating all of the sprite logic.  It should encapsulate the
-position and speed of a Sprite as well as the image displayed
-image. It should provide the necessary methods to make the code of
-your /state/ and /ui/ clean and pleasant to read.
-
-** Introducing a class Place
-
-A place is a location of the game, depicted as a cell on the board. It
-is defined by its name and position (its constructor takes two
-parameters). It can contain one or several bees and at most one
-ant. Each place is connected to an entrance and an exit (the entrance
-of its exit is itself). Define the corresponding class, and populate
-your game with 8 places that form a tunnel.
-
-* First game
-We will first write the main game elements according to the following
-screenshot.
+* Game Basics
 
 [[./img/gui_explanation.png]]
 
-The colony is on top. This is where you select the kind of ant that you
-want to place on your board. The colony cell containing the word "Bye"
-is particular: when you select this cell and click on one of your
-existing ant, it is removed from the game.  Under the colony, you can
-see one tunnel of eight places, in which you can place ants. Later in
-the game, we will create several tunnels forming several lines one
-under another. On the right, you can see the hive, containing 2 bees
-that will soon enter your tunnel.
+Let's have a closer look at the screenshot of the game we should do.
+The colony is on top. This is where you select the kind of ant that
+you want to place on your board. The colony cell containing the word
+"Bye" is particular: when you select this cell and click on one of
+your existing ant, it is removed from the game (food is not refunded).
+Under the colony, you can see one tunnel of eight places, in which you
+can place ants (at most one ant per place). On the right, you can see
+the hive, containing 2 bees that will soon enter your tunnel.
 
-\medskip 
+** Proposed code organization
 
-** The basics
+You probably want to declare a ~Sprite~ sub-class for the colony
+cells on top, and adequately override its ~onClick()~ method. ~Place~
+should be another subclass of ~Sprite~, representing each cell of the
+tunnel. You also want to declare a class ~Insect~, that will be the
+ancestor of ~Bee~ and of all ~Ant~ classes. 
 
-In this first game, food is not an issue: you can create as many ants
-as you wish until you fill all existing Places. For that, click on the
-one cell of the Colony to select it, and then click on the tunnel place
-in which you want to add an ant of the selected type.
+This project consists in implementing several kind of ants. Our goal
+is not to make a nice game to play (and the original /Plants
+vs. Zombies/ may well remain more pleasant). Instead, our objective is
+to experience all OOP concepts seen during the lectures.
+
+** Game turns
+Each turn lasts three seconds, during which each insect entity do one
+move: 
+
+- *Bee* either sting any ant that blocks its path or move to the
+  next /Place/ if not blocked;
+- *Harvester Ants* add one food to the colony;
+- *Thrower Ants* throw a leaf at a bee located in the same place.
+
+The player can place new ants on the places at any moment (provided
+that sufficient food is available). No place can contain more than one
+ant at the same time (and may also contain several Bees).
+
+* Implementing the Game
+** Warm up
+At first, food should not be an issue: you can create as many ants as
+you wish until you fill all existing Places. For that, click on the
+one cell of the Colony to select it, and then click on the tunnel
+place in which you want to add an ant of the selected type.
 
 The game is decomposed in several turns (of three seconds each). The
 player can add new ants at any time during the game.  At each turn,
@@ -250,31 +277,41 @@ the following actions occur:
 If all bees are defeated, the player wins. If one bee passes the
 left-most place, the player loses.
 
-** Making a real game
+** A playable game
 
 Implement the food logic, where you cannot place a new ant if you
 don't have enough food.
 
-#+BEGIN_HTML
-<div align="center">
-#+END_HTML
-#+CAPTION: Harvester (Cost: 2; Armor: 1)
-#+ATTR_LaTeX: :width .2\linewidth
-[[./src/main/resources/ant_harvester.png]]
-#+BEGIN_HTML
-<b>Harvester</b> (Cost: 2; Armor: 1)
-</div>
-#+END_HTML
+#+BEGIN_LaTeX
+  \noindent
+  \begin{minipage}{.45\linewidth}
+    \center
+    \includegraphics[height=4\baselineskip]{gfx/ant_harvester.png}
 
+    \textbf{Harvester} (Cost: 2; Armor: 1)
+  \end{minipage}\hfill
+  \begin{minipage}{.45\linewidth}
+    \center
+    \includegraphics[height=4\baselineskip]{gfx/ant_thrower.png}
+
+    \textbf{Thrower} (Cost: 3; Armor: 1)
+  \end{minipage}\par
+  \bigskip
+
+#+END_LaTeX
 #+BEGIN_HTML
-<div align="center">
-#+END_HTML
-#+CAPTION: Thrower (Cost: 2; Armor: 1)
-#+ATTR_LaTeX: :width .2\linewidth
-[[./src/main/resources/ant_thrower.png]]
-#+BEGIN_HTML
-<b>Thrower</b> (Cost: 2; Armor: 1)
-</div>
+  <div align="center">
+    <table border=0>
+      <tr>
+        <td><img src="gfx/ant_harvester.png"/></td>
+        <td><img src="gfx/ant_thrower.png"/></td>
+      </tr>
+      <tr>
+        <td><b>Harvester</b> (Cost: 2; Armor: 1)</td>
+        <td><b>Thrower</b> (Cost: 2; Armor: 1)</td>
+      </tr>
+    </table>
+  </div>
 #+END_HTML
 
 Now, modify your HaversterAnt so that it shots at the nearest bee on
@@ -283,30 +320,36 @@ introduce two new kind of ants. The short-range thrower can only shot
 bees that are at most two entrances away while the long-range thrower
 can only shot bees that are at least three entrances away.
 
-#+LaTeX: \vspace{-.3\baselineskip}
+#+BEGIN_LaTeX
+  \noindent
+  \begin{minipage}{.45\linewidth}
+    \center
+    \includegraphics[height=4\baselineskip]{gfx/ant_shortthrower.png}
 
-#+BEGIN_HTML
-<div align="center">
-#+END_HTML
-#+CAPTION: Short Thrower (Cost: 3; Armor: 1)
-#+ATTR_LaTeX: :width .2\linewidth
-[[./src/main/resources/ant_shortthrower.png]]
-#+BEGIN_HTML
-<b>Short Thrower</b> (Cost: 3; Armor: 1)
-</div>
-#+END_HTML
+    \textbf{Short Thrower} (Cost: 3; Armor: 1)
+  \end{minipage}\hfill
+  \begin{minipage}{.45\linewidth}
+    \center
+    \includegraphics[height=4\baselineskip]{gfx/ant_longthrower.png}
 
-#+LaTeX: \vspace{-\baselineskip}
+    \textbf{Long Thrower} (Cost: 3; Armor: 1)
+  \end{minipage}\par
+  \bigskip
 
+#+END_LaTeX
 #+BEGIN_HTML
-<div align="center">
-#+END_HTML
-#+CAPTION: Long Thrower (Cost: 3; Armor: 1)
-#+ATTR_LaTeX: :width .2\linewidth
-[[./src/main/resources/ant_longthrower.png]]
-#+BEGIN_HTML
-<b>Long Thrower</b> (Cost: 3; Armor: 1)
-</div>
+  <div align="center">
+    <table border=0>
+      <tr>
+        <td><img src="gfx/ant_shortharvester.png"/></td>
+        <td><img src="gfx/ant_longthrower.png"/></td>
+      </tr>
+      <tr>
+        <td><b>Short Thrower</b> (Cost: 3; Armor: 1)</td>
+        <td><b>Long Thrower</b> (Cost: 3; Armor: 1)</td>
+      </tr>
+    </table>
+  </div>
 #+END_HTML
 
 ** Graphical Refinements
@@ -318,29 +361,54 @@ time (provided that there is enough food).
 
 * Water and Fire
 
-** Adding a Fire Ant
+#+BEGIN_LaTeX
+  \noindent
+  \begin{minipage}{.45\linewidth}
+    \center
+    \includegraphics[height=4\baselineskip]{gfx/ant_fire.png}
 
+    \textbf{Fire Ant} (Cost: 5; Armor: 1)
+  \end{minipage}\hfill
+  \begin{minipage}{.45\linewidth}
+    \center
+    \includegraphics[height=4\baselineskip]{gfx/ant_scuba.png}
+
+    \textbf{Scuba Thrower} (Cost: 5; Armor: 1)
+  \end{minipage}\par
+  \bigskip
+
+#+END_LaTeX
+#+BEGIN_HTML
+  <div align="center">
+    <table border=0>
+      <tr>
+        <td><img src="gfx/ant_fire.png"/></td>
+        <td><img src="gfx/ant_scuba.png"/></td>
+      </tr>
+      <tr>
+        <td><b>Fire Ant</b> (Cost: 5; Armor: 1)</td>
+        <td><b>Scuba Thrower</b> (Cost: 5; Armor: 1)</td>
+      </tr>
+    </table>
+  </div>
+#+END_HTML
+
+
+** Adding a Fire Ant
 Implement the /FireAnt/. A /FireAnt/ has a special /reduceArmor/
 method: when the /FireAnt/'s armor reaches zero or lower, it will
-reduce the armor of all /Bee/s in the same /Place/ as the FireAnt by
+reduce the armor of all /Bees/ in the same /Place/ as the FireAnt by
 its damage attribute (defaults to 3).
-
-#+BEGIN_HTML
-<div align="center">
-#+END_HTML
-#+CAPTION: Fire Ant (Cost: 5; Armor: 1)
-#+ATTR_LaTeX: :width .2\linewidth
-[[./src/main/resources/ant_fire.png]]
-#+BEGIN_HTML
-<b>Fire Ant</b> (Cost: 5; Armor: 1)
-</div>
-#+END_HTML
-
+** Real game
+To make things more interesting, make three tunnels (one under the
+other). When a bee enters the board, it picks a tunnel randomly. A
+full game is now composed of several waves of bees, arriving at
+predetermined turns. 
 ** Adding water to the game
 
-Our tunnels are a bit boring as is, because all places are the same
-(but the hive). To make things more interesting, we're going to create
-a new type of Place called Water.
+Our tunnels are still a bit boring as is, because all places are the
+same (but the hive). We are thus going to create a new type of Place
+called Water.
 
 Only an ant that is /watersafe/ can be deployed to a /Water/ place. In
 order to determine whether an Insect is /watersafe/, add a new
@@ -355,48 +423,57 @@ insect's armor to 0 by invoking /reduceArmor/. Do not copy and paste
 code. Try to use methods that have already been defined and make use
 of inheritance to reuse the functionality of the /Place/ class.
 
-** Adding water to the board
-
-Change the code that create the tunnel to now create 3 tunnels of 8
-places each in which every third place is water. When a bee enters the
-board, it picks a tunnel randomly.
-
-You may also change your code so that bees arrive in waves at
-pre-determined turns (to leave some time to the player to rebuild the base).
-
 ** Adding a Scuba ant
 
  Currently there are no ants that can be placed on Water. Implement
  the /ScubaThrower/, which is a subclass of /ThrowerAnt/ that is more
  costly and /watersafe/, but otherwise identical to its base class.
 
+* More units
+#+BEGIN_LaTeX
+  \noindent
+  \begin{minipage}{.33\linewidth}
+    \center
+    \includegraphics[height=4\baselineskip]{gfx/ant_wall.png}
+
+    \textbf{Wall Ant} {\small(Cost: 4; Armor: 4)}
+  \end{minipage}\hfill
+  \begin{minipage}{.3\linewidth}
+    \center
+    \includegraphics[height=4\baselineskip]{gfx/ant_ninja.png}
+
+    \textbf{Ninja} {\small(Cost: 6; Armor: 1)}
+  \end{minipage}\hfill
+  \begin{minipage}{.36\linewidth}
+    \center
+    \includegraphics[height=4\baselineskip]{gfx/ant_hungry.png}
+
+    \textbf{Hungry Ant} {\small(Cost: 4; Armor: 1)}
+  \end{minipage}\par
+  \bigskip
+
+#+END_LaTeX
 #+BEGIN_HTML
-<div align="center">
-#+END_HTML
-#+CAPTION: Scuba Thrower (Cost: 5; Armor: 1)
-#+ATTR_LaTeX: :width .2\linewidth
-[[./src/main/resources/ant_scuba.png]]
-#+BEGIN_HTML
-<b>Scuba Thrower</b> (Cost: 5; Armor: 1)
-</div>
+  <div align="center">
+    <table border=0>
+      <tr>
+        <td><img src="gfx/ant_wall.png"/></td>
+        <td><img src="gfx/ant_ninja.png"/></td>
+        <td><img src="gfx/ant_hungry.png"/></td>
+      </tr>
+      <tr>
+        <td><b>Wall Ant</b> (Cost: 4; Armor: 4)</td>
+        <td><b>Ninja Ant</b> (Cost: 6; Armor: 1)</td>
+        <td><b>Hungry Ant</b> (Cost: 4; Armor: 1)</td>
+      </tr>
+    </table>
+  </div>
 #+END_HTML
 
-* More units
 ** Wall Ant
 We are going to add some protection to our glorious /AntColony/ by
 implementing the /WallAnt/, which is an ant that does nothing each turn
 (already the default action of the /Ant/ class),  but presents a large armor value.
-
-#+BEGIN_HTML
-<div align="center">
-#+END_HTML
-#+CAPTION: Wall Ant (Cost: 4; Armor: 4)
-#+ATTR_LaTeX: :width .15\linewidth
-[[./src/main/resources/ant_wall.png]]
-#+BEGIN_HTML
-<b>Wall Ant</b> (Cost: 4; Armor: 4)
-</div>
-#+END_HTML
 
 ** Ninja Ant
  Implement the /NinjaAnt/, which damages all Bees that pass by, but is
@@ -404,36 +481,44 @@ implementing the /WallAnt/, which is an ant that does nothing each turn
  nor does it block the path of a /Bee/ that flies by. To implement
  this behavior, add a new attribute /blocksPath/ to /Ant/ that is
  /true/ by default and /false/ for /NinjaAnt/.
-
-#+BEGIN_HTML
-<div align="center">
-#+END_HTML
-#+CAPTION: Ninja Ant (Cost: 6; Armor: 1)
-#+ATTR_LaTeX: :width .2\linewidth
-[[./src/main/resources/ant_ninja.png]]
-#+BEGIN_HTML
-<b>Ninja Ant</b> (Cost: 6; Armor: 1)
-</div>
-#+END_HTML
-
 ** HungryAnt
 We will now implement the new offensive unit called the /HungryAnt/,
 which will eat a random /Bee/ from its place, instantly killing the
 Bee. After eating a Bee, it must spend 3 turns digesting before eating
 again.
 
-#+BEGIN_HTML
-<div align="center">
-#+END_HTML
-#+CAPTION: Hungry Ant (Cost: 4; Armor: 1)
-#+ATTR_LaTeX: :width .2\linewidth
-[[./src/main/resources/ant_hungry.png]]
-#+BEGIN_HTML
-<b>Hungry Ant</b> (Cost: 4; Armor: 1)
-</div>
-#+END_HTML
-
 * God saves the Queen
+#+BEGIN_LaTeX
+  \noindent
+  \begin{minipage}{.45\linewidth}
+    \center
+    \includegraphics[height=4\baselineskip]{gfx/ant_weeds.png}
+
+    \textbf{Bodyguard} (Cost: 4; Armor: 2)
+  \end{minipage}\hfill
+  \begin{minipage}{.45\linewidth}
+    \center
+    \includegraphics[height=4\baselineskip]{gfx/ant_queen.png}
+
+    \textbf{Queen} (Cost: 6; Armor: 2)
+  \end{minipage}\par
+  \bigskip
+
+#+END_LaTeX
+#+BEGIN_HTML
+  <div align="center">
+    <table border=0>
+      <tr>
+        <td><img src="gfx/ant_weeds.png"/></td>
+        <td><img src="gfx/ant_queen.png"/></td>
+      </tr>
+      <tr>
+        <td><b>Bodyguard</b> (Cost: 4; Armor: 2)</td>
+        <td><b>Queen</b> (Cost: 6; Armor: 2)</td>
+      </tr>
+    </table>
+  </div>
+#+END_HTML
 ** Bodyguard Ant
 A /BodyguardAnt/ differs from a normal /Ant/ because it can occupy the
 same /Place/ as another ant. When a /BodyguardAnt/ is added to the
@@ -446,18 +531,6 @@ within the bodyguard. It should start off as /null/, indicating that
 no ant is currently being protected. Give /BodyguardAnt/ a
 /containAnt/ method that adds the Ant passed as a parameter inti that
 field.
-
-#+BEGIN_HTML
-<div align="center">
-#+END_HTML
-#+CAPTION: Bodyguard (Cost: 4; Armor: 2)
-#+ATTR_LaTeX: :width .1\linewidth 
-[[./src/main/resources/ant_weeds.png]]
-#+BEGIN_HTML
-<b>Bodyguard</b> (Cost: 4; Armor: 2)
-</div>
-#+END_HTML
-
 
 Now, change your program so that a BodyguardAnt and another Ant can
 simultaneously occupy the same Place: 
@@ -476,19 +549,8 @@ doubles the damage of all other ants in the same tunnel with her,
 including any ants protected by a bodyguard. Once any ant's damage has
 doubled, it cannot be doubled again. 
 
-#+BEGIN_HTML
-<div align="center">
-#+END_HTML
-#+CAPTION: Queen ant (Cost: 6; Armor: 2)
-#+ATTR_LaTeX: :width .2\linewidth
-[[./src/main/resources/ant_queen.png]]
-#+BEGIN_HTML
-<b>Queen ant</b> (Cost: 6; Armor: 2)
-</div>
-#+END_HTML
-
-However, with great power comes great responsibility. The Queen is
-governed by three special rules:
+With great power comes great responsibility. The Queen is governed by
+three special rules:
 
 - If a bee ever enters the place occupied by the queen, then the bees
   immediately win the game. The game ends even if the queen is
@@ -502,50 +564,39 @@ governed by three special rules:
 
 - The true (first) queen cannot be removed. Attempts to remove the
   queen should have no effect (but should not cause an error).
+* Removing all mutable variables (optional)
 
+Your program is nicely organized so far, but it is still based on
+variables and destructive updates. Once your project is working,
+rework it to use only values and non-destructive updates.
 
-* Extensions
+We provide you with three examples to guide you on this path. First,
+this short [[http://prog21.dadgum.com/23.html][set of blog posts]] discuss the programming of purely
+functional Pac-Man. Then, here comes a [[http://eed3si9n.com/tetrix-in-scala/Combined+Pages.html][functional tetris]] that is
+completely variable-free. And finally, this [[https://michaelshaw.github.io/game_talk/game.html][other presentation]]
+presents the organization of a rather large game using the functional
+approach with Scala. This is probably larger than what you will need
+for your project, but that's still very interesting.
 
-Feel free to implement any extensions that you may see fit. Some
-gameplay elements may be interesting, such as new units or new
-enemies. You can also change your game to a more classical tower
-defense where the units can move freely over a given path and/or
-provide ant updates that come at some price. But such work is more
-centered on the game design. While interesting, this is not the topic
-of this assignment. Please check [[http://people.irisa.fr/Martin.Quinson/Hacking/Curiosa/#game][that page]] for more pointers.
+* Concluding remarks
 
-** Functional Programming
+In your report, explain the OOP concepts that each implemented ant
+puts into practice. It may well be the case that some OOP concepts are
+not well covered by any of the implemented ants. In this case, define
+a new kind of ant (or bee) that would demonstrate the missing
+concepts. Implementing these new insects is optional.
 
-But it is much more interesting to experiment with Functional
-Programming once your project is fully working in OOP. This topic is
-covered in a short [[http://prog21.dadgum.com/23.html][set of blog posts]] discussing the programming of
-purely functional retrogames, focused on a simple Pac-Man. This blog
-is particularly interesting to programming learners. I am an absolute
-fan of its subtitle: "It's not about technology for its own sake. It's
-about being able to implement your ideas". Yeah! Exactly!
+Your report should also contain the inheritance tree(s) of all
+implemented classes. PlantUML is a nice solution to include UML in a
+LaTeX document, but other solutions exist.
 
-This [[https://michaelshaw.github.io/game_talk/game.html][other presentation]] presents the organization of a rather large
-game using the functional approach with Scala. This is probably larger
-than what you will need for your project, but that's still very
-interesting. 
+You must absolutely cleanup and comment your code before turning it
+in. You should strive to make your code as pleasant to read as
+possible. 
 
-Remember, you should finish your project following the OOP approach
-before even thinking of the FP approach.
+#+LaTeX: \bigskip\noindent
+ /Programs must be written for people to read, and only incidentally
+for machines to execute./
+#+LaTeX: \linebreak\null\hfill
+ (Harold Abelson).
 
-** Complex Simulation
-
-Another over-simplification lays in the handling of the time. Our game
-is currently turn-based while time is rarely discrete. But
-making a full-featured simulation engine has a lot of
-implications. You should read [[http://cs.wellesley.edu/~games349/][this paper]] on the game aspects. From a
-Computer Science perspective, you will end up writing a
-[[https://en.wikipedia.org/wiki/Discrete_event_simulation][Discrete-Events Simulator]] (DES). If you want to make your game
-efficient even with huge amounts of entities (turning it into a real
-ant simulator), you may need to use [[http://www.acm-sigsim-mskr.org/Courseware/Fujimoto/Slides/FujimotoSlides-03-FutureEventList.pdf][advanced future events list]]
-structures and cleaver routing algorithm. You will also need to not
-animate the entities that are [[http://gameprogrammingpatterns.com/spatial-partition.html][not currently on screen]], but this will
-require to untangle the time of graphical animations from the time of
-logical updates. The former must occur at least 50 times per second
-for the entities on screen while the latter is well adapted to DES,
-with irregular updates. This brain teaser is mandatory to have a large
-but resource efficient simulation game...
