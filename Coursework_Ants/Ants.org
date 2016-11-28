@@ -110,6 +110,7 @@ second, and disappear when they go out of the board.
   a second.
 - *onKeyPress* ~(keyCode: Value)~ Keyboard handler ([[https://github.com/scala/scala-swing/blob/2.0.x/src/main/scala/scala/swing/event/Key.scala][possible values online]]).
 - *onMouseMove* ~(x:Int, y:Int)~ What to do when the mouse moves. 
+- *repaint* ~()~ Trigger a redraw of the game window.
 
 ** Public fields and methods of the Sprite class
 - *(x,y)* ~:(Int, Int)~ Current position

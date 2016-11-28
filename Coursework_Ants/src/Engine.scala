@@ -98,6 +98,9 @@ abstract class Engine extends SimpleSwingApplication {
     /** What to do when the mouse moves */
     def onMouseMove(x:Int, y:Int) = {}
 
+    /** Ask the UI to redraw the application */
+    def repaint() = ui.repaint()
+    
 	/*
 	 * Implementation part. You should not have to change the following (but you are free to)
 	 */
