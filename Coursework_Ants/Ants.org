@@ -212,8 +212,8 @@ the following actions occur:
   entered the game already.
 - Each ant moves, depending on its type.  The ~HarversterAnt~ adds one
   Food to the colony (useless for now, but soon crucial). If a bee is
-  in the same Place, the ~ThrowerAnt~ removes one Armor to the bee. An
-  insect with 0 Armor is killed.
+  in the same Place, the ~ThrowerAnt~ removes one Armor to the bee
+  (that has initially 3 Armors). An insect with 0 Armor is killed.
 - Each bee moves.
   - If there is no ant in its place, it moves to the next place.
   - If there is an ant in its place, it reduce its Armor by one.
