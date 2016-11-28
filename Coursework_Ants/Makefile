@@ -1,7 +1,10 @@
 all: class_files Ants.pdf Coursework_Ants.tar.gz 
 PDFLATEX_OPTIONS=-shell-escape
 
+ifeq ($(wildcard /usr/include/LaTeX.mk),)
+else
 include LaTeX.mk
+endif
 
 clean::
 	rm -rf cpy.pdf *~ *vrb _region_.tex src/*.class *.class bin
