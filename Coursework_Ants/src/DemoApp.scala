@@ -21,7 +21,7 @@ class Box extends Sprite {
     size = new Dimension(100,100)
 
 	// See https://docs.oracle.com/javase/tutorial/2d/TOC.html to learn about Java 2D graphics
-	override def paint(g: Graphics2D, panel: javax.swing.JPanel) = {
+	override def onPaint(g: Graphics2D, panel: javax.swing.JPanel) = {
 		g.setPaint(Color.red)
 		g.fill(new geom.Rectangle2D.Double(x, y, size.width, size.height))
 	}
@@ -65,7 +65,7 @@ class Bee extends BitmapSprite("bee.png") {
 class MouseTracker extends Sprite {
     size = new Dimension(25,25)
 
-	override def paint(g: Graphics2D, panel: javax.swing.JPanel) = {
+	override def onPaint(g: Graphics2D, panel: javax.swing.JPanel) = {
 		g.setPaint(Color.magenta)
 		g.fill(new geom.Rectangle2D.Double(x, y, size.width, size.height))
 	}

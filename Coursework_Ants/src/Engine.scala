@@ -33,8 +33,8 @@ abstract class Sprite {
 	def isOob(maxX:Int, maxY:Int) = 
         x < 0 || x+size.width >= maxX || y < 0 || y+size.height >= maxY
 	
-    /** Ask the object to draw itself on the panel */
-	def paint(g: Graphics2D, panel: javax.swing.JPanel)
+    /** the object was asked to draw itself on the panel */
+	def onPaint(g: Graphics2D, panel: javax.swing.JPanel)
     
     /** Detect whether the (clicked) point is touching the object */
 	def isInside(px: Int, py:Int): Boolean = 
@@ -57,7 +57,7 @@ abstract class BitmapSprite(imageFile:String) extends Sprite {
     // My size is the one of the image
     size = new Dimension(icon.getIconWidth,icon.getIconHeight)
 
-    override def paint(g: Graphics2D, panel: javax.swing.JPanel) = 
+    override def onPaint(g: Graphics2D, panel: javax.swing.JPanel) = 
 		g.drawImage(image, x, y, panel) 
 }
 
@@ -143,7 +143,7 @@ abstract class Engine extends SimpleSwingApplication {
 			g.setPaint(Color.white);
 			g.fill(new geom.Rectangle2D.Double(0, 0, size.width, size.height));
 			// Draw all sprites
-			sprites.map( sprite => sprite.paint(g, peer) ) 
+			sprites.map( sprite => sprite.onPaint(g, peer) ) 
 		}
 		
 		// Redraw things at 50 fps, executed in the GUI thread for fluid animations
