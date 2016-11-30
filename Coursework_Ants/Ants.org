@@ -149,9 +149,15 @@ tunnel. You also want to declare a class ~Insect~, that will be the
 ancestor of ~Bee~ and of all ~Ant~ classes. 
 
 This project consists in implementing several kind of ants. Our goal
-is not to make a nice game to play (and the original /Plants
-vs. Zombies/ may well remain more pleasant). Instead, our objective is
-to experience all OOP concepts seen during the lectures.
+is not to make a nice game to play. The original /Plants vs. Zombies/
+may well remain more pleasant, and I'm not absolutely certain that
+such a class hierarchy was actually used in the original game, as game
+programmers tend to use [[http://www.gameprogrammingpatterns.com/component.html][components instead of objects' hierarchies]]
+nowadays.
+
+Still, the objective of this assignment is to experience all OOP
+concepts seen during the lectures in a nice and hopefully pleasant
+way. Nothing more.
 
 ** Game turns
 Each turn lasts three seconds, during which each insect entity makes one
