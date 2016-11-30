@@ -20,7 +20,7 @@ indent_mode=2
 [project]
 name=ants
 base_path=.
-description=Ants vs. SomeBees
+description=Ants vs. Somebees
 file_patterns=*.scala;
 
 [long line marker]
@@ -52,4 +52,5 @@ EX_01_WD=
 
 [files]
 current_page=0
-FILE_NAME_0=2079;Scala;0;EUTF-8;0;1;0;%2Fhome%2Fmquinson%2FTeaching%2Frennes%2Fscala%2FCoursework_Ants%2Fsrc%2FAntsApp.scala;0;4
+FILE_NAME_0=3515;Scala;0;EUTF-8;0;1;0;%2Fhome%2Fmquinson%2FTeaching%2Frennes%2Fscala%2FCoursework_Ants%2Fsrc%2FEngine.scala;0;4
+FILE_NAME_1=2512;Scala;0;EUTF-8;0;1;0;%2Fhome%2Fmquinson%2FTeaching%2Frennes%2Fscala%2FCoursework_Ants%2Fsrc%2FDemoApp.scala;0;4

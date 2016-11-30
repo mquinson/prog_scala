@@ -43,7 +43,7 @@ most) one group of three people. Nobody is allowed to work alone. You
 have turn your code on Friday December 2. at noon. There will not be
 any public defense for this project, but you will have to send your
 report *and a 30-seconds long screencast* demoing your application
-(kazam is a nice application ot take screencasts) before Sunday
+(kazam is a nice application for taking screencasts) before Sunday
 December 4. night. No late submission will be accepted.
 
 ** Game Concepts
@@ -70,7 +70,7 @@ document (~Ants.pdf~), a code template that you should reuse (in
 directory ~src/~), some images to use in your game (in ~gfx/~) and
 various files to compile and edit your project (~build.sbt~,
 ~Makefile~, ~ants.geany~).  The template code uses Scala Swing
-for the graphics, which jar file is also provided. Any possible
+for the graphics, whose jar file is also provided. Any possible
 improvement to this template is warmly welcome.
 
 You are free to edit and compile your code in the way that you see
@@ -82,7 +82,7 @@ geany.
 As you will eventually realize, it is very difficult to share code
 with your teammate without the appropriate tools. You are perfectly
 free to use anything you see fit, such as USB key, email attachments
-or pigeons, but you probably want to use a SVN or Git.
+or pigeons, but you probably want to use SVN or Git.
 
 #+LaTeX: \bigskip
 
@@ -131,10 +131,10 @@ second, and disappear when they go out of the board.
 
 [[./img/gui_explanation.png]]
 
-Let's have a closer look at the screenshot of the game we should do.
+Let's have a closer look at the screenshot of the game we want to implement.
 The colony is on top. This is where you select the kind of ant that
 you want to place on your board. The colony cell containing the word
-"Bye" is particular: when you select this cell and click on one of
+"Bye" is special: when you select this cell and click on one of
 your existing ant, it is removed from the game (food is not refunded).
 Under the colony, you can see one tunnel of eight places, in which you
 can place ants (at most one ant per place). On the right, you can see
@@ -154,11 +154,11 @@ vs. Zombies/ may well remain more pleasant). Instead, our objective is
 to experience all OOP concepts seen during the lectures.
 
 ** Game turns
-Each turn lasts three seconds, during which each insect entity do one
+Each turn lasts three seconds, during which each insect entity makes one
 move: 
 
-- *Bee* either sting any ant that blocks its path or move to the
-  next /Place/ if not blocked;
+- *Bees* either sting any ant that blocks their path or move to the
+  next Cell if not blocked;
 - *Harvester Ants* add one food to the colony;
 - *Thrower Ants* throw a leaf at a bee located in the same place.
 
@@ -201,8 +201,8 @@ ant at the same time (and may also contain several Bees).
 #+END_HTML
 
 At first, food should not be an issue: you can create as many ants as
-you wish until you fill all existing Places. For that, click on the
-one cell of the Colony to select it, and then click on the tunnel
+you wish until you fill all existing Places. To this end, click on the
+Colony cell, and then click on the tunnel
 place in which you want to add an ant of the selected type.
 
 The game is decomposed in several turns (of three seconds each). The
@@ -258,11 +258,11 @@ don't have enough food.
     </table>
   </div>
 #+END_HTML
-Now, modify your HaversterAnt so that it shots at the nearest bee on
+Now, modify your HaversterAnt so that it shoots at the nearest bee on
 its right. Well, it makes the game a bit too easy, so we will
-introduce two new kind of ants. The short-range thrower can only shot
+introduce two new kind of ants. The short-range thrower can only shoot
 bees that are at most two entrances away while the long-range thrower
-can only shot bees that are at least three entrances away.
+can only shoot bees that are at least three entrances away.
 
 
 ** Graphical Refinements
@@ -320,7 +320,7 @@ predetermined turns.
 ** Adding water to the game
 
 Our tunnels are still a bit boring as is, because all places are the
-same (but the hive). We are thus going to create a new type of Place
+same (except for the hive). We are thus going to create a new type of Place
 called Water.
 
 Only an ant that is /watersafe/ can be deployed to a /Water/ place. In
