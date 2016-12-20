@@ -1,12 +1,12 @@
-all: scala_exo3.pdf scala_exo3.tar.gz
+all: fun-knapsack.pdf fun-knapsack.tar.gz
 PDFLATEX_OPTIONS=-shell-escape
 
 include LaTeX.mk
 
 clean::
-	rm -rf cpy.pdf *~ *vrb _region_.tex scala_exo3 bin/*
+	rm -rf cpy.pdf *~ *vrb _region_.tex fun-knapsack bin/*
 
-scala_exo3.tex: scala_exo3.org
+fun-knapsack.tex: fun-knapsack.org
 	emacs -batch --eval "(setq enable-local-eval t)" --eval "(setq enable-local-variables t)" $^  --funcall org-latex-export-to-latex
 	mv $@ $@.bak
 	echo '\\def\\raggedright{}' > $@
@@ -14,13 +14,14 @@ scala_exo3.tex: scala_exo3.org
 	cat $@.bak >> $@
 	rm $@.bak
 
-scala_exo3.tar.gz: $(wildcard src/*/*/*/*) build.sbt killparts Makefile
-	rm -rf scala_exo3
-	mkdir scala_exo3
+fun-knapsack.tar.gz: $(wildcard src/*/*/*/*) build.sbt killparts Makefile
+	rm -rf fun-knapsack
+	mkdir fun-knapsack
 	for n in `find src -name '*.scala'` ; do \
-	  m=`echo $$n|sed -e 's|^|scala_exo3/|'`; \
+	  m=`echo $$n|sed -e 's|^|fun-knapsack/|'`; \
 	  mkdir -p `dirname $$m` ; \
 	  ./killparts  $$n $$m ; \
 	done
-	cp build.sbt scala_exo3
-	tar cvfz scala_exo3.tar.gz --exclude-backups scala_exo3
+	cp build.sbt fun-knapsack
+	tar cvfz fun-knapsack.tar.gz --exclude-backups fun-knapsack
+	rm -rf fun-knapsack

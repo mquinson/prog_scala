@@ -131,3 +131,7 @@ sympy-plots-for-*.tex/
 # latex-make
 *.pdf.mk
 *.class
+.cache-main
+.cache-tests
+.classpath
+.project
